@@ -20,7 +20,7 @@ Research questions
 2. Is it feasable to personalize treatments to these user classes? Does it stimulate users into becoming more active users?
     1. Is this something these users want?
     2. Do the inferred preferences of the detected user classes significantly differ from each other?
-    3. Can the personalized treatments be devised in such a way as to allow users to be moved in the direction of any desired user class?
+    3. Can the personalized treatments be devised in such a way as to stimulate the moving of users in the direction of any desired user class?
 3. How can a toolkit be devised to handle the following?
     1. User classification based on behavior.
     2. Product personalization based on a relevant user's class.
