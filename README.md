@@ -3,7 +3,7 @@ Master's project
 
 > The following is a draft of what will be the final project description. It is not necessarily up to date.
 
-Personalizing user activation with machine learning and multivariate testing
+Personalizing anonymous video conferencing with machine learning and multivariate testing
 -----------------------------
 
 Identifying the different ways in which users use a product can be useful on several levels. In this project we will look at how identifying user classes allows for simple personalization of the product, and to what extent simple personalized treatments can alter user behavior.
@@ -60,6 +60,4 @@ Research questions
     3. Tracking of each treatment's effect on each user class.
     4. Prioritize using the most effective treaments without introducing statistical bias (see [multi-armed bandit](http://en.wikipedia.org/wiki/Multi-armed_bandit)).
     5. Allow product developers to easily access results to improve future feature prioritization.
-
-
 
