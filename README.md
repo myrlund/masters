@@ -24,6 +24,8 @@ To be able to affect user behavior, actual differing treatments are required.
 - Hints on unused features.
 - "Did you know?" on loading/alone.
 - Simple poll question while loading/alone.
+- Wording (claim/capture, appear/chat, room/office/channel)
+    - Integrating with i18n
 
 ### Existing togglable features
 
@@ -37,6 +39,11 @@ To be able to affect user behavior, actual differing treatments are required.
 
 - Localization
 - Chat history
+
+### New feature proposals
+
+- Allow users to place arbitrary items in the room (notes, stickers, youtube-videos etc.)
+- Nicknames
 
 **A start could be to identify which ones are least used, and attempt to stimulate usage of those.**
 
