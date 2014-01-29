@@ -12,6 +12,23 @@ It is often the case that some identified user classes are more desirable than o
 
 More specifically, given a set of identified user classes and a set of predefined treatments, we want to find out how each treatment affects each user class. Although the project implementation will specifically target the video conferencing service appear.in, a major research question will be to what extent the results generalize.
 
+
+Research questions
+------------------
+
+1. Are users of video conferencing services such as appear.in clearly dividable into separate groups based only on their behavior within the service? Do these patterns reflect those seen elsewhere (in other types of internet services or IRL)?
+2. Is it feasable to personalize treatments to these user classes? Does it stimulate users into becoming more active users?
+    1. Is this something these users want?
+    2. Do the inferred preferences of the detected user classes significantly differ from each other?
+3. How can a toolkit be devised to handle the following?
+    1. User classification based on behavior.
+    2. Product personalization based on a relevant user's class.
+    3. Tracking of each treatment's effect on each user class.
+    4. Prioritize using the most effective treaments without introducing statistical bias (see [multi-armed bandit](http://en.wikipedia.org/wiki/Multi-armed_bandit)).
+    5. Allow product developers to easily access results to improve future feature prioritization.
+
+
+
 Possible treatments
 -------------------
 
@@ -35,7 +52,9 @@ To be able to affect user behavior, actual differing treatments are required.
 - Customize room
 - Kick
 
-### Possibly togglable features in the pipes
+**A start could be to identify which ones are least used, and attempt to stimulate usage of those.**
+
+### Possibly togglable features in the pipelines
 
 - Localization
 - Chat history
@@ -44,20 +63,3 @@ To be able to affect user behavior, actual differing treatments are required.
 
 - Allow users to place arbitrary items in the room (notes, stickers, youtube-videos etc.)
 - Nicknames
-
-**A start could be to identify which ones are least used, and attempt to stimulate usage of those.**
-
-Research questions
-------------------
-
-1. Are users of video conferencing services such as appear.in clearly dividable into separate groups based only on their behavior within the service? Do these patterns reflect those seen elsewhere (in other types of internet services or IRL)?
-2. Is it feasable to personalize treatments to these user classes? Does it stimulate users into becoming more active users?
-    1. Is this something these users want?
-    2. Do the inferred preferences of the detected user classes significantly differ from each other?
-3. How can a toolkit be devised to handle the following?
-    1. User classification based on behavior.
-    2. Product personalization based on a relevant user's class.
-    3. Tracking of each treatment's effect on each user class.
-    4. Prioritize using the most effective treaments without introducing statistical bias (see [multi-armed bandit](http://en.wikipedia.org/wiki/Multi-armed_bandit)).
-    5. Allow product developers to easily access results to improve future feature prioritization.
-
