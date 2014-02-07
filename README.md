@@ -15,7 +15,7 @@ More specifically, given a set of identified user classes and a set of predefine
 Research questions
 ------------------
 
-**Main research question:** Can users of anonymous video conferencing services be clearly divided into user classes based on their behavior, and to what effect can personalisation improve their activity level?
+**Main research question:** Can users of anonymous video conferencing services be clearly divided into user classes based on their behavior, and if so, to what effect can personalisation improve their activity level?
 
 1. Are users of video conferencing services such as appear.in clearly dividable into separate groups based only on their behavior within the service? Do these patterns reflect those seen elsewhere (in other types of internet services or IRL)?
 2. Is it feasable to personalize treatments to these user classes? Does it stimulate users into becoming more active users?
