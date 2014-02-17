@@ -12,9 +12,10 @@ It is often the case that some identified user classes are more desirable than o
 
 More specifically, given a set of identified user classes and a set of predefined treatments, we want to find out how each treatment affects each user class. Although the project implementation will specifically target the video conferencing service appear.in, a major research question will be to what extent the results generalize.
 
-
 Research questions
 ------------------
+
+**Main research question:** Can users of anonymous video conferencing services be clearly divided into user classes based on their behavior, and if so, to what effect can personalisation improve their activity level?
 
 1. Are users of video conferencing services such as appear.in clearly dividable into separate groups based only on their behavior within the service? Do these patterns reflect those seen elsewhere (in other types of internet services or IRL)?
 2. Is it feasable to personalize treatments to these user classes? Does it stimulate users into becoming more active users?
@@ -27,8 +28,6 @@ Research questions
     3. Tracking of each treatment's effect on each user class.
     4. Prioritize using the most effective treaments without introducing statistical bias (see [multi-armed bandit](http://en.wikipedia.org/wiki/Multi-armed_bandit)).
     5. Allow product developers to easily access results to improve future feature prioritization.
-
-
 
 Possible treatments
 -------------------
@@ -64,3 +63,4 @@ To be able to affect user behavior, actual differing treatments are required.
 
 - Allow users to place arbitrary items in the room (notes, stickers, youtube-videos etc.)
 - Nicknames
+- Build in crowdsourcing of translations
