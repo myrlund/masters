@@ -1,0 +1,84 @@
+
+\addresses{}
+\subject{}
+\keywords{}
+
+\university{Norwegian University of Science and Technology}
+\UNIVERSITY{NORWEGIAN UNIVERSITY OF SCIENCE AND TECHNOLOGY}
+       
+\department{Department of Computer and Information Science}
+\DEPARTMENT{DEPARTMENT OF COMPUTER AND INFORMATION SCIENCE}
+
+\group{Intelligent Systems Group}
+\GROUP{INTELLIGENT SYSTEMS GROUP}
+
+\faculty{Faculty of Information Technology, Mathematics and Electrical Engineering}
+\FACULTY{FACULTY OF INFORMATION TECHNOLOGY, MATHEMATICS AND ELECTRICAL ENGINEERING}
+
+
+\graphicspath{{Figures/}} % Specifies the directory where pictures are stored
+
+\hypersetup{urlcolor=blue, colorlinks=true} % Colors hyperlinks in blue - change to black if annoying
+\title{\ttitle} % Defines the thesis title - don't touch this
+
+\begin{document}
+
+\frontmatter % Use roman page numbering style (i, ii, iii, iv...) for the pre-content pages
+
+\setstretch{1.3} % Line spacing of 1.3
+
+% Define the page headers using the FancyHdr package and set up for one-sided printing
+\fancyhead{} % Clears all page headers and footers
+\rhead{\thepage} % Sets the right side header to show the page number
+\lhead{} % Clears the left side page header
+
+\pagestyle{fancy} % Finally, use the "fancy" page style to implement the FancyHdr headers
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % New command to make the lines in the title page
+
+% PDF meta-data
+\hypersetup{pdftitle={\ttitle}}
+\hypersetup{pdfsubject=\subjectname}
+\hypersetup{pdfauthor=\authornames}
+\hypersetup{pdfkeywords=\keywordnames}
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\begin{titlepage}
+\begin{center}
+
+\newcommand{\thesistype}{Master's thesis, spring 2014}
+
+\textsc{\LARGE \univname}\\[1.5cm] % University name
+\textsc{\Large \thesistype}\\[0.5cm] % Thesis type
+
+\HRule \\[0.4cm] % Horizontal line
+{\huge \bfseries \ttitle}\\[0.4cm] % Thesis title
+\HRule \\[1.5cm] % Horizontal line
+ 
+\begin{minipage}{0.4\textwidth}
+\begin{flushleft} \large
+\emph{Author:}\\
+\authornames \\ ~ % Author name - remove the \href bracket to remove the link
+\end{flushleft}
+\end{minipage}
+\begin{minipage}{0.4\textwidth}
+\begin{flushright} \large
+\emph{Supervisors:} \\
+\supname % Supervisor name - remove the \href bracket to remove the link  
+\end{flushright}
+\end{minipage}\\[3cm]
+ 
+% \large \textit{A thesis submitted in fulfilment of the requirements\\ for the degree of \degreename}\\[0.3cm] % University requirement text
+% \textit{in the}\\[0.4cm]
+% \groupname\\\deptname\\[2cm] % Research group name and department name
+ 
+{\large \today}\\[4cm] % Date
+%\includegraphics{Logo} % University/department logo - uncomment to place it
+ 
+\vfill
+\end{center}
+
+\end{titlepage}
