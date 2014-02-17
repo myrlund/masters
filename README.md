@@ -1,6 +1,8 @@
 Master's project
 ================
 
+**[Download the latest version of the report PDF](/report/main.pdf?raw=true)**
+
 > The following is a draft of what will be the final project description. It is not necessarily up to date.
 
 Personalizing anonymous video conferencing with machine learning and multivariate testing
