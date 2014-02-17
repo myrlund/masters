@@ -1,0 +1,81 @@
+\chapter{Introduction}
+
+\label{Chapter1}
+
+\lhead{Chapter 1. \emph{Introduction}}
+
+% \emph{Context; motivation for the project; problem statement; outline of dissertation.}
+
+\section{Background and motivation}
+\label{sec:motivation}
+
+My motivation for doing a personalisation project related to anonymous online video conferencing is comprised of two important factors. To understand how they are related and why they both are of equally big interest, some background on both the technological landscape of the web and the application case is needed.
+
+For a long time, developing video conferencing services was an extremely challenging discipline, and as a result the market has consisted of a correspondingly low number of actors. However, this trend is currently in the process of being shaken and turned on its head with the introduction of HTML5; more specifically, with the introduction of the WebRTC\footnote{Web Real-Time Communication.} specification.
+
+As the name implies, WebRTC handles real-time communication, but an important aspect of the technology is that it is designed to do so peer-to-peer. Although it per design is a protocol for exchanging arbitrary data between peers, it is especially geared towards multimedia streams. For instance, the traditionally cumbersome task of setting up a two-way audiovisual connection is now a matter of dropping around 40 lines of Javascript into a web page\footnote{For an excellent introduction, see: \url{http://www.html5rocks.com/en/tutorials/webrtc/basics/}.}.
+
+Although the WebRTC specification is still officially a \emph{working draft} in the W3C\footnote{The latest specification can be found here: \url{http://dev.w3.org/2011/webrtc/editor/webrtc.html}.}, several large browser vendors have already implemented it, and applications previously unseen on the web pop up every week.
+
+One of these applications is called appear.in, and like many others it concerns itself with video conferencing. The idea is simple enough: a conversation happens between users who are in the same room at the same time. The central idea, though, is that the room is identified solely by the URL in use, not in any way by the peers connecting. In that way, if any two users are visiting, say, \url{https://appear.in/ntnu} at the same time, they can start chatting away without any more call setup or configuration.
+
+\subsection{Usage patterns}
+
+Until the arrival of WebRTC, this way of thinking about conversations for anything but textual conversations hasn't been a big thing. However, the simplicity of the room concept opens the service up for a wide variety of uses\footnote{In addition to traditional video calls, we've already seen it used for everything from virtual offices and team meeting rooms to baby monitoring and remote tutoring, just to name a few.}. These wildly varied use cases are where the motivation for this project stems from:
+
+\begin{enumerate}
+  \item If the users' behaviors are quantified, will any clear and distinct usage patterns emerge?
+  \item If so, can the different uses be better served by dynamically adapting the product to fit each of them?
+\end{enumerate}
+
+\subsection{Anonymity and privacy}
+
+appear.in is an anonymous communication service. No personal information is ever collected about the users, and not even IP-addresses or geolocational data is logged on an individual level. By tracking individual \emph{browsers} using cookies, then logging behavioral events along with a cookie identifier, we can measure user behavior over time.
+
+This all opens a wide series of questions bordering to sociological aspects of web usage:
+
+\begin{enumerate}
+  \item
+    To what extent can an anonymous web service be personalised?
+    Is user behavior enough to provide a satisfactory personalised user experience?
+  \item
+    Will a personalised user experience go against the users' expectations of appear.in as an anonymous web service?
+  \item
+    How can we measure any of this?
+\end{enumerate}
+
+\section{Research Questions}
+\label{sec:research_questions}
+
+\textbf{Main research question:} Can users of anonymous video conferencing services be clearly divided into user classes based on their behavior, and if so, to what effect can personalisation improve their activity level?
+
+\begin{enumerate}
+  \item Are users of video conferencing services such as appear.in clearly dividable into separate groups based only on their behavior within the service? Do these patterns reflect those seen elsewhere -- in other types of internet services or even in real life?
+  \item Is it feasable to personalize treatments to these user classes? Does it stimulate users into becoming more active users?
+  \begin{enumerate}
+    \item Is this something these users want?
+    \item Do the inferred preferences of the detected user classes significantly differ from each other?
+    \item Can the personalized treatments be devised in such a way as to stimulate the moving of users in the direction of any desired user class?
+  \end{enumerate}
+  \item How can a toolkit be devised to handle the following?
+  \begin{enumerate}
+    \item User classification based on behavior.
+    \item Product personalization based on a relevant user's class.
+    \item Tracking of each treatment's effect on each user class.
+    \item Prioritize using the most effective treaments without introducing statistical bias (see multi-armed bandit).
+    \item Allow product developers to easily access results to improve future feature prioritization.
+  \end{enumerate}
+\end{enumerate}
+
+\section{Overview}
+\label{sec:overview}
+
+This paper is organised as follows.
+
+Chapter~\ref{Chapter2} surveys relevant literature, similar applications, provides an in-depth analysis of the available data.
+Chapter~\ref{Chapter3} describes the system design and the reasoning behind central design choices.
+Chapter~\ref{Chapter4} describes the implementation.
+In chapter~\ref{Chapter5} we'll look at the execution results, and see how they evaluate.
+Chapter~\ref{Chapter6} summarises the most important takeaways, and suggests further work.
+
+%----------------------------------------------------------------------------------------

@@ -1,0 +1,214 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Masters/Doctoral Thesis 
+% LaTeX Template
+% Version 1.41 (9/9/13)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[11pt, a4paper, oneside]{Thesis} % Paper size, default font size and one-sided paper
+
+
+\usepackage[square, numbers, comma, sort&compress]{natbib} % Use the natbib reference package - read up on this to edit the reference style; if you want text (e.g. Smith et al., 2012) for the in-text references (instead of numbers), remove 'numbers' 
+
+\usepackage{minted}
+
+
+%----------------------------------------------------------------------------------------
+%	DOCUMENT VARIABLES
+%	Fill in the lines below to update the thesis template
+%	If you wish to cite each of the variables defined below, look at the
+%	section above for the citation command e.g. \examiner{} below is
+%	defined as \examname above so you cite it as \examname
+%----------------------------------------------------------------------------------------
+
+\thesistitle{Personalizing anonymous video conferencing systems}
+\supervisor{Prof. Heri \textsc{Ramampiaro} \\Prof. Helge \textsc{Langseth}}
+\examiner{}
+\degree{Master of Science in Computer Science}
+\authors{Jonas \textsc{Myrlund}}
+
+\input{setup}
+
+%----------------------------------------------------------------------------------------
+%  QUOTATION PAGE
+%----------------------------------------------------------------------------------------
+
+\pagestyle{empty} % No headers or footers for the following pages
+
+\null\vfill % Add some space to move the quote down the page a bit
+
+\textit{\Large{``I definitely need to find a timely quotation for my Master's thesis."}}
+
+\begin{flushright}
+Jonas Myrlund, February 2014
+\end{flushright}
+
+\vfill\vfill\vfill\vfill\vfill\vfill\null % Add some space at the bottom to position the quote just right
+
+\clearpage % Start a new page
+
+%----------------------------------------------------------------------------------------
+%	ABSTRACT PAGE
+%----------------------------------------------------------------------------------------
+
+\addtotoc{Abstract} % Add the "Abstract" page entry to the Contents
+
+\abstract{\addtocontents{toc}{\vspace{1em}} % Add a gap in the Contents, for aesthetics
+
+Identifying the different ways in which users use a product can be useful on several levels. In this project we will look at how identifying user classes allows for simple personalization of the product, and to what extent simple personalized treatments can alter user behavior.
+
+It is often the case that some identified user classes are more desirable than others. Either because its associated users generate more revenue, use the product more, invite their friends, or similar. This project describes a system capable of not only identifying user classes, but more importantly a framework for identifying the most effective ways of driving users toward more desirable user classes.
+
+More specifically, given a set of identified user classes and a set of predefined treatments, we want to find out how each treatment affects each user class. Although the project implementation will specifically target the video conferencing service appear.in, a major research question will be to what extent the results generalize.
+
+We find that \ldots
+
+}
+
+\clearpage % Start a new page
+
+% %----------------------------------------------------------------------------------------
+% %  ACKNOWLEDGEMENTS
+% %----------------------------------------------------------------------------------------
+% 
+\setstretch{1.3} % Reset the line-spacing to 1.3 for body text (if it has changed)
+
+\acknowledgements{\addtocontents{toc}{\vspace{1em}} % Add a gap in the Contents, for aesthetics
+
+I would like to thank my supervisors, Heri Ramampiaro and Helge Langseth, for lots of good advice, while at the same time allowing me a great extent of freedom in planning and executing this project.
+
+My supervisor at Telenor Digital AS -- Svein Yngvar Willassen.
+
+Rolv Seehuus. Leon du Toit.
+
+}
+\clearpage % Start a new page
+
+%----------------------------------------------------------------------------------------
+%	LIST OF CONTENTS/FIGURES/TABLES PAGES
+%----------------------------------------------------------------------------------------
+
+\pagestyle{fancy} % The page style headers have been "empty" all this time, now use the "fancy" headers as defined before to bring them back
+
+\lhead{\emph{Contents}} % Set the left side page header to "Contents"
+\tableofcontents % Write out the Table of Contents
+
+\lhead{\emph{List of Figures}} % Set the left side page header to "List of Figures"
+\listoffigures % Write out the List of Figures
+
+\lhead{\emph{List of Tables}} % Set the left side page header to "List of Tables"
+\listoftables % Write out the List of Tables
+
+%----------------------------------------------------------------------------------------
+%	ABBREVIATIONS
+%----------------------------------------------------------------------------------------
+
+\clearpage % Start a new page
+
+\setstretch{1.5} % Set the line spacing to 1.5, this makes the following tables easier to read
+
+\lhead{\emph{Abbreviations}} % Set the left side page header to "Abbreviations"
+\listofsymbols{ll} % Include a list of Abbreviations (a table of two columns)
+{
+% \textbf{API} & \textbf{A}pplication \textbf{P}rogramming \textbf{I}nterface \\
+}
+
+%----------------------------------------------------------------------------------------
+%  PHYSICAL CONSTANTS/OTHER DEFINITIONS
+%----------------------------------------------------------------------------------------
+% 
+% \clearpage % Start a new page
+% 
+% \lhead{\emph{Glossary}} % Set the left side page header to "Physical Constants"
+% 
+% \listofwords{ll} % Include a list of Physical Constants (a four column table)
+% {
+% \textbf{Tweet}    & A Twitter message \\
+% \textbf{DatumBox} & A machine learning SaaS \\
+% }
+
+% %----------------------------------------------------------------------------------------
+% %  SYMBOLS
+% %----------------------------------------------------------------------------------------
+% 
+% \clearpage % Start a new page
+% 
+% \lhead{\emph{Symbols}} % Set the left side page header to "Symbols"
+% 
+% \listofnomenclature{lll} % Include a list of Symbols (a three column table)
+% {
+% $a$ & distance & m \\
+% $P$ & power & W (Js$^{-1}$) \\
+% % Symbol & Name & Unit \\
+% 
+% & & \\ % Gap to separate the Roman symbols from the Greek
+% 
+% $\omega$ & angular frequency & rads$^{-1}$ \\
+% % Symbol & Name & Unit \\
+% }
+
+% %----------------------------------------------------------------------------------------
+% %  DEDICATION
+% %----------------------------------------------------------------------------------------
+% 
+% \setstretch{1.3} % Return the line spacing back to 1.3
+% 
+% \pagestyle{empty} % Page style needs to be empty for this page
+% 
+% \dedicatory{For/Dedicated to/To my\ldots} % Dedication text
+% 
+% \addtocontents{toc}{\vspace{2em}} % Add a gap in the Contents, for aesthetics
+
+%----------------------------------------------------------------------------------------
+%	THESIS CONTENT - CHAPTERS
+%----------------------------------------------------------------------------------------
+
+\mainmatter % Begin numeric (1,2,3...) page numbering
+
+\pagestyle{fancy} % Return the page headers back to the "fancy" style
+
+% Include the chapters of the thesis as separate files from the Chapters folder
+% Uncomment the lines as you write the chapters
+
+\input{Chapters/Chapter1}
+\input{Chapters/Chapter2} 
+\input{Chapters/Chapter3}
+\input{Chapters/Chapter4}
+\input{Chapters/Chapter5}
+\input{Chapters/Chapter6}
+
+%----------------------------------------------------------------------------------------
+%	THESIS CONTENT - APPENDICES
+%----------------------------------------------------------------------------------------
+
+\addtocontents{toc}{\vspace{2em}} % Add a gap in the Contents, for aesthetics
+
+\appendix % Cue to tell LaTeX that the following 'chapters' are Appendices
+
+% Include the appendices of the thesis as separate files from the Appendices folder
+% Uncomment the lines as you write the Appendices
+
+\input{Appendices/AppendixA}
+% \input{Appendices/AppendixB}
+% \input{Appendices/AppendixC}
+
+\addtocontents{toc}{\vspace{2em}} % Add a gap in the Contents, for aesthetics
+
+\backmatter
+
+%----------------------------------------------------------------------------------------
+%	BIBLIOGRAPHY
+%----------------------------------------------------------------------------------------
+
+\label{Bibliography}
+
+\lhead{\emph{Bibliography}} % Change the page header to say "Bibliography"
+
+\bibliographystyle{unsrtnat} % Use the "unsrtnat" BibTeX style for formatting the Bibliography
+
+\bibliography{Bibliography} % The references (bibliography) information are stored in the file named "Bibliography.bib"
+
+\end{document}  
