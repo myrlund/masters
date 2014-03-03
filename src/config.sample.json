@@ -1,4 +1,10 @@
 {
     "data_root": "../data/",
-    "data_update_cmd": "../data/update.sh"
+    "data_update_cmd": "../data/update.sh",
+	"MySQLdb": {
+		"host": "localhost",
+		"user": "",
+		"passwd": "",
+		"db": ""
+	}
 }

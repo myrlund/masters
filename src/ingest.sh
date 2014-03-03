@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "--- Updating raw data files."
-./update.sh
+../data/update.sh
 
 echo "--- Loading new data into database."
 ./load.py

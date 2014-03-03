@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 
-import sqlite3, json, sys
+import json, sys, os
+import MySQLdb as mysql
+
+from util import connect_db
 
 INTERESTING_EVENT_TYPES = ('chat',
                            'claim room',
@@ -32,13 +35,17 @@ def get_dirty_data(cursor, batch_size=5000):
     rows = cursor.fetchmany()
     
     if len(rows) > 0:
-        return fields, rows
+        return rows
     else:
         return None
 
 def insert_clean_data(conn, clean_data):
     c = conn.cursor()
-    c.executemany('INSERT INTO events_ref VALUES (?, ?, ?, ?, ?, ?, ?, ?)', clean_data)
+    for row in clean_data:
+        if len(clean_data[6]) > 200:
+            print clean_data[6]
+            continue
+        c.execute('INSERT INTO events_ref VALUES (%s, %s, %s, %s, %s, %s, %s, %s)', row)
     conn.commit()
 
 def normalize_event(raw_event):
@@ -58,16 +65,21 @@ def normalize_event(raw_event):
 def clean_row(row):
     # Normalize into three parts
     try:
-        event = normalize_event(row['raw_event'])
+        event = normalize_event(row[1])
     except AttributeError:
         return None
     
     # Get special properties
-    json_data = json.loads(row['raw_json'])
+    json_data = json.loads(row[4])
     roomname = json_data.get('roomname', None)
+    
+    # Don't support ridiculously long roomnames
+    if roomname is not None and len(roomname) > 200:
+        return None
+    
     url = json_data.get('url', None)
     
-    return (row['id'], row['person'], row['timestamp']) + event + (roomname, url)
+    return (row[0], row[3], row[2]) + event + (roomname, url)
 
 def omit_uninteresting_events(conn, events):
     c = conn.cursor()
@@ -79,7 +91,7 @@ def omit_uninteresting_events(conn, events):
         else:
             interesting_events.append(event)
     
-    c.executemany('INSERT INTO events_ref_omitted VALUES (?)', map(lambda id: (id,), uninteresting_events))
+    c.executemany('INSERT INTO events_ref_omitted VALUES (%s)', map(lambda id: (id,), uninteresting_events))
     conn.commit()
     
     return interesting_events
@@ -126,14 +138,17 @@ def build_user_graph(conn, batch_size=50000):
     
 
 if __name__ == '__main__':
+    from util import load_config
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    CONFIG = load_config(os.path.join(current_dir, 'config.json'))
+    
     import argparse
     parser = argparse.ArgumentParser(description="Parses sentences.")
-    parser.add_argument('-d', '--database', help="database file", default='data.db')
     parser.add_argument('-b', '--batch-size', help="batch size", type=int, default=50000)
     parser.add_argument('--reset', help="clear clean table before running", action='store_true', default=False)
     args = parser.parse_args()
     
-    connection = sqlite3.connect(args.database)
+    connection = connect_db(mysql, CONFIG)
     
     if args.reset:
         print "Clearing clean table..."
@@ -142,9 +157,7 @@ if __name__ == '__main__':
     
     print "Building new version of cleaned table."
     while True:
-        connection.row_factory = sqlite3.Row
-        
-        fields, dirty_data = get_dirty_data(connection.cursor(), batch_size=args.batch_size)
+        dirty_data = get_dirty_data(connection.cursor(), batch_size=args.batch_size)
         clean_data = filter(drop_falsy, map(clean_row, dirty_data))
         
         if not clean_data: break
@@ -157,8 +170,6 @@ if __name__ == '__main__':
         sys.stdout.flush()
     print "Done."
     print
-    
-    connection.row_factory = None
     
     print "Clearing user graph..."
     clear_user_graph(connection)
