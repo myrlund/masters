@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 
-import sqlite3, json, sys
+import json, sys, os
+import MySQLdb as mysql
+
+from util import connect_db
 
 RAW_TABLE = 'events_raw'
 
@@ -14,10 +17,10 @@ LOAD_RAW_DATA = True
 
 def create_table(conn):
     fields = (
-        'id INTEGER PRIMARY KEY AUTOINCREMENT',
-        'raw_event VARCHAR',
+        'id INTEGER PRIMARY KEY AUTO_INCREMENT',
+        'raw_event VARCHAR(250)',
         'timestamp INTEGER',
-        'person VARCHAR',
+        'person VARCHAR(120)',
         'raw_json TEXT',
     )
     stmt = "CREATE TABLE IF NOT EXISTS %s (%s)" % (RAW_TABLE, ", ".join(fields))
@@ -75,8 +78,9 @@ def process_data_file(conn, fname, latest_timestamp=0):
         
         sys.stdout.write('.')
         sys.stdout.flush()
-        
-        c.executemany("INSERT INTO " + RAW_TABLE + " VALUES (" + "?, " * len(FIELDS) + "?)", event_data)
+        sql = "INSERT INTO %s VALUES (%%s, %%s, %%s, %%s, %%s)" % RAW_TABLE
+        for row in event_data:
+            c.execute(sql, row)
         conn.commit()
     
     else:
@@ -84,22 +88,27 @@ def process_data_file(conn, fname, latest_timestamp=0):
         sys.stdout.flush()
 
 def load_latest_data(conn):
+    data_path = os.path.join(CONFIG["data_root"], "kissmetrics")
+    
     latest_timestamp = get_latest_timestamp(conn)
-    new_data_files = load_km_index('kissmetrics/index.csv', latest_timestamp)
+    new_data_files = load_km_index(os.path.join(data_path, 'index.csv'), latest_timestamp)
     
     print "Processing %d data files..." % len(new_data_files)
     for data_file in new_data_files:
-        process_data_file(conn, 'kissmetrics/' + data_file, latest_timestamp=latest_timestamp)
+        process_data_file(conn, os.path.join(data_path, data_file), latest_timestamp=latest_timestamp)
     print "\n\nDone."
 
 if __name__ == '__main__':
+    from util import load_config
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    CONFIG = load_config(os.path.join(current_dir, 'config.json'))
+    
     import argparse
     parser = argparse.ArgumentParser(description="Parses sentences.")
-    parser.add_argument('-d', '--database', help="database file", default='data.db')
     parser.add_argument('-t', '--table-name', help="events table name", default='events')
     args = parser.parse_args()
     
-    connection = sqlite3.connect(args.database)
+    connection = connect_db(mysql, CONFIG)
     
     create_table(connection)
     load_latest_data(connection)
