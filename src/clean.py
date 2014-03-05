@@ -3,7 +3,7 @@
 import json, sys, os
 import MySQLdb as mysql
 
-from util import connect_db
+from util import connect_db, load_config
 
 INTERESTING_EVENT_TYPES = ('chat',
                            'claim room',
@@ -22,28 +22,27 @@ def batches(l, n):
     for i in xrange(0, len(l), n):
         yield l[i:i+n]
 
-def get_dirty_data(cursor, batch_size=5000):
+def get_dirty_data(cursor, batch_size=50000):
     cursor.arraysize = batch_size
+    
+    cursor.execute("SELECT max(timestamp) from events_ref")
+    max_timestamp1 = cursor.fetchone()[0] or 0
+    cursor.execute("SELECT max(timestamp) from events_ref_omitted")
+    max_timestamp2 = cursor.fetchone()[0] or 0
+    
+    max_timestamp = max(max_timestamp1, max_timestamp2)
     
     fields = ('id', 'raw_event', 'timestamp', 'person', 'raw_json')
     cursor.execute("""SELECT %s FROM events_raw
-                  WHERE id NOT IN (
-                   SELECT raw_id FROM events_ref
-                  ) AND id NOT IN (
-                   SELECT raw_id FROM events_ref_omitted
-                  )""" % (", ".join(fields),))
+                  WHERE timestamp > %d ORDER BY timestamp""" % (", ".join(fields), max_timestamp))
     rows = cursor.fetchmany()
     
-    if len(rows) > 0:
-        return rows
-    else:
-        return None
+    return rows
 
 def insert_clean_data(conn, clean_data):
     c = conn.cursor()
     for row in clean_data:
         if len(clean_data[6]) > 200:
-            print clean_data[6]
             continue
         c.execute('INSERT INTO events_ref VALUES (%s, %s, %s, %s, %s, %s, %s, %s)', row)
     conn.commit()
@@ -87,11 +86,11 @@ def omit_uninteresting_events(conn, events):
     uninteresting_events = []
     for event in events:
         if event[3] not in INTERESTING_EVENT_TYPES:
-            uninteresting_events.append(event[0])
+            uninteresting_events.append((event[0], event[2]))
         else:
             interesting_events.append(event)
     
-    c.executemany('INSERT INTO events_ref_omitted VALUES (%s)', map(lambda id: (id,), uninteresting_events))
+    c.executemany('INSERT INTO events_ref_omitted VALUES (%s, %s)', uninteresting_events)
     conn.commit()
     
     return interesting_events
@@ -113,42 +112,36 @@ def build_user_graph(conn, batch_size=50000):
     c = conn.cursor()
     c.arraysize = batch_size
     
-    c.execute("""SELECT p1.person AS person1, p2.person AS person2, COUNT(*) AS n_conversations
-        FROM events_ref AS p1 LEFT JOIN events_ref AS p2 ON
-            p1.roomname = p2.roomname
-            AND p1.person < p2.person
-            AND p1.timestamp > p2.timestamp - 900 AND p1.timestamp < p2.timestamp + 900 -- join within half an hour of each other
-        WHERE
-            -- p1.timestamp > 1388534400 AND p2.timestamp > 1388534400 AND
-            
-            p1.roomname IS NOT NULL
-            AND p1.event_type = 'visited room' AND p2.event_type = 'visited room'
-            
-            -- Allow for batching
-            -- AND p1.person NOT IN (SELECT person1 FROM user_graph WHERE person1 < p2.person)
-            -- AND p2.person NOT IN (SELECT person2 FROM user_graph WHERE person2 > p1.person)
-        GROUP BY
-            p1.person, p2.person""")
+    print "Resetting room presences."
+    c.execute("""DELETE FROM room_presences""")
     
-    # Simply insert fetched data into new table
-    rows = c.fetchall()
-    c.executemany('INSERT INTO user_graph VALUES (?, ?, ?)', rows)
+    print "Extracting room presences."
+    c.execute("""INSERT INTO room_presences (id, person, timestamp, roomname)
+                 SELECT raw_id, person, timestamp, roomname FROM events_ref
+                     WHERE event_type = 'visited room' AND person IS NOT NULL""")
+    
+    print
+    print "Deleting user graph entries."
+    c.execute("""DELETE FROM user_graph""")
+    
+    print "Building new user graph entries."
+    c.execute("""INSERT INTO user_graph (person1, person2, weight)
+                 SELECT p1.person, p2.person, count(*) as weight from room_presences as p1
+                 LEFT JOIN room_presences AS p2
+                     ON p1.person < p2.person AND p1.roomname = p2.roomname AND p1.timestamp < p2.timestamp + 900 AND p1.timestamp > p2.timestamp - 900
+                 GROUP BY p1.person, p2.person HAVING p1.person IS NOT NULL AND p2.person IS NOT NULL""")
+    
     conn.commit()
-    return len(rows)
-    
 
 if __name__ == '__main__':
-    from util import load_config
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    CONFIG = load_config(os.path.join(current_dir, 'config.json'))
+    CONFIG = load_config()
+    connection = connect_db(CONFIG)
     
     import argparse
     parser = argparse.ArgumentParser(description="Parses sentences.")
     parser.add_argument('-b', '--batch-size', help="batch size", type=int, default=50000)
     parser.add_argument('--reset', help="clear clean table before running", action='store_true', default=False)
     args = parser.parse_args()
-    
-    connection = connect_db(mysql, CONFIG)
     
     if args.reset:
         print "Clearing clean table..."
@@ -171,9 +164,5 @@ if __name__ == '__main__':
     print "Done."
     print
     
-    print "Clearing user graph..."
-    clear_user_graph(connection)
-    
-    print "OK. Now, building a new user graph..."
     build_user_graph(connection)
     print "Done."
