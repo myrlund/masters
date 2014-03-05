@@ -1,6 +1,13 @@
 import os, sys, subprocess
 
-def load_config(fname):
+def batches(l, n):
+    for i in xrange(0, len(l), n):
+        yield l[i:i+n]
+
+def load_config(rel_fname='config.json'):
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    fname = os.path.join(current_dir, rel_fname)
+    
     import json
     f = open(fname, 'r')
     try:
@@ -20,6 +27,7 @@ def run_update(config):
         print "No command described in config (data_update_cmd)."
         return False
 
-def connect_db(dbclass, config):
+def connect_db(config):
+    import MySQLdb as dbclass
     conf = config.get(dbclass.__name__, {})
     return dbclass.connect(**conf)
