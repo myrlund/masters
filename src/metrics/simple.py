@@ -21,3 +21,8 @@ def frequency_last_month(c, **options):
               'AND timestamp > %s GROUP BY person', (a_month_ago,))
     rows = c.fetchall()
     return [rows]
+
+def chat_message_sent(c, **options):
+    c.execute('SELECT person, COUNT(*) FROM events_ref WHERE event_type = \'room\' AND event_verb = \'message sent\' GROUP BY person')
+    rows = c.fetchall()
+    return [rows]
