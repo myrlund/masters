@@ -3,7 +3,7 @@
 import json, sys, os
 import MySQLdb as mysql
 
-from util import connect_db
+from util import connect_db, load_config
 
 RAW_TABLE = 'events_raw'
 
@@ -99,16 +99,13 @@ def load_latest_data(conn):
     print "\n\nDone."
 
 if __name__ == '__main__':
-    from util import load_config
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    CONFIG = load_config(os.path.join(current_dir, 'config.json'))
-    
     import argparse
     parser = argparse.ArgumentParser(description="Parses sentences.")
     parser.add_argument('-t', '--table-name', help="events table name", default='events')
     args = parser.parse_args()
     
-    connection = connect_db(mysql, CONFIG)
+    CONFIG = load_config()
+    connection = connect_db(CONFIG)
     
     create_table(connection)
     load_latest_data(connection)
