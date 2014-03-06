@@ -1,54 +1,28 @@
-import sys
+from py2neo import neo4j
 
-import numpy as np
-import matplotlib.pyplot as plt
+def connect():
+    return neo4j.GraphDatabaseService("http://localhost:7474/db/data/")
+NEO4J_CONNECTION = connect()
 
-from util import batches
+def first_degree_conversation_partners(person, **k):
+    q = "START n = node:PERSON(_p = '%s') MATCH n -[:TALKED_TO]-> b RETURN COUNT(DISTINCT b)" % person
+    return neo4j.CypherQuery(NEO4J_CONNECTION, q).execute_one()
 
-def get_all_persons(cursor):
-    cursor.execute("""SELECT DISTINCT person FROM room_presences""")
-    return map(lambda x: x[0], cursor.fetchall())
+def second_degree_conversation_partners(person, **k):
+    q = "START n = node:PERSON(_p = '%s') MATCH n -[:TALKED_TO]-> b -[:TALKED_TO]-> c RETURN COUNT(DISTINCT c)" % person
+    return neo4j.CypherQuery(NEO4J_CONNECTION, q).execute_one()
 
-def count_for_person(cursor, person):
-    cursor.execute("""SELECT if(person1 = %s, person1, person2) as person, count(*) from user_graph where person1 = %s or person2 = %s""", (person,) * 3)
-    row = cursor.fetchone()
-    if row is None or row[0] is None:
-        return (person, 0)
-    else:
-        return row
+def conversations(person, **k):
+    q = "START n = node:PERSON(_p = '%s') MATCH n -[r:TALKED_TO]-> b RETURN SUM(r.weight)" % person
+    return neo4j.CypherQuery(NEO4J_CONNECTION, q).execute_one()
 
-def sum_for_person(cursor, person):
-    cursor.execute("""SELECT if(person1 = %s, person1, person2) as person, sum(weight) from user_graph where person1 = %s or person2 = %s""", (person,) * 3)
-    row = cursor.fetchone()
-    if row is None or row[0] is None:
-        return (person, 0)
-    else:
-        return row
+def second_degree_conversations(person, **k):
+    q = "START n = node:PERSON(_p = '%s') MATCH n -[r1:TALKED_TO]-> b -[r2:TALKED_TO]-> c RETURN SUM(r1.weight) + SUM(r2.weight)" % person
+    return neo4j.CypherQuery(NEO4J_CONNECTION, q).execute_one()
 
-def persons_mapped(cursor, fn, batch_size):
-    # Get every distinct person in table
-    all_persons = get_all_persons(cursor)
-    
-    # Count conversations for each one
-    for persons in batches(all_persons, batch_size):
-        batch_results = map(lambda p: fn(cursor, p), persons)
-        yield batch_results
-
-def conversation_partners_per_person(cursor, batch_size=500):
-    return persons_mapped(cursor, count_for_person, batch_size=batch_size)
-
-def conversations_per_person(cursor, batch_size=500):
-    return persons_mapped(cursor, sum_for_person, batch_size=batch_size)
-
-def analyze_conversation_partners(conn):
-    c = conn.cursor()
-    
-    person_counts = conversation_partners_per_person(c, limit=500)
-    
-    # Grab raw numbers for analytics
-    counts = map(lambda x: x[1], person_counts)
-    print np.mean(counts)
-    print np.std(counts)
-    
-    plt.hist(counts, bins=100, range=(5, 200))
-    plt.show()
+if __name__ == "__main__":
+    import sys
+    print "First degree:"
+    print zip(sys.argv[1:], map(first_degree_aquaintances, sys.argv[1:]))
+    print "Second degree:"
+    print zip(sys.argv[1:], map(second_degree_aquaintances, sys.argv[1:]))
