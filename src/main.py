@@ -3,7 +3,8 @@
 import sqlite3
 import os, sys
 
-from analysis import util, clustering, stats, visualize
+from analysis import clustering, features
+import util
 
 def create_table(conn):
     c = conn.cursor()
@@ -12,18 +13,43 @@ def create_table(conn):
 
 # Feature metric functions
 from metrics.simple import rooms_used, rooms_claimed, roomnames_generated, frequency_last_month, chat_message_sent
-from metrics.graph import conversation_partners_per_person, conversations_per_person
+from metrics.graph import first_degree_conversation_partners, second_degree_conversation_partners, conversations
 
-FEATURES = (conversation_partners_per_person, conversations_per_person,  rooms_used, rooms_claimed, roomnames_generated, frequency_last_month, chat_message_sent)
+FEATURES = (first_degree_conversation_partners,
+            second_degree_conversation_partners,
+            conversations,
+            rooms_used,
+            rooms_claimed,
+            roomnames_generated,
+            frequency_last_month,
+            chat_message_sent)
+
+def map_persons_in_batches(cursor, fn, batch_size=None):
+    """
+    Maps persons to fn with the provided batch_size.
+
+    fn is called as follows: fn(person, cursor=cursor).
+    """
+
+    # Get every distinct person in table
+    all_persons = util.get_all_persons(cursor)
+
+    # Count conversations for each one
+    for persons in util.batches(all_persons, batch_size or len(all_persons)):
+        batch_results = map(lambda p: fn(p, cursor=cursor), persons)
+        yield zip(persons, batch_results)
 
 def build_feature_set(args, connection, feature_names):
-    """Clears and rebuilds selected features from various general data sources."""
+    """
+    Clears and rebuilds selected features from various general data sources.
+
+    The feature_fn call is deferred to persons_mapped.
+    """
 
     if args.create:
         create_table(connection)
 
     feature_fns = dict(zip(map(lambda fn: fn.__name__, FEATURES), FEATURES))
-    print feature_fns
 
     for name in feature_names:
         feature_fn = feature_fns[name]
@@ -33,11 +59,11 @@ def build_feature_set(args, connection, feature_names):
             print name
 
             print "  - clearing old values"
-            util.clear_feature_values(connection, name)
+            features.clear_values(connection, name)
 
             print "  - extracting feature values: ",
-            for batch in feature_fn(connection.cursor(), batch_size=args.batch_size):
-                util.insert_feature_values(connection, name, batch)
+            for batch in map_persons_in_batches(connection.cursor(), feature_fn, batch_size=args.batch_size):
+                features.insert_values(connection, name, batch)
                 sys.stdout.write('.')
                 sys.stdout.flush()
             print

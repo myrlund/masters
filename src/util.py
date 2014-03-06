@@ -1,13 +1,41 @@
 import os, sys, subprocess
 
+# Feature-related
+
+def get_all_persons(c):
+    c.execute('SELECT DISTINCT person FROM user_models')
+    return c.fetchall()
+
+def clear_feature_values(conn, feature_name):
+    c = conn.cursor()
+    c.execute('DELETE FROM user_models WHERE feature = %s', (feature_name,))
+    conn.commit()
+
+def insert_feature_values(conn, feature_name, values):
+    """Parameter values should be tuples of (person, value) for feature called feature_name."""
+    c = conn.cursor()
+    for row in values:
+        if row[0] is None:
+            print row
+        c.execute('INSERT INTO user_models (feature, person, value) VALUES (%s, %s, %s)', (feature_name,) + row)
+    conn.commit()
+
+# Handy iterator stuff
+
 def batches(l, n):
     for i in xrange(0, len(l), n):
         yield l[i:i+n]
 
+def bucket_discretely(field, l):
+    l = map(lambda x: (x[field], x - (x[field],)), events)
+    return reduce(lambda x, (k,v): x[k].append(v) or x, l, defaultdict(list))
+
+# Config and project setup
+
 def load_config(rel_fname='config.json'):
     current_dir = os.path.dirname(os.path.abspath(__file__))
     fname = os.path.join(current_dir, rel_fname)
-    
+
     import json
     f = open(fname, 'r')
     try:
