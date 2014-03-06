@@ -20,11 +20,25 @@ def get_data_vectors(cursor, features):
 
     return np.array(vectors)
 
-def cluster(X, n_clusters, features):
-    # bandwidth = estimate_bandwidth(X, quantile=0.5, n_samples=5000)
-    # clusterer = MeanShift(bandwidth=bandwidth, bin_seeding=True)
+def dbscan(args):
+    return DBSCAN(3.0, 10)
+
+def mean_shift(args):
+    bandwidth = estimate_bandwidth(X, quantile=0.5, n_samples=5000)
+    return MeanShift(bandwidth=bandwidth, bin_seeding=True)
+
+def k_means(n_clusters, args):
+    return KMeans(args.n_clusters, n_jobs=1)
+
+ENABLED_ALGORITHMS = (
+    dbscan,
+    mean_shift,
+    k_means,
+)
+
+def cluster(algorithm, X, features, args):
     # clusterer = KMeans(n_clusters, n_jobs=1)
-    clusterer = DBSCAN(3.0, 10)
+    clusterer = algorithm(args)
     clusterer.fit(X)
 
     labels = clusterer.labels_
@@ -50,22 +64,27 @@ def cluster(X, n_clusters, features):
     pl.title('Number of clusters: %d' % n_clusters_)
     fname = 'images/%s-%d-features-%d-clusters.png' % (clusterer.__class__.__name__.lower(), len(features), n_clusters_)
     pl.savefig(fname)
-    print " - wrote cluster visualization to %s." % fname
+    print "  - wrote cluster visualization to %s." % fname
 
     # return labeled_centers
 
 def run(args, connection, features):
     """Runs clustering routine."""
 
+    # Select algorithm
+    algorithm_names = map(lambda a: a.__name__, ENABLED_ALGORITHMS)
+    algorithm_fn = dict(zip(algorithm_names, ENABLED_ALGORITHMS))[args.algorithm]
+
     # Ensure the feature set is sorted
     features = sorted(features)
 
     # Grab user model vectors
+    print "  - retrieving user models"
     X = get_data_vectors(connection.cursor(), features)
 
     # Loop through requested cluster cardinalities
-    # for n_clusters in xrange(2, 6+1):
-    cluster(X, n_clusters=None, features=features)
+    print "  - clustering with the %s algorithm" % args.algorithm
+    cluster(algorithm_fn, X, features=features, args=args)
     # print "Centers for n = %d:" % n_clusters
     # print "\n".join(map(str, centers))
 

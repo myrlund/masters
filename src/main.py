@@ -60,6 +60,7 @@ if __name__ == '__main__':
     connection = connect_db(CONFIG)
 
     feature_names = map(lambda f: f.__name__, FEATURES)
+    algorithm_names = map(lambda a: a.__name__, clustering.ENABLED_ALGORITHMS)
 
     import argparse
     parser = argparse.ArgumentParser(description="Parses sentences.")
@@ -69,6 +70,7 @@ if __name__ == '__main__':
     parser.add_argument('--analyze', help="analyze features", action='store_true', default=False)
     parser.add_argument('--build', help="rebuild feature index", action='store_true', default=False)
     parser.add_argument('--visualize', help="visualize features upon analysis", action='store_true', default=False)
+    parser.add_argument('--algorithm', help="selected clustering algorithm", choices=algorithm_names, default=algorithm_names[0])
     parser.add_argument('features', help="override feature selection", nargs=argparse.REMAINDER, choices=feature_names)
     args = parser.parse_args()
 
