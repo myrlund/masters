@@ -3,7 +3,7 @@ Clustering
 
 Firstly, we need to quantify our users – express them in terms of numbers, with as many relevant, orthogonal axes as possible.
 
-Some possible dimensions:
+Some possible dimensions (stroked dimensions implemented):
 
 1. ~~Chat frequency~~
 2. Chat duration (average or cumulative)
