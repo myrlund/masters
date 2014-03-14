@@ -1,0 +1,35 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  cluster_id: 
+  feature: MyString
+  number: 9.99
+  sum: 9.99
+  variance: 9.99
+  standard_deviation: 9.99
+  min: 9.99
+  max: 9.99
+  mean: 9.99
+  mode: 9.99
+  median: 9.99
+  range: 9.99
+  q1: 9.99
+  q2: 9.99
+  q3: 9.99
+
+two:
+  cluster_id: 
+  feature: MyString
+  number: 9.99
+  sum: 9.99
+  variance: 9.99
+  standard_deviation: 9.99
+  min: 9.99
+  max: 9.99
+  mean: 9.99
+  mode: 9.99
+  median: 9.99
+  range: 9.99
+  q1: 9.99
+  q2: 9.99
+  q3: 9.99
