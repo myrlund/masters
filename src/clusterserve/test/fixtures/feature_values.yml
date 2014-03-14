@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  classification_id: 
+  feature: MyString
+  value: 9.99
+
+two:
+  classification_id: 
+  feature: MyString
+  value: 9.99

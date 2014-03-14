@@ -1,0 +1,23 @@
+%p#notice= notice
+
+%h1 #{@run.algorithm} (#{@run.clusters.count} clusters)
+
+%h3 Meta
+%dl
+  %dt Features
+  %dd
+    %ol
+      - for feature in @run.features
+        %li= feature
+  %dt Run params
+  %dd= @run.params
+  %dt Comment
+  %dd= @run.comment || '-'
+
+%h2 Clusters
+%ol
+  - @run.clusters.each do |cluster|
+    = render 'visual/cluster_small', cluster: cluster
+
+%p
+  = link_to "« Back to latest runs", runs_path

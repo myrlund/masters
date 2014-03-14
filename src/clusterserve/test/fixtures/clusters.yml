@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  center_x: 1
+  center_y: 1
+  label: MyString
+  variance: 9.99
+
+two:
+  center_x: 1
+  center_y: 1
+  label: MyString
+  variance: 9.99

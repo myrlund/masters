@@ -1,0 +1,14 @@
+%h1 Runs
+
+%table
+  %thead
+    %tr
+      %th Run
+      %th Algorithm
+      %th Cluster count
+  %tbody
+    - @runs.each do |run|
+      %tr
+        %td= link_to l(run.created_at, format: :short), run
+        %td= run.algorithm
+        %td= run.clusters.count
