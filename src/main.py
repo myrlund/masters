@@ -97,6 +97,8 @@ if __name__ == '__main__':
     parser.add_argument('--build', help="rebuild feature index", action='store_true', default=False)
     parser.add_argument('--visualize', help="visualize features upon analysis", action='store_true', default=False)
     parser.add_argument('--algorithm', help="selected clustering algorithm", choices=algorithm_names, default=algorithm_names[0])
+    parser.add_argument('--n-clusters', help="for algorithms requiring explicit number of clusters", type=int, default=8)
+    parser.add_argument('--n-jobs', help="number of parallel jobs (used where applicable)", type=int, default=2)
     parser.add_argument('features', help="override feature selection", nargs=argparse.REMAINDER, choices=feature_names)
     args = parser.parse_args()
 

@@ -1,7 +1,12 @@
+import json
+
 from collections import defaultdict
 
 from sklearn.cluster import KMeans, MeanShift, DBSCAN, estimate_bandwidth
+
 import numpy as np
+import warnings
+warnings.filterwarnings("ignore")
 
 from analysis import util
 
@@ -18,7 +23,7 @@ def get_data_vectors(cursor, features):
     # Map each person to value vector for features
     vectors = map(lambda person: feature_values_for_person(cursor, person, features), persons)
 
-    return np.array(vectors)
+    return persons, np.array(vectors)
 
 def dbscan(args):
     return DBSCAN(3.0, 10)
@@ -27,8 +32,8 @@ def mean_shift(args):
     bandwidth = estimate_bandwidth(X, quantile=0.5, n_samples=5000)
     return MeanShift(bandwidth=bandwidth, bin_seeding=True)
 
-def k_means(n_clusters, args):
-    return KMeans(args.n_clusters, n_jobs=1)
+def k_means(args):
+    return KMeans(args.n_clusters, n_jobs=args.n_jobs)
 
 ENABLED_ALGORITHMS = (
     dbscan,
@@ -36,19 +41,7 @@ ENABLED_ALGORITHMS = (
     k_means,
 )
 
-def cluster(algorithm, X, features, args):
-    # clusterer = KMeans(n_clusters, n_jobs=1)
-    clusterer = algorithm(args)
-    clusterer.fit(X)
-
-    labels = clusterer.labels_
-    # cluster_centers = clusterer.cluster_centers_
-
-    # labeled_centers = map(lambda c: zip(features, c), cluster_centers)
-
-    labels_unique = np.unique(labels)
-    n_clusters_ = len(labels_unique)
-
+def visualize_clusters(clusterer, features, X, n_clusters, labels):
     import pylab as pl
     from itertools import cycle
 
@@ -56,17 +49,78 @@ def cluster(algorithm, X, features, args):
     pl.clf()
 
     colors = cycle('bgrcmykbgrcmykbgrcmykbgrcmyk')
-    for k, col in zip(range(n_clusters_), colors):
+    for k, col in zip(range(n_clusters), colors):
         my_members = labels == k
-        # cluster_center = cluster_centers[k]
         pl.plot(X[my_members, 0], X[my_members, 1], col + '.')
-        # pl.plot(cluster_center[0], cluster_center[1], 'o', markerfacecolor=col, markeredgecolor='k', markersize=14)
-    pl.title('Number of clusters: %d' % n_clusters_)
-    fname = 'images/%s-%d-features-%d-clusters.png' % (clusterer.__class__.__name__.lower(), len(features), n_clusters_)
+
+    pl.title('Number of clusters: %d' % n_clusters)
+    fname = 'images/%s-%d-features-%d-clusters.png' % (clusterer.__class__.__name__.lower(), len(features), n_clusters)
     pl.savefig(fname)
     print "  - wrote cluster visualization to %s." % fname
 
-    # return labeled_centers
+def save_run(connection, data):
+    c = connection.cursor()
+
+    yaml_features = "---\n" + "\n".join(["- " + feature for feature in data['features']])
+    c.execute("INSERT INTO runs (algorithm, features, params) VALUES (%s, %s, %s)", (data['algorithm'], yaml_features, data['params']))
+    run_id = connection.insert_id()
+
+    for cluster in data['clusters']:
+        yaml_center = "---\n" + "\n".join(["- " + str(v) for v in cluster['center']])
+        c.execute("INSERT INTO clusters (run_id, center) VALUES (%s, %s)", (run_id, yaml_center))
+        cluster_id = connection.insert_id()
+
+        for member in cluster['members']:
+            c.execute("INSERT INTO classifications (cluster_id, person) VALUES (%s, %s)", (cluster_id, member['person']))
+            classification_id = connection.insert_id()
+
+            for feature, value in member['feature_values']:
+                c.execute("INSERT INTO feature_values (classification_id, feature, value) VALUES (%s, %s, %s)", (classification_id, feature, value))
+
+    connection.commit()
+
+def cluster(algorithm, persons, X, features, args):
+    # clusterer = KMeans(n_clusters, n_jobs=1)
+    clusterer = algorithm(args)
+    clusterer.fit(X)
+
+    labels = clusterer.labels_
+    labels_unique = np.unique(labels)
+    n_clusters = len(labels_unique)
+
+    cluster_centers = [(None,) * len(features)] * n_clusters
+    try:
+        cluster_centers = clusterer.cluster_centers_
+    except AttributeError:
+        pass
+
+    run_data = {
+        'algorithm': clusterer.__class__.__name__,
+        'features': features,
+        'params': json.dumps(vars(args)),
+        'clusters': [],
+    }
+
+    for i in xrange(n_clusters):
+        # label = labels[i]
+        center = cluster_centers[i]
+
+        run_data['clusters'].append({'center': center, 'members': []})
+
+    for person, sample in zip(persons, X):
+        cluster_index = clusterer.predict(sample)
+        feature_values = zip(features, sample)
+
+        person_data = {
+            'person': person,
+            'feature_values': feature_values,
+        }
+
+        run_data['clusters'][cluster_index]['members'].append(person_data)
+
+    visualize_clusters(clusterer, features, X, n_clusters, labels)
+
+    return run_data
 
 def run(args, connection, features):
     """Runs clustering routine."""
@@ -80,11 +134,14 @@ def run(args, connection, features):
 
     # Grab user model vectors
     print "  - retrieving user models"
-    X = get_data_vectors(connection.cursor(), features)
+    persons, X = get_data_vectors(connection.cursor(), features)
 
     # Loop through requested cluster cardinalities
     print "  - clustering with the %s algorithm" % args.algorithm
-    cluster(algorithm_fn, X, features=features, args=args)
+    data = cluster(algorithm_fn, persons, X, features=features, args=args)
+
+    save_run(connection, data)
+
     # print "Centers for n = %d:" % n_clusters
     # print "\n".join(map(str, centers))
 
