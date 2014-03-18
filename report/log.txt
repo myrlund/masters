@@ -1,0 +1,6 @@
+\item[2014-03-07] Some structural changes to report. Added ingestion pipeline figure. \\
+\item[2014-03-07] Updated motivation with a bit more on privacy concerns. Fixed chaptering. \\
+\item[2014-03-05] Fixed minor errors in report. \\
+\item[2014-03-05] Removed chapter 4 and moved higher ones to reflect. \\
+\item[2014-03-02] Updated report. \\
+\item[2014-02-17] Added preliminary version of the report source. \\

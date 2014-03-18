@@ -4,7 +4,7 @@
 % This template has been downloaded from:
 % http://www.latextemplates.com
 %
-% This class file defines the structure and design of the template. 
+% This class file defines the structure and design of the template.
 %
 % There is one part of this file that needs to be filled out - the variables
 % dictating the document particulars such as the author name, university
@@ -174,7 +174,7 @@
 \newcommand*{\subject}[1]{\def\subjectname{#1}}
 \newcommand*{\keywords}[1]{\def\keywordnames{#1}}
 
-% The default title page, this is not used in this www.latextemplates.com version            
+% The default title page, this is not used in this www.latextemplates.com version
 \renewcommand\maketitle{
   \btypeout{Title Page}
   \hypersetup{pdftitle={\@title}}
@@ -205,7 +205,7 @@
       \bigskip
       {\large in the \par}
       {\large \facname \par}
-      {\large \deptname \par} 
+      {\large \deptname \par}
       \bigskip
       \bigskip
       \bigskip
@@ -340,6 +340,12 @@
           \MakeUppercase\listglossary}{\MakeUppercase\listglossary}}
 \begin{longtable}[c]{#1}#2\end{longtable}\par
     \cleardoublepage
+}
+\newcommand\changelog[1]{
+\btypeout{Changelog}
+\addtotoc{Changelog}
+\thispagestyle{plain}
+\chapter*{Changelog}
 }
 \newcommand\listnomenclature{Symbols}
 \usepackage{longtable}
