@@ -1,6 +1,17 @@
+\item[2014-03-18] Tiny label fix. New version of PDF. \\
+\item[2014-03-18] Added condensed section on experimental setup. \\
+\item[2014-03-18] Added intro on similar domains and research. \\
+\item[2014-03-18] Expanded on how users are tracked in appear.in. \\
+\item[2014-03-14] Added changelog to compile pipeline and report. \\
+\item[2014-03-07] Some structural changes to report. Added ingestion pipeline figure. \\
 \item[2014-03-07] Some structural changes to report. Added ingestion pipeline figure. \\
 \item[2014-03-07] Updated motivation with a bit more on privacy concerns. Fixed chaptering. \\
+\item[2014-03-07] Updated motivation with a bit more on privacy concerns. Fixed chaptering. \\
+\item[2014-03-05] Fixed minor errors in report. \\
 \item[2014-03-05] Fixed minor errors in report. \\
 \item[2014-03-05] Removed chapter 4 and moved higher ones to reflect. \\
+\item[2014-03-05] Removed chapter 4 and moved higher ones to reflect. \\
 \item[2014-03-02] Updated report. \\
+\item[2014-03-02] Updated report. \\
+\item[2014-02-17] Added preliminary version of the report source. \\
 \item[2014-02-17] Added preliminary version of the report source. \\
