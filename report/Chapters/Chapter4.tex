@@ -7,10 +7,27 @@
 \section{Description of the evaluated dataset} % (fold)
 \label{sec:description_of_the_evaluated_dataset}
 
+
+
 % section description_of_the_evaluated_dataset (end)
 
 \section{Experimental setup} % (fold)
 \label{sec:experimental_setup}
+
+\emph{Condensed version.}
+
+The main experiment determines whether an alteration of the service affects different kinds of users differently.
+More specifically, do users in clusters $C_1, \ldots, C_n$ employ function $f$ in significantly differing ways?
+
+We break the process into three steps:
+
+\begin{enumerate}
+  \item Divide users into clusters $C_1, \ldots, C_n$.
+  \item A/B test feature $f$ independently of clusters, noting the outcomes for each user.
+  \item Analyze results: did the test results vary significantly between clusters?
+\end{enumerate}
+
+If the final answer is ``yes'', we can store our result and use it to toggle feature $f$ for users in the relevant clusters.
 
 % section experimental_setup (end)
 
