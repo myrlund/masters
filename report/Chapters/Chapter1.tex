@@ -48,11 +48,30 @@ This all opens a wide series of questions bordering to sociological aspects of w
 
 Several others have written about how privacy constraints impact personalized systems~\cite{Teltzrow2004,Kobsa2007}. In many ways, the very nature of anonymity is an extension of privacy. However, the absence of \emph{identity} presents an entirely different challenge.
 
-There are ways of coping with lack of demographical knowledge of users. Kobsa, for instance, describes an approach that makes heavy use of pseudonyms to help remedy the problem~\cite{Kobsa2003}.
+There are ways of coping with the absence of user identification. Kobsa, for instance, describes an approach that makes heavy use of pseudonyms designed around this problem~\cite{Kobsa2003}.
+However, appear.in is not only a pseudonymous service -- it is a fully anonymous service; there are no user accounts, and there is no login.
+Tracking users, then, is obviously a bit of a struggle.
 
-Not having the ability to consistently track users over time, however -- as in our case -- takes the challenges of privacy to a whole other level.
+\subsubsection{Tracking users}
 
-@TODO: Possible to solve, or do we just need to pay attention to this when interpreting results?
+appear.in runs in the browser. The first time a user enters the site, a cookie is set with a random value uniquely identifying the browser over time. This value is sent with every event to the instrumentation service used for user analytics.
+
+Unfortunately, using only cookies for identification has its clear downsides. Should the user clear the browser cache, switch browsers, use the browser ``incognito''\footnote{Google lingo for private browsing, where previously set cookies are not available (among other things).}, or simply use multiple machines, then different user ids will be generated for each case.
+
+Without tracking more user information -- IPs and locations, for instance -- there is no easy way of tying these user ids together\footnote{Some suggestions on how to solve this is found in the suggestions for further work, in section~\ref{sec:further_work}.}, and to reason about them as a single user. However, collecting this information about users goes against appear.in's privacy policy, and it has been deemed more interesting to see what can be done without crossing this line.
+
+\subsection{Why personalize?} % (fold)
+\label{sub:why_personalize}
+
+\emph{@TODO: Write out in full-text.}
+
+\begin{itemize}
+  \item Premise: Users use service in different ways, and want a simple UI targeted at their specific use case.
+  \item Goal: Provide an interface which stimulates activation and retention.
+  \item Result: Increase general user base, as well as their happiness (as measured by metrics such as recurring visits and time on site).
+\end{itemize}
+
+% subsection why_personalize (end)
 
 \subsection{Visualization of clustering}
 
