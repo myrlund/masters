@@ -7,13 +7,37 @@
 \section{Similar problem domains} % (fold)
 \label{sec:similar_problem_domains}
 
+Although the case in question is a specific service, the techniques in use and the limitations needing to be dealt with should apply to many kinds of applications.
+
+When demographics are absent and identity is highly unreliable, this will unevitably lead to some highly sparse usage data and quite a bit of noise in the user modeling data.
+Assuming that the usage patterns of the users actually differ, will these patterns be clearly and reliably identifiable?
+Will it be possible to base an adaptive personalization system on this kind of data?
+When using an anonymous system, will users welcome a personalized product, or will they regard this as breaking with their perceived concept of anonymity?
+
+These are all questions that apply especially to appear.in, but that may also apply to many other anonymous, web-based systems.
+
 % section similar_problem_domains (end)
 
 \section{Similar research} % (fold)
 \label{sec:similar_applications}
 
+The approach taken to adaptive personalization is based heavily on the work by Vrieze in ``Fundaments of Adaptive Personalization''~\cite{Vrieze}.
+
 \subsection{Relevant literature} % (fold)
 \label{sub:relevant_literature}
+
+Teltzrow and Kobsa's work on privacy-driven personalization systems provides insight into a lot of the issues surrounding the lack of demographic information in personalization~\cite{Teltzrow2004,Kobsa2007}. However, the main focus of their work seems to be that users are more willing to provide demographic information if that information is not backtracable to themselves, through pseudonymous personalization.
+This matches the application in question quite poorly, as the goal is not to obtain demographics -- rather to attempt to cope without it.
+
+\emph{@TODO} Explore and include literature on:
+
+\begin{itemize}
+  \item Clustering and segmenting users, choice of algorithms etc.
+  \item Visualizing and evaluating clusters.
+  \item A/B testing, multivariate testing, multi-arm bandits.
+  \item Motivations for adaptive personalization. Online business models?
+  \item Anonymity: do users experience personalization as an overstep?
+\end{itemize}
 
 % subsection relevant_literature (end)
 
