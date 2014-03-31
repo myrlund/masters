@@ -17,7 +17,7 @@
 The main experiment determines whether an alteration of the service affects different kinds of users differently.
 More specifically, do users in clusters $C_1, \ldots, C_n$ employ function $f$ in significantly differing ways?
 
-We break the process into three steps:
+We break the process into three steps, each elaborated on in~\ref{sub:clustering_of_users}, \ref{sub:a_b_testing_features}, and \ref{sub:evaluating_the_results}:
 
 \begin{enumerate}
   \item Divide users into clusters $C_1, \ldots, C_n$.
@@ -26,6 +26,31 @@ We break the process into three steps:
 \end{enumerate}
 
 If the final answer is ``yes'', we can store our result and use it to toggle feature $f$ for users in the relevant clusters.
+
+\subsection{Clustering of users} % (fold)
+\label{sub:clustering_of_users}
+
+\emph{@TODO: Describe methods and algorithms used. What kind of results are expected?}
+
+% subsection clustering_of_users (end)
+
+\subsection{A/B testing features} % (fold)
+\label{sub:a_b_testing_features}
+
+\emph{@TODO: Brief description of how to fit the actual testing regime into the production system.}
+
+% subsection a_b_testing_features (end)
+
+\subsection{Evaluating the results} % (fold)
+\label{sub:evaluating_the_results}
+
+Seeing as the application does not yield any direct and real payoff, we will evaluate the performance of each variation relatively, using some general key metrics. This approach is described in~\cite{Yue2012}.
+
+For appear.in, the most important key metrics are \ldots
+
+\emph{@TODO: Key metrics. Time on site? Recurring visits? Number of conversations?}
+
+% subsection evaluating_the_results (end)
 
 % section experimental_setup (end)
 
