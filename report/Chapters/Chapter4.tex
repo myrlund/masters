@@ -9,6 +9,15 @@
 
 % section description_of_the_evaluated_dataset (end)
 
+\section{Prerequisites} % (fold)
+\label{sec:prerequisites}
+
+For any of this user adaptation to have any actual use, we will need to find out whether there is actually significant variation in feature adoption between clusters; it matters little whether users exhibit differing behavior with regard to existing functionality, if this behavior yields no basis for predicting feature adoption in the future. We need an inductive bias.
+
+An easy way of discovering whether this inductive bias is present in the user base is to simply log whether there is significant variance across the user groups in their users' adoption of new features. Thus, this question of whether the predictive bias actually exists will be included as a central part of the actual experiment itself, and be thoroughly discussed through the next sections.
+
+% section prerequisites (end)
+
 \section{Experimental setup} % (fold)
 \label{sec:experimental_setup}
 
@@ -46,9 +55,9 @@ If the final answer is ``yes'', we can store our result and use it to toggle fea
 
 Seeing as the application does not yield any direct and real payoff, we will evaluate the performance of each variation relatively, using some general key metrics. This approach is described in~\cite{Yue2012}.
 
-For appear.in, the most important key metrics are \ldots
+For appear.in, the most important key metrics are ``time on site'' and ``number of visits in the last $n$ days''. These are combined in providing a relative success metric for each variation.
 
-\emph{@TODO: Key metrics. Time on site? Recurring visits? Number of conversations?}
+\emph{@TODO: Verify key metrics.}
 
 % subsection evaluating_the_results (end)
 
