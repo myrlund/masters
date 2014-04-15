@@ -8,12 +8,12 @@ RELATIONSHIP_TYPE = 'TALKED_TO'
 def export_row(service, row):
     """Exports p1, p2, weight tuple."""
 
-    p1, p2, weight = row
+    p1, p2, timestamp = row
 
     node1 = service.get_or_create_indexed_node(NODE_INDEX, '_p', p1, {'id': p1})
     node2 = service.get_or_create_indexed_node(NODE_INDEX, '_p', p2, {'id': p2})
-    rels  = service.create((node1, RELATIONSHIP_TYPE, node2, {'weight': weight}),
-                           (node2, RELATIONSHIP_TYPE, node1, {'weight': weight}))
+    rels  = service.create((node1, RELATIONSHIP_TYPE, node2, {'timestamp': timestamp}),
+                           (node2, RELATIONSHIP_TYPE, node1, {'timestamp': timestamp}))
 
     sys.stdout.write('.'); sys.stdout.flush()
 

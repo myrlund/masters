@@ -29,8 +29,7 @@ def dbscan(args):
     return DBSCAN(3.0, 10)
 
 def mean_shift(args):
-    bandwidth = estimate_bandwidth(X, quantile=0.5, n_samples=5000)
-    return MeanShift(bandwidth=bandwidth, bin_seeding=True)
+    return MeanShift(bin_seeding=True)
 
 def k_means(args):
     return KMeans(args.n_clusters, n_jobs=args.n_jobs)
@@ -58,11 +57,11 @@ def visualize_clusters(clusterer, features, X, n_clusters, labels):
     pl.savefig(fname)
     print "  - wrote cluster visualization to %s." % fname
 
-def save_run(connection, data):
+def save_run(connection, data, args):
     c = connection.cursor()
 
     yaml_features = "---\n" + "\n".join(["- " + feature for feature in data['features']])
-    c.execute("INSERT INTO runs (algorithm, features, params) VALUES (%s, %s, %s)", (data['algorithm'], yaml_features, data['params']))
+    c.execute("INSERT INTO runs (algorithm, features, params, timespan_from, timespan_to) VALUES (%s, %s, %s, %s, %s)", (data['algorithm'], yaml_features, data['params']) + args.timespan)
     run_id = connection.insert_id()
 
     for cluster in data['clusters']:
@@ -140,7 +139,7 @@ def run(args, connection, features):
     print "  - clustering with the %s algorithm" % args.algorithm
     data = cluster(algorithm_fn, persons, X, features=features, args=args)
 
-    save_run(connection, data)
+    save_run(connection, data, args=args)
 
     # print "Centers for n = %d:" % n_clusters
     # print "\n".join(map(str, centers))
