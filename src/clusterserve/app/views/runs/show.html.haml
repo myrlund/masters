@@ -2,22 +2,68 @@
 
 %h1 #{@run.algorithm} (#{@run.clusters.count} clusters)
 
-%h3 Meta
-%dl
-  %dt Features
-  %dd
-    %ol
-      - for feature in @run.features
-        %li= feature
-  %dt Run params
-  %dd= @run.params
-  %dt Comment
-  %dd= @run.comment || '-'
+.row
+  .col-md-8
+    .panel.panel-default
+      .panel-heading
+        %h2.panel-title Cluster comparison
+      %section#comparison.panel-body{ title: "Cluster comparison", data: { clusters: @clusters.to_json, features: @run.features.to_json } }
+        %div.container{ style: 'width: 500px; height: 350px;' }
+      %form.panel-footer.form{ action: '', method: 'get' }
+        %p
+          %label{ for: 'n' }
+            Number of clusters to visualize (sorted by number of members)
+          %br
+          %input.pull-left{ id: 'n', type: 'range', name: 'n', min: 1, max: @run.clusters.count, value: params[:n] || 3, oninput: '_n.value = n.value' }
+          %output{ for: 'n', name: '_n' }= params[:n] || 3
+        = submit_tag 'Update', name: nil
 
-%h2 Clusters
-%ol
-  - @run.clusters.each do |cluster|
-    = render 'visual/cluster_small', cluster: cluster
+    - @clusters.each do |cluster|
+      .panel.panel-default
+        .panel-heading
+          %h2.panel-title= cluster.label || "Cluster #{@clusters.index(cluster) + 1}"
+        %table.table.table-bordered
+          %tr
+            %td.col-md-8{ rowspan: cluster.statistics.length }
+              INSERT GRAPH
+            %th= cluster.features.first
+            %td.numeric= cluster.feature_statistics(cluster.features.first).mean.round(2)
+          - for feature in cluster.features.from(1)
+            %tr
+              %th= feature
+              %td.numeric= cluster.feature_statistics(feature).mean.round(2)
+
+              / - for statistic in cluster.statistics.values
+              /   %li
+              /     %strong= statistic.feature
+              /     %table.table
+              /       - for property in %i(number standard_deviation min max mean median)
+              /         %tr
+              /           %th= property.capitalize
+              /           %td= statistic.send(property)
+
+  .col-md-4
+    .panel.panel-default
+      .panel-heading
+        %h3.panel-title Meta
+      %dl.panel-body
+        %dt Data timespan
+        %dd
+          #{l(@run.timespan_from, format: '%d.%m.%Y')} - #{l(@run.timespan_to, format: '%d.%m.%Y')}
+        %dt Features
+        %dd
+          %ol
+            - for feature in @run.features
+              %li= feature
+        %dt Run params
+        %dd= @run.params
+        %dt Comment
+        %dd= @run.comment || '-'
+
+
+/ %ol
+/   - @run.clusters.each do |cluster|
+/     = render 'visual/cluster_small', cluster: cluster
 
 %p
   = link_to "« Back to latest runs", runs_path

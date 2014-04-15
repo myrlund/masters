@@ -1,3 +1,10 @@
+GIT
+  remote: git://github.com/doabit/bootstrap-sass-extras.git
+  revision: 404cfe58aa58ed567733c295d556e0903ada8366
+  specs:
+    bootstrap-sass-extras (0.0.5)
+      rails (>= 3.1.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -27,6 +34,8 @@ GEM
       tzinfo (~> 0.3.37)
     arel (4.0.2)
     atomic (1.1.15)
+    bootstrap-sass (3.1.1.0)
+      sass (~> 3.2)
     builder (3.1.4)
     descriptive_statistics (1.1.3)
     erubis (2.7.0)
@@ -103,6 +112,8 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  bootstrap-sass (~> 3.1.1)
+  bootstrap-sass-extras!
   descriptive_statistics
   haml
   jbuilder (~> 1.2)
