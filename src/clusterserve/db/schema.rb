@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140313164153) do
+ActiveRecord::Schema.define(version: 20140409134210) do
 
   create_table "classifications", force: true do |t|
     t.string   "person"
@@ -111,12 +111,14 @@ ActiveRecord::Schema.define(version: 20140313164153) do
     t.text     "comment"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "timespan_from"
+    t.integer  "timespan_to"
   end
 
   create_table "user_graph", id: false, force: true do |t|
-    t.string  "person1", limit: 120, null: false
-    t.string  "person2", limit: 120, null: false
-    t.integer "weight",              null: false
+    t.string  "person1",   limit: 120, null: false
+    t.string  "person2",   limit: 120, null: false
+    t.integer "timestamp",             null: false
   end
 
   create_table "user_models", id: false, force: true do |t|

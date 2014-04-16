@@ -1,14 +1,18 @@
 %h1 Runs
 
-%table
+%table.table
   %thead
     %tr
-      %th Run
-      %th Algorithm
-      %th Cluster count
+      %th(rowspan=2) Run
+      %th(rowspan=2) Algorithm
+      %th(rowspan=2) Cluster count
+      %th Data from
+      %th ...until
   %tbody
     - @runs.each do |run|
       %tr
-        %td= link_to l(run.created_at, format: :short), run
+        %td= link_to l(run.created_at, format: :long), run
         %td= run.algorithm
         %td= run.clusters.count
+        %td= run.timespan_from ? l(run.timespan_from, format: '%B') : "-"
+        %td= run.timespan_to ? l(run.timespan_to, format: '%B') : "-"

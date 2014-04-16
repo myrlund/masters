@@ -10,6 +10,7 @@ class RunsController < ApplicationController
   # GET /runs/1
   # GET /runs/1.json
   def show
+    @clusters = @run.clusters.n_largest(params[:n] || 3)
   end
 
   # GET /runs/new

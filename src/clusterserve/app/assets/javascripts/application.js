@@ -12,5 +12,6 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require Chart
+//= require flotr2
+//= require bootstrap
 //= require_tree .

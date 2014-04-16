@@ -12,19 +12,21 @@ def create_table(conn):
     conn.commit()
 
 # Feature metric functions
-from metrics.simple import rooms_used, rooms_claimed, roomnames_generated, frequency_last_month, chat_message_sent
+from metrics.simple import rooms_used, rooms_claimed, roomnames_generated, chat_message_sent, inviter, invitee # , frequency_last_month
 from metrics.graph import first_degree_conversation_partners, second_degree_conversation_partners, conversations
 
 FEATURES = (first_degree_conversation_partners,
             second_degree_conversation_partners,
+            inviter,
+            invitee,
             conversations,
             rooms_used,
             rooms_claimed,
             roomnames_generated,
-            frequency_last_month,
+            # frequency_last_month,
             chat_message_sent)
 
-def map_persons_in_batches(cursor, fn, batch_size=None):
+def map_persons_in_batches(cursor, fn, batch_size=None, **options):
     """
     Maps persons to fn with the provided batch_size.
 
@@ -36,7 +38,7 @@ def map_persons_in_batches(cursor, fn, batch_size=None):
 
     # Count conversations for each one
     for persons in util.batches(all_persons, batch_size or len(all_persons)):
-        batch_results = map(lambda p: fn(p, cursor=cursor), persons)
+        batch_results = map(lambda p: fn(p, cursor=cursor, **options), persons)
         yield zip(persons, batch_results)
 
 def build_feature_set(args, connection, feature_names):
@@ -62,7 +64,7 @@ def build_feature_set(args, connection, feature_names):
             features.clear_values(connection, name)
 
             print "  - extracting feature values: ",
-            for batch in map_persons_in_batches(connection.cursor(), feature_fn, batch_size=args.batch_size):
+            for batch in map_persons_in_batches(connection.cursor(), feature_fn, batch_size=args.batch_size, timespan=args.timespan):
                 features.insert_values(connection, name, batch)
                 sys.stdout.write('.')
                 sys.stdout.flush()
@@ -88,9 +90,12 @@ if __name__ == '__main__':
     feature_names = map(lambda f: f.__name__, FEATURES)
     algorithm_names = map(lambda a: a.__name__, clustering.ENABLED_ALGORITHMS)
 
+    timespan = lambda s: tuple(map(int, s.split(',', 1)))
+
     import argparse
     parser = argparse.ArgumentParser(description="Parses sentences.")
     parser.add_argument('-b', '--batch-size', help="batch size", type=int, default=500)
+    parser.add_argument('-t', '--timespan', help="time span to use: from,to in seconds since unix epoch", default=(None, None), type=timespan)
     parser.add_argument('--reset', help="clear features before rebuilding", action='store_true', default=False)
     parser.add_argument('--create', help="attempt to create user model table before starting", action='store_true', default=False)
     parser.add_argument('--analyze', help="analyze features", action='store_true', default=False)
@@ -116,6 +121,7 @@ if __name__ == '__main__':
         analyze_feature_set(args, connection, selected_feature_names)
         print
 
-    print "~ Perform clustering routine"
-    clustering.run(args, connection, selected_feature_names)
-    print
+    if not (args.build or args.analyze):
+        print "~ Perform clustering routine"
+        clustering.run(args, connection, selected_feature_names)
+        print
