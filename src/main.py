@@ -3,7 +3,7 @@
 import sqlite3
 import os, sys
 
-from analysis import clustering, features
+from analysis import clustering, features, stats
 import util
 
 def create_table(conn):
@@ -12,19 +12,31 @@ def create_table(conn):
     conn.commit()
 
 # Feature metric functions
-from metrics.simple import rooms_used, rooms_claimed, roomnames_generated, chat_message_sent, inviter, invitee # , frequency_last_month
+from metrics.simple import rooms_used, rooms_claimed, roomnames_generated, chat_message_sent, inviter, invitee, rooms_followed # frequency_last_month
 from metrics.graph import first_degree_conversation_partners, second_degree_conversation_partners, conversations
 
-FEATURES = (first_degree_conversation_partners,
-            second_degree_conversation_partners,
-            inviter,
-            invitee,
-            conversations,
-            rooms_used,
-            rooms_claimed,
-            roomnames_generated,
-            # frequency_last_month,
-            chat_message_sent)
+ALL_FEATURES = (
+    first_degree_conversation_partners,
+    second_degree_conversation_partners,
+    inviter,
+    invitee,
+    conversations,
+    rooms_used,
+    rooms_claimed,
+    roomnames_generated,
+    # frequency_last_month,
+    chat_message_sent,
+)
+
+FEATURES = (
+    conversations,
+    # rooms_locked,
+    rooms_followed,
+    second_degree_conversation_partners,
+    rooms_claimed,
+    rooms_used,
+    chat_message_sent,
+)
 
 def map_persons_in_batches(cursor, fn, batch_size=None, **options):
     """
@@ -74,7 +86,7 @@ def analyze_feature_set(args, connection, feature_names):
     """Analyzes and plots various standard metrics for each feature."""
 
     for name in feature_names:
-        values = util.get_feature_values(connection, name)
+        values = util.get_feature_values(connection.cursor(), name)
 
         stats.analyze_feature(connection, name, values)
 
@@ -103,7 +115,9 @@ if __name__ == '__main__':
     parser.add_argument('--visualize', help="visualize features upon analysis", action='store_true', default=False)
     parser.add_argument('--algorithm', help="selected clustering algorithm", choices=algorithm_names, default=algorithm_names[0])
     parser.add_argument('--n-clusters', help="for algorithms requiring explicit number of clusters", type=int, default=8)
-    parser.add_argument('--n-jobs', help="number of parallel jobs (used where applicable)", type=int, default=2)
+    parser.add_argument('--n-jobs', help="number of parallel jobs (used where applicable)", type=int, default=-2)
+    parser.add_argument('--n-runs', help="number of clustering passes to use", type=int, default=5)
+    parser.add_argument('--normalize', help="normalize axes explicitly before clustering", action='store_true', default=False)
     parser.add_argument('features', help="override feature selection", nargs=argparse.REMAINDER, choices=feature_names)
     args = parser.parse_args()
 

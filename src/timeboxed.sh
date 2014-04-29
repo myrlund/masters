@@ -15,7 +15,7 @@ for month in ${months[@]}; do
     echo ./main.py --reset --build -t $timespan
     ./main.py --reset --build -t $timespan
     for n in ${n_clusters[@]}; do
-        echo ./main.py -t $timespan --algorithm k_means --n-clusters $n
-        ./main.py -t $timespan --algorithm k_means --n-clusters $n
+        echo "EXECUTING: ./main.py -t $timespan --algorithm k_means --n-clusters $n --normalize"
+        ./main.py -t $timespan --algorithm k_means --n-clusters $n --normalize
     done
 done

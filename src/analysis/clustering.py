@@ -3,6 +3,7 @@ import json
 from collections import defaultdict
 
 from sklearn.cluster import KMeans, MeanShift, DBSCAN, estimate_bandwidth
+from sklearn import preprocessing
 
 import numpy as np
 import warnings
@@ -15,15 +16,20 @@ def feature_values_for_person(cursor, person, valid_features):
     feature_values = defaultdict(int, cursor.fetchall())
     return tuple(feature_values[f] for f in valid_features)
 
-def get_data_vectors(cursor, features):
+def get_data_vectors(cursor, features, normalize=True):
 
     # Get all persons present in user_models for wanted features
     persons = util.get_all_persons(cursor)
 
     # Map each person to value vector for features
-    vectors = map(lambda person: feature_values_for_person(cursor, person, features), persons)
+    raw_vectors = map(lambda person: feature_values_for_person(cursor, person, features), persons)
 
-    return persons, np.array(vectors)
+    vectors = np.array(raw_vectors)
+    if normalize:
+        print "  - normalizing vectors"
+        vectors = preprocessing.normalize(vectors)
+
+    return persons, vectors
 
 def dbscan(args):
     return DBSCAN(3.0, 10)
@@ -32,6 +38,7 @@ def mean_shift(args):
     return MeanShift(bin_seeding=True)
 
 def k_means(args):
+    print "  - k_means with %d clusters." % args.n_clusters
     return KMeans(args.n_clusters, n_jobs=args.n_jobs)
 
 ENABLED_ALGORITHMS = (
@@ -61,7 +68,7 @@ def save_run(connection, data, args):
     c = connection.cursor()
 
     yaml_features = "---\n" + "\n".join(["- " + feature for feature in data['features']])
-    c.execute("INSERT INTO runs (algorithm, features, params, timespan_from, timespan_to) VALUES (%s, %s, %s, %s, %s)", (data['algorithm'], yaml_features, data['params']) + args.timespan)
+    c.execute("INSERT INTO runs (algorithm, features, params, eval_db, eval_dunn, timespan_from, timespan_to) VALUES (%s, %s, %s, %s, %s, %s, %s)", (data['algorithm'], yaml_features, data['params'], data['evaluation']['davies_bouldin'], data['evaluation']['dunn']) + args.timespan)
     run_id = connection.insert_id()
 
     for cluster in data['clusters']:
@@ -117,9 +124,31 @@ def cluster(algorithm, persons, X, features, args):
 
         run_data['clusters'][cluster_index]['members'].append(person_data)
 
+    run_data['evaluation'] = evaluate_run(run_data['clusters'])
+
     visualize_clusters(clusterer, features, X, n_clusters, labels)
 
     return run_data
+
+def evaluate_run(data):
+    centers = []
+    cluster_data = {}
+    for i in xrange(len(data)):
+        centers.append(data[i]['center'])
+        cluster_data[i] = []
+        for person in data[i]['members']:
+            cluster_data[i].append(map(lambda p: p[1], person['feature_values']))
+
+    from evaluation.cluster import davies_bouldin, dunn
+
+    eval_fns = (davies_bouldin, dunn)
+    results = {}
+    for eval_fn in eval_fns:
+        evaluation = eval_fn(centers, cluster_data)
+        results[eval_fn.__name__] = evaluation
+        print "  - %s evaluation result: %.2f" % (eval_fn.__name__, evaluation)
+
+    return results
 
 def run(args, connection, features):
     """Runs clustering routine."""
@@ -133,11 +162,18 @@ def run(args, connection, features):
 
     # Grab user model vectors
     print "  - retrieving user models"
-    persons, X = get_data_vectors(connection.cursor(), features)
+    persons, X = get_data_vectors(connection.cursor(), features, normalize=args.normalize)
 
     # Loop through requested cluster cardinalities
-    print "  - clustering with the %s algorithm" % args.algorithm
-    data = cluster(algorithm_fn, persons, X, features=features, args=args)
+    print "  - clustering %d times with the %s algorithm" % (args.n_runs, args.algorithm)
+    evals = []
+    runs = []
+    run_data = cluster(algorithm_fn, persons, X, features=features, args=args)
+    runs.append(run_data)
+    evals.append(run_data['evaluation']['davies_bouldin'])
+
+    # Grab the best one, the one with the minimal davies-bouldin index
+    data = runs[evals.index(min(evals))]
 
     save_run(connection, data, args=args)
 

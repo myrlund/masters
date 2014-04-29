@@ -2,9 +2,20 @@ import os, sys, subprocess
 
 # Feature-related
 
-def get_all_persons(c):
-    c.execute('SELECT DISTINCT person FROM user_models')
-    return c.fetchall()
+def get_all_persons(c, feature=None):
+    sql = 'SELECT DISTINCT person FROM user_models'
+    params = []
+    if feature is not None:
+        sql += ' WHERE feature = %s'
+        params.append(feature)
+
+    c.execute(sql, params)
+    return [vec[0] for vec in c.fetchall()]
+
+def get_feature_values(c, feature):
+    sql = 'SELECT value FROM user_models WHERE feature = %s'
+    c.execute(sql, (feature,))
+    return map(lambda vec: vec[0], c.fetchall())
 
 def clear_feature_values(conn, feature_name):
     c = conn.cursor()

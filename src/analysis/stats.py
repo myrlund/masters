@@ -11,7 +11,7 @@ def analyze_feature(conn, feature, all_values):
     aggregates = dict(zip(aggregate_keys, c.fetchone()))
 
     average = aggregates['sum'] / aggregates['count']
-    stddev = np.std(values)
+    stddev = math.sqrt(sum([(x - average)**2 for x in values]))
 
     print "Analyzing feature '%s':" % feature
     for agg in aggregates.keys():

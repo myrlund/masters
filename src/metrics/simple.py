@@ -1,15 +1,19 @@
 import datetime
 
 def simple_query(c, sql, *args, **options):
-    if 'timespan' in options:
+    if 'timespan' in options and all(options['timespan']):
         sql  += " AND timestamp >= %s AND timestamp < %s"
         args += options['timespan']
 
     c.execute(sql, args)
-    return c.fetchone()[0]
+    result = c.fetchone()[0]
+    return result
 
 def rooms_claimed(person, cursor, **options):
     return simple_query(cursor, 'SELECT COUNT(distinct roomname) FROM events_ref WHERE event_type = \'room claimed\' AND person = %s', person, **options)
+
+def rooms_followed(person, cursor, **options):
+    return simple_query(cursor, 'SELECT COUNT(*) FROM events_ref WHERE event_type = \'follow room\' AND person = %s', person, **options)
 
 def rooms_used(person, cursor, **options):
     return simple_query(cursor, 'SELECT COUNT(distinct roomname) FROM events_ref WHERE event_type = \'visited room\' AND person = %s', person, **options)

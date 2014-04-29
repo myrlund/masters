@@ -5,18 +5,21 @@ import MySQLdb as mysql
 
 from util import connect_db, load_config
 
-INTERESTING_EVENT_TYPES = ('chat',
-                           'claim room',
-                           'connection',
-                           'customization',
-                           'entered existing room',
-                           'entered new room',
-                           'follow room',
-                           'frontpage',
-                           'in a conversation',
-                           'room',
-                           'room claimed',
-                           'visited room')
+INTERESTING_EVENT_TYPES = (
+    'chat',
+    'claim room',
+    'connection',
+    'customization',
+    'entered existing room',
+    'entered new room',
+    'follow room',
+    'frontpage',
+    'in a conversation',
+    'room',
+    'room claimed',
+    'visited room',
+    'room lock changed',
+)
 
 def batches(l, n):
     for i in xrange(0, len(l), n):

@@ -11,9 +11,10 @@ NEO4J_CONNECTION = connect()
 
 def run_query(q, **options):
     where = ''
-    if 'timespan' in options:
+    if 'timespan' in options and options['timespan'] != (None, None):
         where = "WHERE ALL(r IN rs WHERE r.timestamp >= %s AND r.timestamp < %s)" % options['timespan']
-    return neo4j.CypherQuery(NEO4J_CONNECTION, q % where).execute_one()
+    result = neo4j.CypherQuery(NEO4J_CONNECTION, q % where).execute_one()
+    return result
 
 def first_degree_conversation_partners(person, **k):
     q = "START n = node:PERSON(_p = '%s') MATCH n -[rs:TALKED_TO*1]-> b %%s RETURN COUNT(DISTINCT b)" % person

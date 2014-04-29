@@ -27,6 +27,9 @@ def davies_bouldin(centers, cluster_data):
 
     return 1.0 * sum(db_indices) / k
 
+def dunn(centers, cluster_data):
+    return 0.0
+
 if __name__ == '__main__':
     centers = [(4, 5), (-1, -1)]
     cluster_data = {
