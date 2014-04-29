@@ -23,7 +23,7 @@ function doSmallVisualization(element) {
             max: 1.5,
             tickDecimals: 0,
             noTicks: data.features.length,
-            tickFormatter: function (n) { console.log("EHHHHHY: " + n); return data.features[n]; }
+            tickFormatter: function (n) { return data.features[n]; }
         },
         yaxis: {
             min: 0,
@@ -41,10 +41,14 @@ function doSmallVisualization(element) {
 }
 
 function comparativeVisualization(element) {
+    var clusterSorter = function (a, b) {
+        return -(a.size - b.size);
+    };
+
     var container = element.getElementsByTagName('div')[0],
         data = $(element).data(),
         features = data.features,
-        clusters = data.clusters;
+        clusters = data.clusters; //.sort(clusterSorter);
 
     var featureScaling = [];
     for (var i = 0; i < features.length; i++) {
@@ -53,7 +57,8 @@ function comparativeVisualization(element) {
             vals.push(clusters[j].center[i]);
         }
         var max = Math.max.apply(null, vals);
-        featureScaling.push((1 / max) * 10);
+        var scale = max > 0 ? (1 / max) * 10 : 1;
+        featureScaling.push(scale);
     }
 
     var series = [];
@@ -64,6 +69,9 @@ function comparativeVisualization(element) {
         for (var j = 0; j < clusters[i].center.length; j++) {
             series[i].data.push([j, clusters[i].center[j] * featureScaling[j]]);
         }
+        console.log(label);
+        console.log(series[i].data);
+
     }
 
     var ticks = [];

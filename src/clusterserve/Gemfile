@@ -36,3 +36,6 @@ group :doc do
 end
 
 gem 'descriptive_statistics', require: false
+gem 'sidekiq'
+
+gem 'debugger'

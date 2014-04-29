@@ -14,14 +14,16 @@
           %label{ for: 'n' }
             Number of clusters to visualize (sorted by number of members)
           %br
-          %input.pull-left{ id: 'n', type: 'range', name: 'n', min: 1, max: @run.clusters.count, value: params[:n] || 3, oninput: '_n.value = n.value' }
-          %output{ for: 'n', name: '_n' }= params[:n] || 3
+          %input.pull-left{ id: 'n', type: 'range', name: 'n', min: 1, max: @run.clusters.count, value: params[:n] || @run.clusters.count, oninput: '_n.value = n.value' }
+          %output{ for: 'n', name: '_n' }= params[:n] || @run.clusters.count
         = submit_tag 'Update', name: nil
 
     - @clusters.each do |cluster|
       .panel.panel-default
         .panel-heading
-          %h2.panel-title= cluster.label || "Cluster #{@clusters.index(cluster) + 1}"
+          %h2.panel-title
+            = cluster.label || "Cluster #{@clusters.index(cluster) + 1}"
+            %small id: #{cluster.id}
         %table.table.table-bordered
           %tr
             %td.col-md-8{ rowspan: cluster.statistics.length }
@@ -47,9 +49,10 @@
       .panel-heading
         %h3.panel-title Meta
       %dl.panel-body
-        %dt Data timespan
-        %dd
-          #{l(@run.timespan_from, format: '%d.%m.%Y')} - #{l(@run.timespan_to, format: '%d.%m.%Y')}
+        - if @run.timespan_from && @run.timespan_to
+          %dt Data timespan
+          %dd
+            #{l(@run.timespan_from, format: '%d.%m.%Y')} - #{l(@run.timespan_to, format: '%d.%m.%Y')}
         %dt Features
         %dd
           %ol

@@ -1,5 +1,7 @@
 class Run < ActiveRecord::Base
   has_many :clusters
+  has_many :classifications, through: :clusters
+  has_many :feature_values, through: :classifications
 
   default_scope -> { order('created_at DESC') }
 

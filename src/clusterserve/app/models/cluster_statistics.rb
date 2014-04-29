@@ -1,6 +1,16 @@
 class ClusterStatistics < ActiveRecord::Base
   belongs_to :cluster
 
+  after_initialize :override_defaults
+
+  def override_defaults
+    ClusterStatistics.statistics_fields.each do |field|
+      class_eval do
+        define_method(field) { self[:field].present? ? self[:field] : 0.0 }
+      end
+    end
+  end
+
   def to_hash
     Hash[self.class.statistics_fields.zip(statistics_values)]
   end

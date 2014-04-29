@@ -1,6 +1,7 @@
 class Cluster < ActiveRecord::Base
   belongs_to :run
   has_many :classifications
+  has_many :feature_values, through: :classifications
   has_many :cluster_statistics, :class_name => "ClusterStatistics"
 
   def self.n_largest(n)
@@ -15,6 +16,10 @@ class Cluster < ActiveRecord::Base
 
   # The features and the center values are assumed to be in the same order
   serialize :center
+
+  def center
+    super.map {|n| n.round(3) }
+  end
 
   def features
     run.features
@@ -38,29 +43,22 @@ class Cluster < ActiveRecord::Base
     begin
       stats = cluster_statistics.find_by!(feature: feature)
     rescue ActiveRecord::RecordNotFound
-      require 'descriptive_statistics/safe'
-      feature_values = values_for_feature(feature)
-      generated_statistics = feature_values.extend(DescriptiveStatistics).descriptive_statistics
-
-      puts "Generated statistics for #{feature}."
-
-      stats = cluster_statistics.create(generated_statistics.merge(feature: feature))
+      values = values_for_feature(feature)
+      mean = values.sum.to_f / values.length
+      stats = cluster_statistics.create(feature: feature, mean: mean)
+      StatisticsWorker.perform_async(stats.id)
     end
 
     stats
   end
 
-  protected
-
   def values_for_feature(feature)
-    # Grab FeatureValue matching feature for each classification
-    classifications.includes(:feature_values)
-                   .map {|c| c.feature_values.select {|fv| fv.feature == feature }.first }
-                   .select(&:present?) # Filter out any nil values
-                   .map(&:value)       # Get their values
+    FeatureValue.where(feature: feature, classification_id: classifications.map(&:id)).map(&:value)
   end
 
+  protected
+
   def serializable_hash(options={})
-    super(options.merge({methods: [:size]}))
+    super(options.merge(methods: [:size]))
   end
 end
