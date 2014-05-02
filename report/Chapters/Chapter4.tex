@@ -24,24 +24,17 @@ An easy way of discovering whether this inductive bias is present in the user ba
 \emph{Condensed version.}
 
 The main experiment determines whether an alteration of the service affects different kinds of users differently.
-More specifically, do users in clusters $C_1, \ldots, C_n$ employ function $f$ in significantly differing ways?
+More specifically, do users in clusters $C_1, \ldots, C_n$ employ function $f$ in significantly differing ways? We find out without touching a large percentage of the users, and can use the results to individually enable features for users that
 
 We break the process into three steps, each elaborated on in~\ref{sub:clustering_of_users}, \ref{sub:a_b_testing_features}, and \ref{sub:evaluating_the_results}:
 
 \begin{enumerate}
-  \item Divide users into clusters $C_1, \ldots, C_n$.
-  \item A/B test feature $f$ independently of clusters, noting the outcomes for each user.
+  \item A/B test feature $f$ on a percentage of all users.
+  \item Separate users into clusters $C_1, \ldots, C_n$.
   \item Analyze results: did the test results vary significantly between clusters?
 \end{enumerate}
 
-If the final answer is ``yes'', we can store our result and use it to toggle feature $f$ for users in the relevant clusters.
-
-\subsection{Clustering of users} % (fold)
-\label{sub:clustering_of_users}
-
-\emph{@TODO: Describe methods and algorithms used. What kind of results are expected?}
-
-% subsection clustering_of_users (end)
+If the final answer is ``yes'', we can store our results and use them as a basis for adaptating the interface for each user.
 
 \subsection{A/B testing features} % (fold)
 \label{sub:a_b_testing_features}
@@ -49,6 +42,26 @@ If the final answer is ``yes'', we can store our result and use it to toggle fea
 \emph{@TODO: Brief description of how to fit the actual testing regime into the production system.}
 
 % subsection a_b_testing_features (end)
+
+\subsection{User clustering} % (fold)
+\label{sub:clustering_of_users}
+
+\emph{@TODO: Describe methods and algorithms used. What kind of results are expected?}
+
+% subsection clustering_of_users (end)
+
+
+% section experimental_setup (end)
+
+\section{Adapting the user interface} % (fold)
+\label{sec:adapting_the_user_interface}
+
+The adaptation component consists of two important steps.
+
+\begin{enumerate}
+  \item Determine which type of user (ie. \emph{cluster}) will have the most to gain from having feature $f$ enabled.
+  \item Tagging the users with cluster and enabling features for
+\end{enumerate}
 
 \subsection{Evaluating the results} % (fold)
 \label{sub:evaluating_the_results}
@@ -61,7 +74,8 @@ For appear.in, the most important key metrics are ``time on site'' and ``number 
 
 % subsection evaluating_the_results (end)
 
-% section experimental_setup (end)
+
+% section adapting_the_interface (end)
 
 \section{Results} % (fold)
 \label{sec:results}
