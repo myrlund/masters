@@ -79,15 +79,77 @@ The KISSmetrics service provides several analytical tools to dig into this data,
     \label{fig:cohort-report}
 \end{figure}
 
+\subsection{Cleaning the data}
+\label{sub:cleaning_data}
+
+KISSmetrics has the ability to export raw event data to data files. This can be used to power completely customized analyses, as will be needed for our particular task.
+
+After the raw data has been aquired, it will need to be cleaned. This is a simple process of churning through each line of each unprocessed data file, parsing and splitting its contents into appropriate data fields, and inserting it into a database.
+
+To facilitate the compilation of network-related user model features, conversation data was loaded into a graph database to enable querying of network structures. In the RDBMS handling the other data, this presented itself as a computationally unfeasable task.
+
 % section data_ingestion_and_preprocessing (end)
 
-\section{User modeling and clustering} % (fold)
-\label{sec:user_modeling_and_clustering}
+\section{User modeling} % (fold)
+\label{sec:user_modeling}
 
+To find clusters of users, we first and foremost need to quantify them. More specifically, we want to represent each user as a feature vector in an n-dimensional space.
 
-Further, whenever
+\subsection{Feature selection}
+\label{sub:feature_selection}
 
-% section user_modeling_and_clustering (end)
+Given the types of events being collected, we landed on compiling the following features:
+
+\begin{enumerate}
+  \item First degree conversation partners
+  \item Second degree conversation partners
+  \item Inviter
+  \item Invitee
+  \item Conversations
+  \item Rooms used
+  \item Rooms claimed
+  \item Roomnames generated
+  \item Chat message sent
+\end{enumerate}
+
+To generate user models, the stream of event data needs to be mapped to its associated users for aggregation. This is a classic MapReduce task~\cite{Dean2008} easily solved using simple functional techniques, and did not present itself as a particularly interesting problem, albeit a computationally heavy one.
+
+To summarize, the transformation in this step started with data in the form of \eqref{pre_user_model}.
+
+\begin{equation}
+  \langle \text{event}, \text{timestamp}, \text{person}, \text{metadata} \rangle
+  \label{pre_user_model}
+\end{equation}
+
+And ended with data in the form of~\eqref{post_user_model}.
+
+\begin{equation}
+  \langle \text{person}, \text{feature}, \text{value} \rangle
+  \label{post_user_model}
+\end{equation}
+
+\section{Clustering the users}
+\label{sec:clustering}
+
+\subsection{Choice of algorithms}
+\label{sub:clustering_algorithms}
+
+\subsection{Normalizing axes}
+\label{sub:normalizing_axes}
+
+\subsection{Storing clustering results}
+\label{sub:storing_results}
+
+\section{Identifying adaptable product features}
+\label{sec:identifying_adaptability}
+
+Ideally at this point, we have identified several significant clusters of users. Now we want to adapt the product to better suit each user, based on the cluster he or she belongs to.
+
+Given a set of candidate product alterations $A$, we want to give each user the combination of these that maximizes some performance measure $P$. However, we arguably have no predictive bias to start us off on solving this.
+
+The approach taken in this implementation is a simple one, which relies on conducting a single A/B test up front for each candidate product alteration. The important part during this phase is to log each selected alteration variant along with the same person identifier used for other event instrumentation, as discussed in section~\ref{sub:generating_data}.
+
+This approach enables us to see up-front whether there are any significant variances in feature adoption between the clusters. If there are, we can adapt the service by selecting the more successful variation of the feature for all users in the relevant clusters. If not, we have a feature that affects all users equally -- at least with regard to cluster granularity.
 
 \section{Adaptation component} % (fold)
 \label{sec:adaptation_component}
@@ -96,6 +158,14 @@ Further, whenever
 \label{sub:evaluation_metrics}
 
 \subsubsection{How to measure a positive user experience} % (fold)
+
+It is hard to objectively define user happiness. However, for a service like appear.in, activity level should serve as a pretty clear indicator of user happiness -- unhappy users have more than enough alternative applications that cater to their needs.
+
+Simply put, we basically assume that the following hypothesis holds: \emph{happy users use the service more than unhappy users}.
+
+Furthermore, we seldom need a measure of \emph{user happiness} to determine the relative success of variations of a product feature. Some parts of the product have clearly defined goals themselves.
+
+The perhaps most obvious example of this is the landing page, whose main objective is to get people to try out the product. We can define the performance of the landing page in terms of the percentage of users that continue on to try out the product.
 
 % section evaluation_metrics (end)
 
