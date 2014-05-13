@@ -1,3 +1,7 @@
+\item[2014-05-13] Elaborated on generation and collection of event data. (HEAD, master) \\
+\item[2014-05-02] Elaborated on experiment design. (origin/master, origin/HEAD) \\
+\item[2014-04-14] Expanded on appear.in as a concept. \\
+\item[2014-03-31] Elaborated on evaluation chapter. Work in progress. (home/master) \\
 \item[2014-03-18] Tiny label fix. New version of PDF. \\
 \item[2014-03-18] Added condensed section on experimental setup. \\
 \item[2014-03-18] Added intro on similar domains and research. \\
