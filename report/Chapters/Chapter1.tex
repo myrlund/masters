@@ -13,7 +13,7 @@ My motivation for doing a user adaptation project related to anonymous online vi
 
 For a long time, developing video conferencing services was an extremely challenging discipline, and as a result the market has consisted of a correspondingly low number of actors. However, this trend is currently in the process of being shaken and turned on its head with the introduction of HTML5; more specifically, with the introduction of the WebRTC\footnote{Web Real-Time Communication.} specification.
 
-As the name implies, WebRTC handles real-time communication, but an important aspect of the technology is that it is designed to do so peer-to-peer. Although it per design is a protocol for exchanging arbitrary data between peers, it is particularly geared toward multimedia streams. For instance, the traditionally cumbersome task of setting up a two-way audiovisual connection is now a matter of dropping around 40 lines of boilerplate Javascript into a web page\footnote{For an excellent introduction, see: \url{http://www.html5rocks.com/en/tutorials/webrtc/basics/}.}.
+As the name implies, WebRTC handles real-time communication, but for our case, the important aspect of the technology is that it is able to do so peer-to-peer. Although it per design is a protocol for exchanging arbitrary data between peers, it is particularly geared toward multimedia streams. For instance, the traditionally cumbersome task of setting up a two-way audiovisual connection is now a matter of dropping around 40 lines of boilerplate Javascript into a web page\footnote{For an excellent introduction, see: \url{http://www.html5rocks.com/en/tutorials/webrtc/basics/}.}.
 
 Although the WebRTC specification is still officially a \emph{working draft} in the W3C\footnote{The latest specification can be found here: \url{http://dev.w3.org/2011/webrtc/editor/webrtc.html}.}, several large browser vendors have already implemented it, and applications previously unseen on the web pop up every week.
 
@@ -33,6 +33,7 @@ Until the arrival of WebRTC, this particular way of thinking about conversations
 \end{enumerate}
 
 \subsection{Anonymity and privacy}
+\label{sub:anonymity_privacy}
 
 appear.in is an anonymous communication service. No personal information is ever collected about the users, and not even IP-addresses or geolocational data is logged on an individual level. By tracking individual \emph{browsers} using cookies, then logging behavioral events along with a cookie identifier, we can measure user behavior over time.
 
