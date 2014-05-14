@@ -131,8 +131,69 @@ And ended with data in the form of~\eqref{post_user_model}.
 \section{Clustering the users}
 \label{sec:clustering}
 
+We assume the following hypothesis holds, as a basis for the clustering approach to the user adaptation problem:
+
+\begin{hypothesis}
+The more similarly two people use a service, the more likely they are to respond similarly to it changing.
+\end{hypothesis}
+
+Thus, we want to segment the users in the following way: users in each segment should be as similar as possible, and as dissimilar those in other segments as possible. This scheme fits well with the two criterias for selecting an optimal clustering scheme, as described by Berry and Linoff~\cite{Berry1997}.
+
 \subsection{Choice of algorithms}
 \label{sub:clustering_algorithms}
+
+Three algorithms were implemented and experimented with: DBSCAN, mean-shift, and k-means. Of these, the k-means clearly proved itself as the most effective one, and as it also managed to produce adequate and meaningful results, it was chosen as the principal algorithm.
+
+\subsubsection{The k-means clustering algorithm}
+\label{subs:kmeans}
+
+The k-means clustering algorithm is arguably one of the most intuitive clustering algorithms.
+
+It takes as input a preset number of clusters, $k$, a similarity measure function, and a set of data vectors. Initially, it randomly chooses $k$ data vectors as centroids as a starting point for the process, before repeatedly performing a two-pass operation adjusting the centroids until convergence.
+
+Figure~\ref{fig:k-means} shows a simple python-esque implementation of the algorithm.
+
+\begin{figure}[h]
+  \begin{minted}[gobble=4]{python}
+    def kmeans(K, distance_fn, vectors):
+        N = len(vectors)
+        cluster_members = {}
+        memberships = {}
+
+        # Initially set centroids to random data vectors
+        centroids = [vectors[randint(N)] for _ in xrange(K)]
+
+        while True:
+
+            # Assign each data vector to the closest cluster centroid
+            for vector in vectors:
+                k = argmin(K, lambda k: distance_fn(centroid[k], vector))
+                if not memberships[vector] == k:
+                    cluster_members[memberships[vector]].remove(vector)
+                    cluster_members[k].append(vector)
+                    memberships[vector] = k
+
+            # Set each centroid to the mean of its members
+            previous_centroids = centroids
+            for k in xrange(K):
+                centroids[k] = mean_vector(cluster_members[k])
+
+            # Stop computing if we've achieved convergence
+            change = 0.0
+            for k in xrange(K):
+                change += distance_fn(previous_centroids[k], centroids[k])
+            if change < CONVERGENCE_THRESHOLD:
+                break
+  \end{minted}
+
+  \caption{The k-means algorithm}
+  \label{fig:k-means}
+\end{figure}
+
+\subsection{Evaluating cluster quality}
+\label{sub:evaluating_clusters}
+
+@TODO: Davies-Bouldin index etc.
 
 \subsection{Normalizing axes}
 \label{sub:normalizing_axes}
@@ -151,23 +212,26 @@ The approach taken in this implementation is a simple one, which relies on condu
 
 This approach enables us to see up-front whether there are any significant variances in feature adoption between the clusters. If there are, we can adapt the service by selecting the more successful variation of the feature for all users in the relevant clusters. If not, we have a feature that affects all users equally -- at least with regard to cluster granularity.
 
-\section{Adaptation component} % (fold)
-\label{sec:adaptation_component}
-
 \subsection{Evaluation metrics} % (fold)
 \label{sub:evaluation_metrics}
 
-\subsubsection{How to measure a positive user experience} % (fold)
+When considering which variation of a product feature to prefer, we need to be able to measure their relative success rates.
 
-It is hard to objectively define user happiness. However, for a service like appear.in, activity level should serve as a pretty clear indicator of user happiness -- unhappy users have more than enough alternative applications that cater to their needs.
+As for any user-facing product, the main objective is achieving user happiness. However, user happiness is hard to objectively define. For a service like appear.in, though, activity level should serve as a pretty clear indicator of user happiness -- unhappy users have more than enough alternative applications that cater to their needs.
 
-Simply put, we basically assume that the following hypothesis holds: \emph{happy users use the service more than unhappy users}.
+Simply put, we basically assume that the following hypothesis holds:
+
+\begin{hypothesis}
+  Happy users use the service more than unhappy users.
+\end{hypothesis}
 
 Furthermore, we seldom need a measure of \emph{user happiness} to determine the relative success of variations of a product feature. Some parts of the product have clearly defined goals themselves.
 
 The perhaps most obvious example of this is the landing page, whose main objective is to get people to try out the product. We can define the performance of the landing page in terms of the percentage of users that continue on to try out the product.
 
-% section evaluation_metrics (end)
+\section{Adaptation component} % (fold)
+\label{sec:adaptation_component}
+
 
 \subsection{Applying the personalized feature set} % (fold)
 \label{sub:applying_the_personalized_feature_set}
@@ -175,11 +239,6 @@ The perhaps most obvious example of this is the landing page, whose main objecti
 Description of the FlagService model.
 
 % section applying_the_personalized_feature_set (end)
-
-\subsection{Tracking user treatments} % (fold)
-\label{sub:tracking_user_treatments}
-
-% section tracking_user_treatments (end)
 
 \subsection{Visualizing effects} % (fold)
 \label{sub:visualizing_effects}
