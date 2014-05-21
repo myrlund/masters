@@ -19,6 +19,7 @@ INTERESTING_EVENT_TYPES = (
     'room claimed',
     'visited room',
     'room lock changed',
+    '_property',
 )
 
 def batches(l, n):
@@ -47,7 +48,7 @@ def insert_clean_data(conn, clean_data):
     for row in clean_data:
         if len(clean_data[6]) > 200:
             continue
-        c.execute('INSERT INTO events_ref VALUES (%s, %s, %s, %s, %s, %s, %s, %s)', row)
+        c.execute('INSERT INTO events_ref VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)', row)
     conn.commit()
 
 def normalize_event(raw_event):
@@ -57,7 +58,7 @@ def normalize_event(raw_event):
     event_verb   = None
     event_object = None
     try:
-        event_type   = event_parts[0]
+        event_type   = event_parts[0] or '_property'
         event_verb   = event_parts[1]
         event_object = event_parts[2]
     except IndexError: pass
@@ -81,7 +82,7 @@ def clean_row(row):
 
     url = json_data.get('url', None)
 
-    return (row[0], row[3], row[2]) + event + (roomname, url)
+    return (row[0], row[3], row[2]) + event + (row[4], roomname, url)
 
 def omit_uninteresting_events(conn, events):
     c = conn.cursor()
