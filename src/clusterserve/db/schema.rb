@@ -32,6 +32,7 @@ ActiveRecord::Schema.define(version: 20140409134210) do
     t.decimal  "min",                precision: 10, scale: 0
     t.decimal  "max",                precision: 10, scale: 0
     t.decimal  "mean",               precision: 10, scale: 0
+    t.decimal  "normalized_mean",    precision: 10, scale: 0
     t.decimal  "mode",               precision: 10, scale: 0
     t.decimal  "median",             precision: 10, scale: 0
     t.decimal  "range",              precision: 10, scale: 0

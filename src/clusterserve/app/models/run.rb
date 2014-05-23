@@ -20,7 +20,8 @@ class Run < ActiveRecord::Base
   end
 
   def feature_average(feature)
-    clusters.map {|c| c.feature_statistics(feature) }.map(&:sum).sum.to_f / self.size
+    feature_index = features.index(feature)
+    clusters.collect {|c| c.center[feature_index] * c.size }.sum.to_f / self.size
   end
 
   def feature_averages

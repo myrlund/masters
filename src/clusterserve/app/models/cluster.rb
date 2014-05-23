@@ -44,19 +44,31 @@ class Cluster < ActiveRecord::Base
       stats = cluster_statistics.find_by!(feature: feature)
     rescue ActiveRecord::RecordNotFound
       values = values_for_feature(feature)
+      normalized_values = normalized_values_for_feature(feature)
+
       mean = values.sum.to_f / values.length
-      stats = cluster_statistics.create(feature: feature, mean: mean)
-      StatisticsWorker.perform_async(stats.id)
+      normalized_mean = normalized_values.sum.to_f / normalized_values.length
+
+      stats = cluster_statistics.create(feature: feature, mean: mean, normalized_mean: normalized_mean)
+      # StatisticsWorker.perform_async(stats.id)
     end
 
     stats
   end
 
   def values_for_feature(feature)
-    FeatureValue.where(feature: feature, classification_id: classifications.map(&:id)).map(&:value)
+    fieldset_for_feature(feature, :value)
+  end
+
+  def normalized_values_for_feature(feature)
+    fieldset_for_feature(feature, :normalized_value)
   end
 
   protected
+
+  def fieldset_for_feature(feature, field)
+    FeatureValue.where(feature: feature, classification_id: classifications.map(&:id)).map(&field)
+  end
 
   def serializable_hash(options={})
     super(options.merge(methods: [:size]))

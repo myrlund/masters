@@ -24,25 +24,19 @@
           %h2.panel-title
             = cluster.label || "Cluster #{@clusters.index(cluster) + 1}"
             %small id: #{cluster.id}
+            %p.pull-right
+              #{cluster.size} samples
         %table.table.table-bordered
           %tr
             %td.col-md-8{ rowspan: cluster.statistics.length }
-              INSERT GRAPH
-            %th= cluster.features.first
-            %td.numeric= cluster.feature_statistics(cluster.features.first).mean.round(2)
+              %figure.cluster.small-visualization{ data: { center: cluster.center.to_json, avg_center: @run.feature_averages.values.to_json, features: 1.upto(@run.features.length).map(&:to_s).to_json } }
+                %canvas.container{ width: 390, height: 300 }
+            %th 1. #{cluster.features.first}
+            %td.numeric= sprintf("%.2f", cluster.feature_statistics(cluster.features.first).mean.round(2))
           - for feature in cluster.features.from(1)
             %tr
-              %th= feature
-              %td.numeric= cluster.feature_statistics(feature).mean.round(2)
-
-              / - for statistic in cluster.statistics.values
-              /   %li
-              /     %strong= statistic.feature
-              /     %table.table
-              /       - for property in %i(number standard_deviation min max mean median)
-              /         %tr
-              /           %th= property.capitalize
-              /           %td= statistic.send(property)
+              %th #{cluster.features.index(feature) + 1}.&nbsp;#{feature}
+              %td.numeric= sprintf("%.2f", cluster.feature_statistics(feature).mean.round(2))
 
   .col-md-4
     .panel.panel-default
@@ -50,16 +44,24 @@
         %h3.panel-title Meta
       %dl.panel-body
         - if @run.timespan_from && @run.timespan_to
-          %dt Data timespan
+          %dt Data for month
           %dd
-            #{l(@run.timespan_from, format: '%d.%m.%Y')} - #{l(@run.timespan_to, format: '%d.%m.%Y')}
+            %p= l(@run.timespan_from, format: '%B %Y')
+        %dt Evaluation (davies-bouldin index)
+        %dd
+          %p= @run.eval_db
         %dt Features
         %dd
           %ol
             - for feature in @run.features
               %li= feature
         %dt Run params
-        %dd= @run.params
+        %dd
+          %ul
+            - @run.params.each do |key, value|
+              %li
+                %strong= key.to_s + ":"
+                = value
         %dt Comment
         %dd= @run.comment || '-'
 

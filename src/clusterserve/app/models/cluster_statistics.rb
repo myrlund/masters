@@ -6,7 +6,7 @@ class ClusterStatistics < ActiveRecord::Base
   def override_defaults
     ClusterStatistics.statistics_fields.each do |field|
       class_eval do
-        define_method(field) { self[:field].present? ? self[:field] : 0.0 }
+        define_method(field) { self[field].present? ? self[field] : 0.0 }
       end
     end
   end

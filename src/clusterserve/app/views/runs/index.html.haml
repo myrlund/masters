@@ -8,6 +8,8 @@
       %th Cluster count
       %th Features
       %th Davies bouldin index
+      %th Avg. cluster size
+      %th Median cluster size
       %th Month
   %tbody
     - @runs.each do |run|
@@ -17,4 +19,6 @@
         %td= run.clusters.count
         %td{ title: run.features.join(", ") }= run.features.count
         %td= run.eval_db
+        %td= run.clusters.collect(&:size).sum / run.clusters.count
+        %td= run.clusters.collect(&:size)[run.clusters.count / 2]
         %td= run.timespan_from ? l(run.timespan_from, format: '%B') : "-"

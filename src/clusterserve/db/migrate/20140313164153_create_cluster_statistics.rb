@@ -10,6 +10,7 @@ class CreateClusterStatistics < ActiveRecord::Migration
       t.decimal :min
       t.decimal :max
       t.decimal :mean
+      t.decimal :normalized_mean
       t.decimal :mode
       t.decimal :median
       t.decimal :range

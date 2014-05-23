@@ -3,39 +3,29 @@
 
 function doSmallVisualization(element) {
     var data = $(element).data();
-    var container = element.getElementsByTagName('div')[0];
-
-    var center = [];
-    for (var i = 0; i < data.center.length; i++) {
-        center.push([i, data.center[i]]);
-    }
+    var container = element.getElementsByTagName('canvas')[0];
+    var ctx = container.getContext('2d');
 
     var s1 = {
-        label: element.title,
-        data: center
+        label: 'Average',
+        fillColor: 'rgba(220,220,220,0.5)',
+        strokeColor: 'rgba(220,220,220,1)',
+        data: data.avgCenter
+    }
+
+    var s2 = {
+        label: 'Cluster center',
+        fillColor: 'rgba(151,187,205,0.5)',
+        strokeColor: 'rgba(151,187,205,1)',
+        data: data.center
     };
 
-    console.log(data.features);
+    var data = {
+        labels: data.features,
+        datasets: [ s1, s2 ]
+    }
 
-    var chart = Flotr.draw(container, [s1], {
-        xaxis: {
-            min: -0.5,
-            max: 1.5,
-            tickDecimals: 0,
-            noTicks: data.features.length,
-            tickFormatter: function (n) { return data.features[n]; }
-        },
-        yaxis: {
-            min: 0,
-            autoscale: true
-        },
-        bars: {
-            show: true,
-            horizontal: false,
-            shadowSize: 0,
-            barWidth: 0.5
-        }
-    });
+    var chart = new Chart(ctx).Bar(data, {});
 
     console.log(chart);
 }
