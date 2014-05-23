@@ -25,11 +25,12 @@ def get_data_vectors(cursor, features, normalize=True):
     raw_vectors = map(lambda person: feature_values_for_person(cursor, person, features), persons)
 
     vectors = np.array(raw_vectors)
+    normalized_vectors = None
     if normalize:
         print "  - normalizing vectors"
-        vectors = preprocessing.normalize(vectors)
+        normalized_vectors = preprocessing.normalize(vectors)
 
-    return persons, vectors
+    return persons, vectors, normalized_vectors
 
 def dbscan(args):
     return DBSCAN(3.0, 10)
@@ -80,12 +81,12 @@ def save_run(connection, data, args):
             c.execute("INSERT INTO classifications (cluster_id, person) VALUES (%s, %s)", (cluster_id, member['person']))
             classification_id = connection.insert_id()
 
-            for feature, value in member['feature_values']:
-                c.execute("INSERT INTO feature_values (classification_id, feature, value) VALUES (%s, %s, %s)", (classification_id, feature, value))
+            for feature, value, normalized_value in member['feature_values']:
+                c.execute("INSERT INTO feature_values (classification_id, feature, value, normalized_value) VALUES (%s, %s, %s, %s)", (classification_id, feature, value, normalized_value))
 
     connection.commit()
 
-def cluster(algorithm, persons, X, features, args):
+def cluster(algorithm, persons, X, X_raw, features, args):
     # clusterer = KMeans(n_clusters, n_jobs=1)
     clusterer = algorithm(args)
     clusterer.fit(X)
@@ -113,9 +114,13 @@ def cluster(algorithm, persons, X, features, args):
 
         run_data['clusters'].append({'center': center, 'members': []})
 
-    for person, sample in zip(persons, X):
-        cluster_index = clusterer.predict(sample)
-        feature_values = zip(features, sample)
+    for person, sample, normalized_sample in zip(persons, X_raw, X):
+
+        # Use either real sample or the normalized sample
+        predictive_sample = normalized_sample if args.normalize else sample
+
+        cluster_index = clusterer.predict(predictive_sample)
+        feature_values = zip(features, sample, normalized_sample)
 
         person_data = {
             'person': person,
@@ -137,7 +142,7 @@ def evaluate_run(data):
         centers.append(data[i]['center'])
         cluster_data[i] = []
         for person in data[i]['members']:
-            cluster_data[i].append(map(lambda p: p[1], person['feature_values']))
+            cluster_data[i].append(map(lambda p: p[2], person['feature_values']))
 
     from evaluation.cluster import davies_bouldin, dunn
 
@@ -162,13 +167,13 @@ def run(args, connection, features):
 
     # Grab user model vectors
     print "  - retrieving user models"
-    persons, X = get_data_vectors(connection.cursor(), features, normalize=args.normalize)
+    persons, X_raw, X = get_data_vectors(connection.cursor(), features, normalize=args.normalize)
 
     # Loop through requested cluster cardinalities
     print "  - clustering %d times with the %s algorithm" % (args.n_runs, args.algorithm)
     evals = []
     runs = []
-    run_data = cluster(algorithm_fn, persons, X, features=features, args=args)
+    run_data = cluster(algorithm_fn, persons, X, X_raw, features=features, args=args)
     runs.append(run_data)
     evals.append(run_data['evaluation']['davies_bouldin'])
 

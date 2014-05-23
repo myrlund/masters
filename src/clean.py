@@ -5,9 +5,12 @@ import MySQLdb as mysql
 
 from util import connect_db, load_config
 
+import run_export.run
+
 INTERESTING_EVENT_TYPES = (
     'chat',
     'claim room',
+    'current client became owner',
     'connection',
     'customization',
     'entered existing room',
@@ -52,24 +55,24 @@ def insert_clean_data(conn, clean_data):
     conn.commit()
 
 def normalize_event(raw_event):
+    raw_event = raw_event or ""
     event_parts = raw_event.split("  ")
 
-    event_type   = None
-    event_verb   = None
-    event_object = None
+    event_type, event_verb, event_object = (None, None, None)
     try:
-        event_type   = event_parts[0] or '_property'
-        event_verb   = event_parts[1]
-        event_object = event_parts[2]
+        event_type, event_verb, event_object = map(lambda i: event_parts[i], xrange(3))
     except IndexError: pass
 
-    return event_type, event_verb, event_object
+    return event_type or '_property', event_verb, event_object
 
 def clean_row(row):
     # Normalize into three parts
     try:
         event = normalize_event(row[1])
     except AttributeError:
+        print "Whaat? %s" % str(row)
+        import sys
+        sys.exit(1)
         return None
 
     # Get special properties
@@ -170,3 +173,5 @@ if __name__ == '__main__':
 
     build_user_graph(connection)
     print "Done."
+
+    run_export.run(connection)

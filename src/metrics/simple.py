@@ -18,6 +18,9 @@ def rooms_followed(person, cursor, **options):
 def rooms_used(person, cursor, **options):
     return simple_query(cursor, 'SELECT COUNT(distinct roomname) FROM events_ref WHERE event_type = \'visited room\' AND person = %s', person, **options)
 
+def conversations(person, cursor, **options):
+    return simple_query(cursor, 'SELECT COUNT(*) FROM user_graph WHERE (person1 = %s OR person2 = %s) and person1 < person2', person, person, **options)
+
 def roomnames_generated(person, cursor, **options):
     return simple_query(cursor, 'SELECT COUNT(*) FROM events_ref WHERE event_verb = \'randomized new room name\' AND person = %s', person, **options)
 

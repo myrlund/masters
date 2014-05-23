@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-import sqlite3
 import os, sys
 
 from analysis import clustering, features, stats
@@ -12,28 +11,30 @@ def create_table(conn):
     conn.commit()
 
 # Feature metric functions
-from metrics.simple import rooms_used, rooms_claimed, roomnames_generated, chat_message_sent, inviter, invitee, rooms_followed # frequency_last_month
-from metrics.graph import first_degree_conversation_partners, second_degree_conversation_partners, conversations
+from metrics.simple import rooms_used, rooms_claimed, roomnames_generated, chat_message_sent, inviter, invitee, rooms_followed, conversations # frequency_last_month
+from metrics.graph import first_degree_conversation_partners, second_degree_conversation_partners # , conversations
 
-ALL_FEATURES = (
+MODEL_FEATURES = (
+    conversations,
+    rooms_followed,
     first_degree_conversation_partners,
     second_degree_conversation_partners,
+    rooms_claimed,
+    rooms_used,
+    chat_message_sent,
     inviter,
     invitee,
-    conversations,
-    rooms_used,
-    rooms_claimed,
     roomnames_generated,
     # frequency_last_month,
-    chat_message_sent,
 )
 
-FEATURES = (
+CLUSTER_FEATURES = (
     conversations,
     # rooms_locked,
-    rooms_followed,
+    # rooms_followed,
+    first_degree_conversation_partners,
     second_degree_conversation_partners,
-    rooms_claimed,
+    # rooms_claimed,
     rooms_used,
     chat_message_sent,
 )
@@ -63,7 +64,7 @@ def build_feature_set(args, connection, feature_names):
     if args.create:
         create_table(connection)
 
-    feature_fns = dict(zip(map(lambda fn: fn.__name__, FEATURES), FEATURES))
+    feature_fns = dict(zip(map(lambda fn: fn.__name__, MODEL_FEATURES), MODEL_FEATURES))
 
     for name in feature_names:
         feature_fn = feature_fns[name]
@@ -99,7 +100,9 @@ if __name__ == '__main__':
 
     connection = connect_db(CONFIG)
 
-    feature_names = map(lambda f: f.__name__, FEATURES)
+    model_feature_names = map(lambda f: f.__name__, MODEL_FEATURES)
+    cluster_feature_names = map(lambda f: f.__name__, CLUSTER_FEATURES)
+
     algorithm_names = map(lambda a: a.__name__, clustering.ENABLED_ALGORITHMS)
 
     timespan = lambda s: tuple(map(int, s.split(',', 1)))
@@ -118,10 +121,18 @@ if __name__ == '__main__':
     parser.add_argument('--n-jobs', help="number of parallel jobs (used where applicable)", type=int, default=-2)
     parser.add_argument('--n-runs', help="number of clustering passes to use", type=int, default=5)
     parser.add_argument('--normalize', help="normalize axes explicitly before clustering", action='store_true', default=False)
-    parser.add_argument('features', help="override feature selection", nargs=argparse.REMAINDER, choices=feature_names)
+    parser.add_argument('features', help="override feature selection", nargs=argparse.REMAINDER, choices=model_feature_names)
     args = parser.parse_args()
 
-    selected_feature_names = args.features or feature_names
+    is_clustering = not (args.build or args.analyze)
+
+    # Features to process:
+    # - allow override with explicit arguments
+    # - default to MODEL_FEATURES if building
+    # - default to CLUSTER_FEATURES if clustering
+    selected_feature_names = args.features
+    if not selected_feature_names:
+        selected_feature_names = model_feature_names if not is_clustering else cluster_feature_names
 
     print "~ Using %d features" % len(selected_feature_names)
 
@@ -135,7 +146,7 @@ if __name__ == '__main__':
         analyze_feature_set(args, connection, selected_feature_names)
         print
 
-    if not (args.build or args.analyze):
+    if is_clustering:
         print "~ Perform clustering routine"
         clustering.run(args, connection, selected_feature_names)
         print

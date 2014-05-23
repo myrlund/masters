@@ -1,6 +1,6 @@
 #!/bin/bash
 
-months=(1 2 3)
+months=(5)
 for month in ${months[@]}; do
     monthplus1=$month+1
     this_month=`printf "%02d" $month`
@@ -15,7 +15,8 @@ for month in ${months[@]}; do
     echo ./main.py --reset --build -t $timespan
     ./main.py --reset --build -t $timespan
     for n in ${n_clusters[@]}; do
-        echo "EXECUTING: ./main.py -t $timespan --algorithm k_means --n-clusters $n --normalize"
-        ./main.py -t $timespan --algorithm k_means --n-clusters $n --normalize
+        cmd="./main.py -t $timespan --algorithm k_means --n-clusters $n --normalize"
+        echo "Executing for month $month: $cmd"
+        $cmd
     done
 done

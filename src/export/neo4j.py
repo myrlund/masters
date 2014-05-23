@@ -12,8 +12,7 @@ def export_row(service, row):
 
     node1 = service.get_or_create_indexed_node(NODE_INDEX, '_p', p1, {'id': p1})
     node2 = service.get_or_create_indexed_node(NODE_INDEX, '_p', p2, {'id': p2})
-    rels  = service.create((node1, RELATIONSHIP_TYPE, node2, {'timestamp': timestamp}),
-                           (node2, RELATIONSHIP_TYPE, node1, {'timestamp': timestamp}))
+    rels = node1.create_path((RELATIONSHIP_TYPE, {'timestamp': timestamp}), node2)
 
     sys.stdout.write('.'); sys.stdout.flush()
 
