@@ -6,18 +6,31 @@
 
 % \emph{Context; motivation for the project; problem statement; outline of dissertation.}
 
+The goal of the project in this thesis is to explore the viability of a new approach to user adaptation, where the requirements of the application are significantly more constraining than in most cases seen in previous academic work.
+
+The application case is an anonymous, web-based video conferencing service called \url{appear.in}. The most important part of that description is the term ``anonymous'', as we not only need to deal with a complete lack of demographic information about the users -- we do not even have the ability to consistently identify them. Luckily, there are a few workarounds to the issue of identification that make the problem at least partly tractable.
+
+Previous work in the area of user adaptation has often adhered to the concept of recommending some kind of resource -- often being reducible to the task of finding relevant items to sell, or interesting pages in a website hierarchy. The goal of this project, however, is not to \emph{find good things}, it is to \emph{optimize the user experience of an application}. More specifically, the goal is to be able to predict which version of the application will lead to better performance for each user, down to the individual feature level.
+
+Let us start off with some background on why I believe this is an especially exciting time for user adaptation on the web, before section~\ref{sec:appearin_intro} introduces the specific application case of appear.in. Finally, section~\ref{sec:adaptation_intro} will provide an introduction to the realm of user adaptation.
+
 \section{Background and motivation}
 \label{sec:motivation}
 
-My motivation for doing a user adaptation project related to anonymous online video conferencing is comprised of two important factors. To understand how they are related and why they both are of equally big interest, some background on both the technological landscape of the web and the application case is needed.
+The web is an interesting venue in which to explore new ways of user adaptation and personalization. Even today, when we are able to build almost every kind of application right in the web browser, a fundamental concept remains: there is still a server serving the application code every single time a user opens the site\footnote{Caching excluded, of course, but that's beside the point.}.
+
+This is the modern web: a place where applications are nearing the power of traditional desktop applications, but with the potential of being continuously tailored to suit each user individually.
+
+Like desktop applications, you say? HTML5 -> new types of applications. WebRTC, for instance, enabling shit like appear.in.
+
+\section{Introducing appear.in}
+\label{sec:appearin_intro}
 
 For a long time, developing video conferencing services was an extremely challenging discipline, and as a result the market has consisted of a correspondingly low number of actors. However, this trend is currently in the process of being shaken and turned on its head with the introduction of HTML5; more specifically, with the introduction of the WebRTC\footnote{Web Real-Time Communication.} specification.
 
 As the name implies, WebRTC handles real-time communication, but for our case, the important aspect of the technology is that it is able to do so peer-to-peer. Although it per design is a protocol for exchanging arbitrary data between peers, it is particularly geared toward multimedia streams. For instance, the traditionally cumbersome task of setting up a two-way audiovisual connection is now a matter of dropping around 40 lines of boilerplate Javascript into a web page\footnote{For an excellent introduction, see: \url{http://www.html5rocks.com/en/tutorials/webrtc/basics/}.}.
 
 Although the WebRTC specification is still officially a \emph{working draft} in the W3C\footnote{The latest specification can be found here: \url{http://dev.w3.org/2011/webrtc/editor/webrtc.html}.}, several large browser vendors have already implemented it, and applications previously unseen on the web pop up every week.
-
-\subsection{Introducing appear.in}
 
 One of these applications is called appear.in, and it will serve as the main use case in this thesis. Like many other WebRTC applications, appear.in concerns itself with video conferencing. The idea is simple enough: a conversation happens between users who are in the same room at the same time. The central idea, though, is that the room is identified solely by the URL in use, and not in any way by the peers connecting. As an example, if any two people are visiting \url{https://appear.in/ntnu} at the same time, they will see and hear each other and can start chatting away without any further call setup or configuration.
 
@@ -65,27 +78,27 @@ Unfortunately, using only cookies for identification has its clear downsides. Sh
 
 Without tracking more user information -- IPs and locations, for instance -- there is no easy way of tying these user ids together\footnote{Some suggestions on how to solve this is found in the suggestions for further work, in section~\ref{sec:further_work}.}, and to reason about them as a single user. However, collecting this information about users goes against appear.in's privacy policy, and it has been deemed more interesting to see what can be done without crossing this line.
 
-\subsection{Why personalize?} % (fold)
-\label{sub:why_personalize}
+\section{User adaptation}
+\label{sec:adaptation_intro}
 
-\emph{@TODO: Write out in full-text.}
+What is it? Why is it? Other domains where it's used (marketing).
 
-\begin{itemize}
-  \item Premise: Users use service in different ways, and want a simple UI targeted at their specific use case.
-  \item Goal: Provide an interface which stimulates activation and retention.
-  \item Result: Increase general user base, as well as their happiness (as measured by metrics such as recurring visits and time on site).
-\end{itemize}
+@TODO: Shove the following non-introductory stuff into chapter 2?
 
-% subsection why_personalize (end)
+\subsection{A brief history of the field}
 
-\subsection{Visualization of clustering}
+How'd it start? What use cases have been popular throughout its history? What are recent developments and key enablers?
 
-@TODO: What is the state of the art regarding visualization of spacio-temporal clusters. (Dimensionality reduction etc.)
+\subsection{Conceptual framework}
 
-Package into clustering tool to improve business intelligence. Challenges from lack of demographics.
+\subsection{Implementation methodology}
+
+\subsection{State of the art}
 
 \section{Problem specification}
 \label{sec:problem_specification}
+
+@TODO: Pull together above sections, explain exact case for this project. How does it differ from the general case?
 
 \textbf{Main research question:} Can users of anonymous video conferencing services be clearly divided into user classes based on their behavior, and if so, to what effect can personalization improve their activity level?
 
