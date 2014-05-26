@@ -19,14 +19,20 @@ Let us start off with some background on why I believe this is an especially exc
 
 The web is an interesting venue in which to explore new ways of user adaptation and personalization. Even today, when we are able to build almost every kind of application right in the web browser, a fundamental concept remains: there is still a server serving the application code every single time a user opens the site\footnote{Caching excluded, of course, but that's beside the point.}.
 
+\subsection{The modern web}
+
 This is the modern web: a place where applications are nearing the power of traditional desktop applications, but with the potential of being continuously tailored to suit each user individually.
 
-Like desktop applications, you say? HTML5 -> new types of applications. WebRTC, for instance, enabling shit like appear.in.
+When we say that web applications are nearing the power of traditional desktop applications, we are of course talking about the introduction of HTML5. HTML was primarily designed as a language for semantically describing documents, and little more. The last decade, however, the concept of web applications has thoroughly established itself, while lacking clear standardization efforts from the W3C. The HTML5 specification is an attempt to remedy this~\cite{W3CHTML5_intro}, by providing standards and guidelines for the browser vendors on how to implement a wide range of common APIs.
+
+In practice, these APIs lets websites play video, generate graphics, grab your webcam and microphone stream, process files, and a wide range of other things. In general, HTML5 enables web applications to do most of the things one would need plugins or desktop applications for just a few years ago.
+
+One of these new API specifications is called WebRTC\footnote{Web Real-Time Communication.}, and it is the last piece of the API puzzle enabling applications like appear.in.
 
 \section{Introducing appear.in}
 \label{sec:appearin_intro}
 
-For a long time, developing video conferencing services was an extremely challenging discipline, and as a result the market has consisted of a correspondingly low number of actors. However, this trend is currently in the process of being shaken and turned on its head with the introduction of HTML5; more specifically, with the introduction of the WebRTC\footnote{Web Real-Time Communication.} specification.
+For a long time, developing video conferencing services was an extremely challenging discipline, and as a result the market has consisted of a correspondingly low number of actors. However, this trend is currently in the process of being shaken and turned on its head with the introduction of HTML5; more specifically, with the introduction of the WebRTC specification.
 
 As the name implies, WebRTC handles real-time communication, but for our case, the important aspect of the technology is that it is able to do so peer-to-peer. Although it per design is a protocol for exchanging arbitrary data between peers, it is particularly geared toward multimedia streams. For instance, the traditionally cumbersome task of setting up a two-way audiovisual connection is now a matter of dropping around 40 lines of boilerplate Javascript into a web page\footnote{For an excellent introduction, see: \url{http://www.html5rocks.com/en/tutorials/webrtc/basics/}.}.
 
@@ -55,12 +61,15 @@ This all opens a wide series of questions bordering to sociological aspects of w
 \begin{enumerate}
   \item
     To what extent can an anonymous web service be adapted?
+  \item
     Is user behavior enough to provide a satisfactory personalized user experience?
-  \item
-    Will a personalized user experience go against the users' expectations of appear.in as an anonymous web service?
-  \item
-    How can we measure any of this?
+  % \item
+  %   Will a personalized user experience go against the users' expectations of appear.in as an anonymous web service?
+  % \item
+  %   How can we measure any of this?
 \end{enumerate}
+
+These are issues which will be revisited throughout the thesis.
 
 \subsubsection{Absence of identity} % (fold)
 
@@ -68,6 +77,7 @@ Several others have written about how privacy constraints impact personalized sy
 
 There are ways of coping with the absence of user identification. Kobsa, for instance, describes an approach that makes heavy use of pseudonyms designed around this problem~\cite{Kobsa2003}.
 However, appear.in is not only a pseudonymous service -- it is a fully anonymous service; there are no user accounts, and there is no login.
+
 Tracking users, then, is obviously a bit of a struggle.
 
 \subsubsection{Tracking users}
@@ -81,19 +91,19 @@ Without tracking more user information -- IPs and locations, for instance -- the
 \section{User adaptation}
 \label{sec:adaptation_intro}
 
-What is it? Why is it? Other domains where it's used (marketing).
+Before answering the question of \emph{how} to do user adaptation, let's look into the more fundamental issue of \emph{why}. Why would we want to adapt a product to its users?
 
-@TODO: Shove the following non-introductory stuff into chapter 2?
+There can be several reasons. Dijkstra once described a way in which humans and computers differ with a short anecdote involving piano playing and his mother~\cite{Dijkstra1982}:
 
-\subsection{A brief history of the field}
+\begin{quote}
+    To end up my talk I would like to tell you a small story, that taught me the absolute mystery of human communication. I once went to the piano with the intention to play a Mozart sonata, but at the keyboard I suddenly changed my mind and started playing Schubert instead. After the first few bars my surprised mother interrupted me with ``I thought you were going to play Mozart!''. She was reading and had only seen me going to the piano through the corner of her eye. It then transpired that, whenever I went to the piano, she always knew what I was going to play! How? Well, she knew me for seventeen years, that is the only explanation you are going to get.
+\end{quote}
 
-How'd it start? What use cases have been popular throughout its history? What are recent developments and key enablers?
+Humans constantly monitor the world around them, and model the objects and people in it. The kind of implicit modeling and predictive behavior is something computers generally have a hard time dealing with.
 
-\subsection{Conceptual framework}
+In addition to this, the digital world around us is becoming more and more complex. This complexity will at some point overwhelm users. Adapting to the user's expectations may help in this~\cite{Vrieze}.
 
-\subsection{Implementation methodology}
-
-\subsection{State of the art}
+For a survey of the field of user adaptation, see section~\ref{sec:user_adaptation_survey}.
 
 \section{Problem specification}
 \label{sec:problem_specification}

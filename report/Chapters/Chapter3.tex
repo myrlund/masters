@@ -11,7 +11,7 @@ The proposed system is constructed around the data flowing through it.
 
 The system takes the data stepwise through an ingestion pipeline, importing, filtering and cleaning it, before churning it into user models. This particular part of the system is elaborated on further in section~\ref{sec:data_ingestion_and_preprocessing}.
 
-Once user models are in place, the system generates user segments. These are stored in a database for future use. There are several viable approaches to the segmentation task. These are discussed in more detail in section~\ref{sec:user_modeling_and_clustering}.
+Once user models are in place, the system generates user segments. These are stored in a database for future use. There are several viable approaches to the segmentation task. These are discussed in more detail in section~\ref{sec:clustering}.
 
 As it turns out, when designing completely autonomous adaptative systems, we need more data than user segments to effectively drive the adaptive component. When considering whether to enable a feature or an interface switch, we need to know whether doing so will be advantageous to the user segment in question. This is discussed in section~\ref{sec:adaptation_component}.
 
@@ -93,7 +93,7 @@ To facilitate the compilation of network-related user model features, conversati
 \section{User modeling} % (fold)
 \label{sec:user_modeling}
 
-To find clusters of users, we first and foremost need to quantify them. More specifically, we want to represent each user as a feature vector in an n-dimensional space.
+To find clusters of users, we first and foremost need to quantify them. More specifically, we want to represent each user as a feature vector in an $n$-dimensional space.
 
 \subsection{Feature selection}
 \label{sub:feature_selection}
