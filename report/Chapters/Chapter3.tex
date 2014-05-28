@@ -5,20 +5,20 @@
 \lhead{Chapter 3. \emph{Approach}}
 
 \section{System overview} % (fold)
-\label{sec:system_overview}
+\label{approach:sec:system_overview}
 
 The proposed system is constructed around the data flowing through it.
 
-The system takes the data stepwise through an ingestion pipeline, importing, filtering and cleaning it, before churning it into user models. This particular part of the system is elaborated on further in section~\ref{sec:data_ingestion_and_preprocessing}.
+The system takes the data stepwise through an ingestion pipeline, importing, filtering and cleaning it, before churning it into user models. This particular part of the system is elaborated on further in section~\ref{approach:sec:data_ingestion_and_preprocessing}.
 
-Once user models are in place, the system generates user segments. These are stored in a database for future use. There are several viable approaches to the segmentation task. These are discussed in more detail in section~\ref{sec:clustering}.
+Once user models are in place, the system generates user segments. These are stored in a database for future use. There are several viable approaches to the segmentation task. These are discussed in more detail in section~\ref{approach:sec:clustering}.
 
-As it turns out, when designing completely autonomous adaptative systems, we need more data than user segments to effectively drive the adaptive component. When considering whether to enable a feature or an interface switch, we need to know whether doing so will be advantageous to the user segment in question. This is discussed in section~\ref{sec:adaptation_component}.
+As it turns out, when designing completely autonomous adaptative systems, we need more data than user segments to effectively drive the adaptive component. When considering whether to enable a feature or an interface switch, we need to know whether doing so will be advantageous to the user segment in question. This is discussed in section~\ref{approach:sec:adaptation_component}.
 
 % section system_overview (end)
 
 \section{Data ingestion and preprocessing} % (fold)
-\label{sec:data_ingestion_and_preprocessing}
+\label{approach:sec:data_ingestion_and_preprocessing}
 
 Before the interesting parts of the system can start doing their work, the data needs to be transformed from \emph{a series of chronological raw events} to \emph{a set of user models}.
 
@@ -32,7 +32,7 @@ The amount of data can be arbitrarily sizable, and will grow linearly with user 
 \end{figure}
 
 \subsection{Generating the raw data}
-\label{sub:generating_data}
+\label{approach:sub:generating_data}
 
 The system input is a chronological series of raw events sent from the production system.
 
@@ -44,10 +44,10 @@ These are instrumented via an external analysis service called KISSmetrics\footn
   \item user properties
 \end{enumerate}
 
-The consistency of the personal identifier has already been discussed extensively in the introductory chapters, especially section~\ref{sub:anonymity_privacy}, but a short technical introduction to the actual production system is in order.
+The consistency of the personal identifier has already been discussed extensively in the introductory chapters, especially section~\ref{intro:sub:anonymity_privacy}, but a short technical introduction to the actual production system is in order.
 
 \subsection{Event instrumentation in KISSmetrics}
-\label{sub:event_instrumentation}
+\label{approach:sec:event_instrumentation}
 
 To enable effective utilization of the KISSmetrics instrumentation functionality, they supply a client library for the purpose. This client library handles a few central things for us:
 
@@ -80,7 +80,7 @@ The KISSmetrics service provides several analytical tools to dig into this data,
 \end{figure}
 
 \subsection{Cleaning the data}
-\label{sub:cleaning_data}
+\label{approach:sec:cleaning_data}
 
 KISSmetrics has the ability to export raw event data to data files. This can be used to power completely customized analyses, as will be needed for our particular task.
 
@@ -91,12 +91,12 @@ To facilitate the compilation of network-related user model features, conversati
 % section data_ingestion_and_preprocessing (end)
 
 \section{User modeling} % (fold)
-\label{sec:user_modeling}
+\label{approach:sec:user_modeling}
 
 To find clusters of users, we first and foremost need to quantify them. More specifically, we want to represent each user as a feature vector in an $n$-dimensional space.
 
 \subsection{Feature selection}
-\label{sub:feature_selection}
+\label{approach:sec:feature_selection}
 
 Given the types of events being collected, we landed on compiling the following features:
 
@@ -129,7 +129,7 @@ And ended with data in the form of~\eqref{post_user_model}.
 \end{equation}
 
 \section{Clustering the users}
-\label{sec:clustering}
+\label{approach:sec:clustering}
 
 We assume the following hypothesis holds, as a basis for the clustering approach to the user adaptation problem:
 
@@ -139,8 +139,10 @@ The more similarly two people use a service, the more likely they are to respond
 
 Thus, we want to segment the users in the following way: users in each segment should be as similar as possible, and as dissimilar those in other segments as possible. This scheme fits well with the two criterias for selecting an optimal clustering scheme, as described by Berry and Linoff~\cite{Berry1997}.
 
+@TODO: Remember the bias introduced in section~\ref{survey:sub:generality}.
+
 \subsection{Choice of algorithms}
-\label{sub:clustering_algorithms}
+\label{approach:sec:clustering_algorithms}
 
 Three algorithms were implemented and experimented with: DBSCAN, mean-shift, and k-means. Of these, the k-means clearly proved itself as the most effective one, and as it also managed to produce adequate and meaningful results, it was chosen as the principal algorithm.
 
@@ -191,29 +193,29 @@ Figure~\ref{fig:k-means} shows a simple python-esque implementation of the algor
 \end{figure}
 
 \subsection{Evaluating cluster quality}
-\label{sub:evaluating_clusters}
+\label{approach:sub:evaluating_clusters}
 
 @TODO: Davies-Bouldin index etc.
 
 \subsection{Normalizing axes}
-\label{sub:normalizing_axes}
+\label{approach:sub:normalizing_axes}
 
 \subsection{Storing clustering results}
-\label{sub:storing_results}
+\label{approach:sub:storing_results}
 
 \section{Identifying adaptable product features}
-\label{sec:identifying_adaptability}
+\label{approach:sec:identifying_adaptability}
 
 Ideally at this point, we have identified several significant clusters of users. Now we want to adapt the product to better suit each user, based on the cluster he or she belongs to.
 
 Given a set of candidate product alterations $A$, we want to give each user the combination of these that maximizes some performance measure $P$. However, we arguably have no predictive bias to start us off on solving this.
 
-The approach taken in this implementation is a simple one, which relies on conducting a single A/B test up front for each candidate product alteration. The important part during this phase is to log each selected alteration variant along with the same person identifier used for other event instrumentation, as discussed in section~\ref{sub:generating_data}.
+The approach taken in this implementation is a simple one, which relies on conducting a single A/B test up front for each candidate product alteration. The important part during this phase is to log each selected alteration variant along with the same person identifier used for other event instrumentation, as discussed in section~\ref{approach:sub:generating_data}.
 
 This approach enables us to see up-front whether there are any significant variances in feature adoption between the clusters. If there are, we can adapt the service by selecting the more successful variation of the feature for all users in the relevant clusters. If not, we have a feature that affects all users equally -- at least with regard to cluster granularity.
 
 \subsection{Evaluation metrics} % (fold)
-\label{sub:evaluation_metrics}
+\label{approach:sec:evaluation_metrics}
 
 When considering which variation of a product feature to prefer, we need to be able to measure their relative success rates.
 
@@ -230,30 +232,30 @@ Furthermore, we seldom need a measure of \emph{user happiness} to determine the 
 The perhaps most obvious example of this is the landing page, whose main objective is to get people to try out the product. We can define the performance of the landing page in terms of the percentage of users that continue on to try out the product.
 
 \section{Adaptation component} % (fold)
-\label{sec:adaptation_component}
+\label{approach:sec:adaptation_component}
 
 
 \subsection{Applying the personalized feature set} % (fold)
-\label{sub:applying_the_personalized_feature_set}
+\label{approach:sec:applying_the_personalized_feature_set}
 
 Description of the FlagService model.
 
 % section applying_the_personalized_feature_set (end)
 
 \subsection{Visualizing effects} % (fold)
-\label{sub:visualizing_effects}
+\label{approach:sec:visualizing_effects}
 
 % section visualizing_effects (end)
 
 % section adaptation_component (end)
 
 \subsection{Differentiating product features} % (fold)
-\label{sec:differentiating_product_features}
+\label{approach:sec:differentiating_product_features}
 
 % section differentiating_product_features (end)
 
 \section{Evolving the user models} % (fold)
-\label{sec:evolving_the_user_models}
+\label{approach:sec:evolving_the_user_models}
 
 \subsection{Multi-arm bandits}
 
@@ -262,6 +264,6 @@ Description of the FlagService model.
 % section evolving_the_user_models (end)
 
 \section{Visualization requirements (?)} % (fold)
-\label{sec:visualization_requirements}
+\label{approach:sec:visualization_requirements}
 
 % section visualization_requirements (end)

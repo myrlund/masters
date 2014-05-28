@@ -5,12 +5,12 @@
 \lhead{Chapter 4. \emph{Evaluation}}
 
 \section{Description of the evaluated dataset} % (fold)
-\label{sec:description_of_the_evaluated_dataset}
+\label{eval:sec:description_of_the_evaluated_dataset}
 
 % section description_of_the_evaluated_dataset (end)
 
 \section{Prerequisites} % (fold)
-\label{sec:prerequisites}
+\label{eval:sec:prerequisites}
 
 For any of this user adaptation to have any actual use, we will need to find out whether there is actually significant variation in feature adoption between clusters; it matters little whether users exhibit differing behavior with regard to existing functionality, if this behavior yields no basis for predicting feature adoption in the future. We need an inductive bias.
 
@@ -19,14 +19,14 @@ An easy way of discovering whether this inductive bias is present in the user ba
 % section prerequisites (end)
 
 \section{Experimental setup} % (fold)
-\label{sec:experimental_setup}
+\label{eval:sec:experimental_setup}
 
 \emph{Condensed version.}
 
 The main experiment determines whether an alteration of the service affects different kinds of users differently.
 More specifically, do users in clusters $C_1, \ldots, C_n$ employ function $f$ in significantly differing ways? We find out without touching a large percentage of the users, and can use the results to individually enable features for users that
 
-We break the process into three steps, each elaborated on in~\ref{sub:clustering_of_users}, \ref{sub:a_b_testing_features}, and \ref{sub:evaluating_the_results}:
+We break the process into three steps, each elaborated on in~\ref{approach:sec:identifying_adaptability}, \ref{approach:sec:clustering}, and \ref{approach:sec:adaptation_component}:
 
 \begin{enumerate}
   \item A/B test feature $f$ on a percentage of all users.
@@ -37,14 +37,14 @@ We break the process into three steps, each elaborated on in~\ref{sub:clustering
 If the final answer is ``yes'', we can store our results and use them as a basis for adaptating the interface for each user.
 
 \subsection{A/B testing features} % (fold)
-\label{sub:a_b_testing_features}
+\label{eval:sec:a_b_testing_features}
 
 \emph{@TODO: Brief description of how to fit the actual testing regime into the production system.}
 
 % subsection a_b_testing_features (end)
 
 \subsection{User clustering} % (fold)
-\label{sub:clustering_of_users}
+\label{eval:sec:clustering_of_users}
 
 \emph{@TODO: Describe methods and algorithms used. What kind of results are expected?}
 
@@ -54,11 +54,11 @@ If the final answer is ``yes'', we can store our results and use them as a basis
 % section experimental_setup (end)
 
 \section{Initial clustering results}
-\label{sec:clustering_results}
+\label{eval:sec:clustering_results}
 
 The data used in this analysis stems from February 2014.
 
-The following clustering results were found by choosing the best of 5 k-means runs, ``best'' being defined by their Davies-Bouldin indices (see section~\ref{sub:evaluating_clusters} for a brief description of this evaluation metric). This process was performed for $k$ parameter values from 3 to 10, where $K = 8$ yielded the best result. The 2 smallest resulting clusters were omitted in the analysis due to their relatively insignificant sizes.
+The following clustering results were found by choosing the best of 5 k-means runs, ``best'' being defined by their Davies-Bouldin indices (see section~\ref{approach:sub:evaluating_clusters} for a brief description of this evaluation metric). This process was performed for $k$ parameter values from 3 to 10, where $K = 8$ yielded the best result. The 2 smallest resulting clusters were omitted in the analysis due to their relatively insignificant sizes.
 
 Data from January and March yield more or less the same results, although they are a bit less clear. This could be due to media events and holidays generating more skewed data than usual.
 
@@ -87,7 +87,7 @@ The features used in this particular clustering run are (going clockwise around 
 Most of these features are quantified by counting the number of relevant events logged for each user.
 
 \subsection{The typical clusters}
-\label{sub:typical_clusters}
+\label{eval:sec:typical_clusters}
 
 \emph{@TODO: Should this part be moved to appendix?}
 
@@ -183,7 +183,7 @@ The users of cluster 6 are very much like those in cluster 3, as can be seen in 
 \end{persona}
 
 \section{Adapting the user interface} % (fold)
-\label{sec:adapting_the_user_interface}
+\label{eval:sec:adapting_the_user_interface}
 
 The adaptation component consists of two important steps.
 
@@ -193,7 +193,7 @@ The adaptation component consists of two important steps.
 \end{enumerate}
 
 \subsection{Evaluating the results} % (fold)
-\label{sub:evaluating_the_results}
+\label{eval:sec:evaluating_the_results}
 
 Seeing as the application does not yield any direct and real payoff, we will evaluate the performance of each variation relatively, using some general key metrics. This approach is described in~\cite{Yue2012}.
 
@@ -207,11 +207,11 @@ For appear.in, the most important key metrics are ``time on site'' and ``number 
 % section adapting_the_interface (end)
 
 \section{Results} % (fold)
-\label{sec:results}
+\label{eval:sec:results}
 
 % section results (end)
 
 \section{Discussion} % (fold)
-\label{sec:discussion}
+\label{eval:sec:discussion}
 
 % section discussion (end)
