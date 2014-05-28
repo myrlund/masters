@@ -12,7 +12,7 @@ The application case is an anonymous, web-based video conferencing service calle
 
 Previous work in the area of user adaptation has often adhered to the concept of recommending some kind of resource -- often being reducible to the task of finding relevant items to sell, or interesting pages in a website hierarchy. The goal of this project, however, is not to \emph{find good things}, it is to \emph{optimize the user experience of an application}. More specifically, the goal is to be able to predict which version of the application will lead to better performance for each user, down to the individual feature level.
 
-Let us start off with some background on why I believe this is an especially exciting time for user adaptation on the web, before section~\ref{sec:appearin_intro} introduces the specific application case of appear.in. Finally, section~\ref{sec:adaptation_intro} will provide an introduction to the realm of user adaptation.
+Let us start off with some background on why I believe this is an especially exciting time for user adaptation on the web, before section~\ref{intro:sec:appearin} introduces the specific application case of appear.in. Finally, section~\ref{intro:sec:adaptation} will provide an introduction to the realm of user adaptation.
 
 \section{Background and motivation}
 \label{sec:motivation}
@@ -43,7 +43,7 @@ In general, HTML5 enables web applications to do most of the things one would ne
 One of these new API specifications is called WebRTC\footnote{Web Real-Time Communication.}, and it is the last piece of the API puzzle enabling applications like appear.in.
 
 \section{The application case}
-\label{sec:appearin_intro}
+\label{intro:sec:appearin}
 
 For a long time, developing video conferencing services was an extremely challenging discipline, and as a result the market has consisted of a correspondingly low number of actors. However, this trend is currently in the process of being shaken and turned on its head with the introduction of HTML5; more specifically, with the introduction of the WebRTC specification.
 
@@ -110,7 +110,7 @@ Unfortunately, using only cookies for identification has its clear downsides. Sh
 Without tracking more user information -- IPs and locations, for instance -- there is no easy way of tying these user ids together\footnote{Some suggestions on how to solve this is found in the suggestions for further work, in section~\ref{sec:further_work}.}, and to reason about them as a single user. However, collecting this information about users goes against appear.in's privacy policy, and it has been deemed more interesting to see what can be done without crossing this line.
 
 \section{User adaptation}
-\label{sec:adaptation_intro}
+\label{intro:sec:adaptation}
 
 Before answering the question of \emph{how} to do user adaptation, let's look into the more fundamental issue of \emph{why}. Why would we want to adapt a product to its users?
 
@@ -124,10 +124,10 @@ Humans constantly monitor the world around them, and model the objects and peopl
 
 In addition to this, the digital world around us is becoming more and more complex. This complexity will at some point overwhelm users. Adapting to the user's expectations may help in this~\cite{Vrieze}.
 
-For a survey of the field of user adaptation, see section~\ref{sec:user_adaptation_survey}.
+For a survey of the field of user adaptation, see section~\ref{survey:sec:user_adaptation}.
 
 \subsection{A new context}
-\label{sub:adaptation_context_intro}
+\label{intro:sub:adaptation_context}
 
 The application case of appear.in presents a few novel qualities for an adaptive system to deal with. Firstly, we want to do feature-level user adaptation of a web application, and secondly, we want to do so with extremely challenging privacy constraints.
 
@@ -139,7 +139,7 @@ As we shall see throughout chapter~\ref{Chapter2}, most of the surveyed adaptati
 
 We, however, do not enjoy such luxuries. A large part of this thesis will look at how far we can get with only behavioral data, when even identity is at best an unstable notion.
 
-Section~\ref{sec:privacy_vs_personalization_survey} will take a closer look at previous research on the notion of ``privacy versus personalization''.
+Section~\ref{survey:sec:privacy_vs_personalization} will take a closer look at previous research on the notion of ``privacy versus personalization''.
 
 \section{Problem specification}
 \label{sec:problem_specification}
