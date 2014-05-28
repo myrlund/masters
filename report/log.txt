@@ -1,6 +1,11 @@
-\item[2014-05-28] Started on historic and contextual literature survey in chapter 2. (HEAD, master) \\
+\item[2014-05-28] Expanded survey chapter greatly. (HEAD, origin/master, origin/HEAD, master) \\
+\item[2014-05-28] New reference style. \\
+\item[2014-05-28] Minor fixes. \\
+\item[2014-05-28] Rewrite of abstract, problem definition and research questions. \\
+\item[2014-05-28] Started namespacing labels. \\
+\item[2014-05-28] Started on historic and contextual literature survey in chapter 2. \\
 \item[2014-05-28] Expanded chapter 1. \\
-\item[2014-05-26] Rewrote central parts of introductory chapter. Moved out survey-y stuff to ch2. (origin/master, origin/HEAD) \\
+\item[2014-05-26] Rewrote central parts of introductory chapter. Moved out survey-y stuff to ch2. \\
 \item[2014-05-25] Figures into subfigures in chapter 4. \\
 \item[2014-05-24] Reworked structure of chapter 1. Introduction/background/motivation rewrite. \\
 \item[2014-05-14] Cluster walkthrough and analysis. \\
