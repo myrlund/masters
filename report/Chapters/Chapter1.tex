@@ -144,38 +144,46 @@ Section~\ref{survey:sec:privacy_vs_personalization} will take a closer look at p
 \section{Problem specification}
 \label{sec:problem_specification}
 
+An essential part of the research will consist of determining whether anonymous users, like the ones described for the appear.in application, will be clearly separable into clusters based purely on their behavior -- the only data available about them.
 
+Given a set of identified user classes and a set of product variations, we want to find out how each variation affects each user class. When launching a new feature, for instance, will it be adopted differently by different classes of users?
 
-@TODO: Pull together above sections, explain exact case for this project. How does it differ from the general case?
-
-\textbf{Main research question:} Can users of anonymous video conferencing services be clearly divided into user classes based on their behavior, and if so, to what effect can personalization improve their activity level?
+To find out, we perform the following steps:
 
 \begin{enumerate}
-  \item Are users of video conferencing services such as appear.in clearly dividable into separate groups based only on their behavior within the service? Do these patterns reflect those seen elsewhere -- in other types of internet services or even in real life?
-  \item Is it feasible to personalize treatments to these user classes? Does it stimulate users into becoming more active users?
-  \begin{enumerate}
-    \item Is this something these users want?
-    \item Do the inferred preferences of the detected user classes significantly differ from each other?
-    \item Can the personalized treatments be devised in such a way as to stimulate the moving of users in the direction of any desired user class?
-  \end{enumerate}
-  \item How can a toolkit be devised to handle the following?
-  \begin{enumerate}
-    \item User classification based on behavior.
-    \item Product personalization based on a relevant user's class.
-    \item Tracking of each treatment's effect on each user class.
-    \item Prioritize using the most effective treatments without introducing statistical bias (see multi-armed bandit).
-    \item Allow product developers to easily access results to improve future feature prioritization.
-  \end{enumerate}
+  \item Separate users into user classes using segmentation techniques.
+  \item Perform A/B tests of applicable feature variants, independently of user classes.
+  \item Look for significant variation between user classes given their designated variation, as measured by some performance measure.
 \end{enumerate}
+
+If significant variation exists for a feature's variations, we can consistently select the highest-scoring feature variation for the members of the various user classes. The reasoning behind this leap can be found in section~\ref{sec:clustering}.
+
+The A/B testing regime proposed in this work has the advantage of not requiring any sort of reasoning about the actual users in each clusters. By all means, this may well be interesting from a business intelligence perspective, but it will not be necessary to effectively roll out an optimized feature set for each user class.
+
+This project describes a system capable of not only identifying user classes based on user behavior, but more importantly: a framework for identifying the most effective ways of adapting the product to these user classes, in effect driving users in a desirable direction.
+
+Although the project implementation will specifically target the video conferencing service appear.in, a major research question will be to what extent the results generalize.
+
+\subsection{Research questions}
+\label{sub:research_questions}
+
+With the context outlined above, we formulate the following two main research questions:
+
+\begin{enumerate}
+  \item Is it possible to clearly divide users of simple, anonymous web applications into user classes based solely on their behavior?
+  \item To what extent can such an application be adapted to better suit their way of using it?
+\end{enumerate}
+
+It is clear that the second research question strongly depends on the first one, and consequently the thesis is organized in a similarly stepwise manner.
 
 \section{Organization of the thesis}
 \label{sec:thesis_organization}
 
 This paper is organized as follows.
 
-Chapter~\ref{Chapter2} surveys relevant literature, similar applications, provides an in-depth analysis of the available data.
-Chapter~\ref{Chapter3} describes the system design and the reasoning behind central design choices.
-In chapter~\ref{Chapter4} we'll look at the execution results, and see how they evaluate.
+Chapter~\ref{Chapter2} surveys similar research, similar applications, and provides an in-depth analysis of the available data.
+Chapter~\ref{Chapter3} describes the system design and the reasoning behind central design choices, choices of algorithms et cetera.
+In chapter~\ref{Chapter4} we'll analyze the discovered user classes to help answer the first research question, and see how they differ in their adoption of two central application features.
 Chapter~\ref{Chapter5} summarizes the most important takeaways, and suggests further work.
 
 %----------------------------------------------------------------------------------------
