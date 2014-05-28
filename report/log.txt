@@ -1,10 +1,15 @@
-\item[2014-05-14] Cluster walkthrough and analysis. (HEAD, master) \\
+\item[2014-05-28] Started on historic and contextual literature survey in chapter 2. (HEAD, master) \\
+\item[2014-05-28] Expanded chapter 1. \\
+\item[2014-05-26] Rewrote central parts of introductory chapter. Moved out survey-y stuff to ch2. (origin/master, origin/HEAD) \\
+\item[2014-05-25] Figures into subfigures in chapter 4. \\
+\item[2014-05-24] Reworked structure of chapter 1. Introduction/background/motivation rewrite. \\
+\item[2014-05-14] Cluster walkthrough and analysis. \\
 \item[2014-05-14] Started on clustering theory. \\
 \item[2014-05-13] Elaborated on chapter 3, in particular data cleaning and user modeling. \\
 \item[2014-05-13] Elaborated on generation and collection of event data. \\
 \item[2014-05-02] Elaborated on experiment design. \\
 \item[2014-04-14] Expanded on appear.in as a concept. \\
-\item[2014-03-31] Elaborated on evaluation chapter. Work in progress. (home/master) \\
+\item[2014-03-31] Elaborated on evaluation chapter. Work in progress. \\
 \item[2014-03-18] Tiny label fix. New version of PDF. \\
 \item[2014-03-18] Added condensed section on experimental setup. \\
 \item[2014-03-18] Added intro on similar domains and research. \\
