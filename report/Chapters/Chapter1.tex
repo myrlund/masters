@@ -17,28 +17,47 @@ Let us start off with some background on why I believe this is an especially exc
 \section{Background and motivation}
 \label{sec:motivation}
 
-The web is an interesting venue in which to explore new ways of user adaptation and personalization. Even today, when we are able to build almost every kind of application right in the web browser, a fundamental concept remains: there is still a server serving the application code every single time a user opens the site\footnote{Caching excluded, of course, but that's beside the point.}.
+The web is an interesting venue in which to explore new ways of user adaptation and personalization. Even today, when we are able to build almost every kind of application right in the web browser, a fundamental concept remains: there is still a server serving the application code every single time a user opens the site\footnote{Caching aside, of course.}.
 
 \subsection{The modern web}
+\label{sub:the_modern_web}
 
 This is the modern web: a place where applications are nearing the power of traditional desktop applications, but with the potential of being continuously tailored to suit each user individually.
 
 When we say that web applications are nearing the power of traditional desktop applications, we are of course talking about the introduction of HTML5. HTML was primarily designed as a language for semantically describing documents, and little more. The last decade, however, the concept of web applications has thoroughly established itself, while lacking clear standardization efforts from the W3C. The HTML5 specification is an attempt to remedy this~\cite{W3CHTML5_intro}, by providing standards and guidelines for the browser vendors on how to implement a wide range of common APIs.
 
-In practice, these APIs lets websites play video, generate graphics, grab your webcam and microphone stream, process files, and a wide range of other things. In general, HTML5 enables web applications to do most of the things one would need plugins or desktop applications for just a few years ago.
+In practice, these APIs lets websites do things like:
+
+\begin{itemize}
+    \item play audio and video\footnote{\url{http://dev.w3.org/html5/spec-author-view/video.html}}
+    \item generate graphics\footnote{\url{http://www.w3.org/TR/2dcontext/}}
+    \item access your webcam and microphone\footnote{\url{http://www.w3.org/TR/mediacapture-streams/}}
+    \item handle and manipulate arbitrary files\footnote{\url{http://www.w3.org/TR/FileAPI/}}
+    \item send and recieve data over full-duplex socket connections\footnote{\url{http://www.w3.org/TR/websockets/}}
+\end{itemize}
+
+...as well as a wide range of other things.
+
+In general, HTML5 enables web applications to do most of the things one would need plugins or native applications for just a few years ago.
 
 One of these new API specifications is called WebRTC\footnote{Web Real-Time Communication.}, and it is the last piece of the API puzzle enabling applications like appear.in.
 
-\section{Introducing appear.in}
+\section{The application case}
 \label{sec:appearin_intro}
 
 For a long time, developing video conferencing services was an extremely challenging discipline, and as a result the market has consisted of a correspondingly low number of actors. However, this trend is currently in the process of being shaken and turned on its head with the introduction of HTML5; more specifically, with the introduction of the WebRTC specification.
 
+\subsection{The enabling piece of technology: WebRTC}
+
 As the name implies, WebRTC handles real-time communication, but for our case, the important aspect of the technology is that it is able to do so peer-to-peer. Although it per design is a protocol for exchanging arbitrary data between peers, it is particularly geared toward multimedia streams. For instance, the traditionally cumbersome task of setting up a two-way audiovisual connection is now a matter of dropping around 40 lines of boilerplate Javascript into a web page\footnote{For an excellent introduction, see: \url{http://www.html5rocks.com/en/tutorials/webrtc/basics/}.}.
 
-Although the WebRTC specification is still officially a \emph{working draft} in the W3C\footnote{The latest specification can be found here: \url{http://dev.w3.org/2011/webrtc/editor/webrtc.html}.}, several large browser vendors have already implemented it, and applications previously unseen on the web pop up every week.
+Although the WebRTC specification at the time of writing still officially is a \emph{working draft} in the W3C\footnote{The latest specification can be found here: \url{http://dev.w3.org/2011/webrtc/editor/webrtc.html}.}, most of the large browser vendors have already implemented it. Consequentially, a plethora of applications leveraging this technology are already available, with ever more being launched every month.
 
-One of these applications is called appear.in, and it will serve as the main use case in this thesis. Like many other WebRTC applications, appear.in concerns itself with video conferencing. The idea is simple enough: a conversation happens between users who are in the same room at the same time. The central idea, though, is that the room is identified solely by the URL in use, and not in any way by the peers connecting. As an example, if any two people are visiting \url{https://appear.in/ntnu} at the same time, they will see and hear each other and can start chatting away without any further call setup or configuration.
+\subsection{Introducing appear.in}
+
+One of these applications is called appear.in, and it will serve as the main use case in this thesis. Like many other WebRTC applications, appear.in concerns itself with video conferencing.
+
+The idea is simple enough: a conversation happens between users who are in the same room at the same time. The central idea, though, is that the \emph{conversation} is identified solely by the URL in use, and not in any way by the peers connecting. As an example, if any two people are visiting \url{https://appear.in/ntnu} at the same time, they will see and hear each other and can start chatting away without any further call setup or configuration.
 
 This view of a conversation as not really being an enitity in its own right, but rather an \emph{effect} of people being in the same room at the same time, breaks with the traditional model of audiovisual communication. Traditionally, talking to someone not present has been a process of one person \emph{calling} the other one, with group conversations usually being nothing more than an extension of this concept. appear.in doesn't concern itself with distinguishing between callers and callees, has no simple concept of a ``conversation'', and generally does not enforce any particular way of using the service -- apart from requiring the conversation venue to be identifiable by a string of characters.
 
@@ -54,7 +73,9 @@ Until the arrival of WebRTC, this particular way of thinking about conversations
 \subsection{Anonymity and privacy}
 \label{sub:anonymity_privacy}
 
-appear.in is an anonymous communication service. No personal information is ever collected about the users, and not even IP-addresses or geolocational data is logged on an individual level. By tracking individual \emph{browsers} using cookies, then logging behavioral events along with a cookie identifier, we can measure user behavior over time.
+appear.in is an anonymous communication service. No personal information is ever collected about the users, and not even IP-addresses or geolocational data is logged on an individual level. By tracking individual \emph{browsers} using cookies, however, we can track users -- or more precisely, browsers -- over time.
+
+By logging various events that we deem interesting along with a cookie value identifying the browser, we can reconstruct user sessions, and connect them to the application users pseudonomously. By ``pseudonomously'' it is meant that we identify the users solely by a random string set in their browser.
 
 This all opens a wide series of questions bordering to sociological aspects of web usage:
 
@@ -105,8 +126,25 @@ In addition to this, the digital world around us is becoming more and more compl
 
 For a survey of the field of user adaptation, see section~\ref{sec:user_adaptation_survey}.
 
+\subsection{A new context}
+\label{sub:adaptation_context_intro}
+
+The application case of appear.in presents a few novel qualities for an adaptive system to deal with. Firstly, we want to do feature-level user adaptation of a web application, and secondly, we want to do so with extremely challenging privacy constraints.
+
+The first point, what being an \emph{application} running on the web entails for the relevance of previous research, is discussed in depth in section~\ref{sub:traditional_web_personalization}.
+
+The second point, the impact of tight privacy constraints, requires some discussion before we take on the concrete problem specification of this thesis.
+
+As we shall see throughout chapter~\ref{Chapter2}, most of the surveyed adaptation systems have a notion of \emph{users}, who can be tracked over time. Furthermore, most traditional user modeling systems even assume either the availability of demographic information or some notion of \emph{consumption of resources}, which in turn both can aid in constructing user models.
+
+We, however, do not enjoy such luxuries. A large part of this thesis will look at how far we can get with only behavioral data, when even identity is at best an unstable notion.
+
+Section~\ref{sec:privacy_vs_personalization_survey} will take a closer look at previous research on the notion of ``privacy versus personalization''.
+
 \section{Problem specification}
 \label{sec:problem_specification}
+
+
 
 @TODO: Pull together above sections, explain exact case for this project. How does it differ from the general case?
 
