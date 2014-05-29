@@ -128,6 +128,7 @@ However, as touched upon in section~\ref{}, the main challenge with appear.in as
 The absence of demographics leaves us with less information for us to found our predictions on.
 
 \subsubsection{The unreliability of user identity}
+\label{survey:unreliable_identity}
 
 Being an anonymous service, appear.in has no explicit login. As explained in section~\ref{intro:sub:tracking_users}, appear.in uses cookies to track users over time, which introduces some challenges when it comes to building user models.
 
@@ -180,13 +181,7 @@ One system, however, Doppelgänger~\cite{Orwant1995}, stands out in this regard,
 
 \subsubsection{Internet-time research}
 
-@TODO
-
---
-
-What is it? Other domains where it's used (marketing).
-
-How'd it start? What use cases have been popular throughout its history? What are recent developments and key enablers?
+@TODO What are recent developments and key enablers?
 
 \subsection{Personalization on the web}
 \label{survey:sub:web_personalization}
@@ -215,54 +210,103 @@ As mentioned, there are many approaches to the task of user adaptation. Due to t
 
 Traditionally, this has entailed tracking the way users traverse a website hierarchy, looking for path patterns among them, and using this information to adapt the pages in various ways~\cite{Mobasher2000,Eirinaki2003,Montgomery2009}. While not entirely the same, this is mostly analogous to the type of adaptation problem we are solving, and the systems proposed in this earlier work solves many of the same problems that we will need to solve.
 
-A general, high-level sketch of a typical adaptive system is outlined in figure~\ref{fig:general_adaptive_system}.
-
-\begin{figure}[h]
-  \centering
-    \includegraphics[width=0.8\textwidth]{Figures/adaptation-high-level}
-  \caption{Caption.}
-  \label{fig:general_adaptive_system}
-\end{figure}
+% The following belongs in history, if anywhere. Outdated figure.
+%
+% A general, high-level sketch of a typical adaptive system is outlined in figure~\ref{fig:general_adaptive_system}.
+%
+% \begin{figure}[h]
+%   \centering
+%     \includegraphics[width=0.8\textwidth]{Figures/adaptation-high-level}
+%   \caption{Caption.}
+%   \label{fig:general_adaptive_system}
+% \end{figure}
 
 \subsection{Privacy versus personalization}
 \label{survey:sec:privacy_vs_personalization}
 
+The marketing firm Jupiter defines personalization as ``predictive analysis of consumer data used to adapt targeted media, advertising and merchandising to consumer needs. According to Jupiter, personalization can be viewed as a cycle of recurring processes consisting of \emph{data collection}, \emph{profiling} and \emph{matching}''~\cite{Foster2000}. This section will discuss some ethical and political issues surrounding the first step of this cycle, namely \emph{data collection}.
 
+Teltzrow and Kobsa~\cite{Teltzrow2004} state it plainly: ``Personalization systems need to acquire a certain amount of data about users' interests, behavior, demographics and actions before they can start adapting to them.'' As we shall see, many Internet users are highly sceptical of providing personal information to web sites, and a majority are concerned about web sites tracking their movements and behavior online. This doesn't fit adaptive systems' demand for data collection.
 
-\section{Segmentation techniques}
-\label{survey:sec:segmentation_techniques}
+First, consider the following survey results regarding personal infomation~\cite{Teltzrow2004}:
 
-There are several ways of
+\begin{enumerate}
+  \item Internet Users who are concerned about the security of personal information: 83\% (Cyber Dialogue, 2001), 70\% (Behrens, 2001), 72\% (UMR, 2001), 84\% (Fox et al., 2000)
+  \item People who have refused to give (personal) information to a web site: 82\% (Culnan and Milne, 2001)
+  \item Internet users who would never provide personal information to a web site: 27\% (Fox et al., 2000)
+  \item Internet users who supplied false or fictitious information to a web site when asked to register: 34\% (Culnan and Milne, 2001), 24\% (Fox et al., 2000)
+\end{enumerate}
+
+% @TODO: Resolve the above references into actual citations.
+
+Although the above numbers aren't directly relevant to the case of appear.in, where no personal information is collected or stored, it underlines a general scepticism towards providing information to web sites.
+
+The same scepticism is again seen when users are surveyed on their attitudes towards being tracked online~\cite{Teltzrow2004}.
+
+\begin{enumerate}
+  \item People who are concerned about being tracked on the Internet: 60\% (Cyber Dialogue, 2001), 54\% (Fox et al., 2000), 63\% (Harris, 2000)
+  \item Internet users who generally accept cookies: 62\% (Personalization Consortium, 2000)
+  \item Internet users who set their computers to reject cookies: 25\% (Culnan and Milne, 2001), 3\% (Cyber Dialogue, 2001), 31\% in warning modus (Cyber Dialogue, 2001), 10\% (Fox et al., 2000)
+  \item Internet users who delete cookies periodically: 52\% (Personalization Consortium, 2000)
+\end{enumerate}
+
+Although these numbers are a bit dated, there is little reason to believe that the tracking situation is going to get any easier in the years to come. This is the subject of discussion in the next section.
+
+As discussed in section~\ref{survey:unreliable_identity}, any time a user clears the browser cookies, we effectively break the user's event stream, and is from that moment onwards -- for all we know -- a brand new user.
+
+This makes it hard to know if these numbers are similar to those among the users of appear.in, as they have not yet been surveyed on this subject. Furthermore, our only data source touching the user base is based on the tracking cookies in question -- hence we are unable to examine to what extent the above survey applies to our case.
+
+\subsubsection{The road ahead}
+
+\begin{itemize}
+  \item Broad scepticism towards the use of cookies to track users, even on first-party sites.
+  \item Legislation restricting the extent to which first-party, and especially third-party sites, can use cookies to track users has already been put into place -- with more to come.
+\end{itemize}
+
+\cite{RuizMartinez2012,Nikiforakis2013,Sorensen2013,Eijk2011}.
+
+\section{Clustering techniques}
+\label{survey:sec:clustering_techniques}
+
+There are many approaches to the task of clustering user models.
+
+@TODO: Some text on hierarchical, flat, density, probabilistic, k-median etc, before presenting k-means as our choice due to: good match with both input and desired output, scales well (parallel optimization), by far most popular in commercial applications~\cite{Berkhin2006}.
 
 \section{A/B testing}
 \label{survey:sec:ab_testing}
 
+Controlled experiments embody the best scientific design for establishing a causal relationship between changes and their influence on user-observable behavior~\cite{Kohavi2007,Kohavi2008}.
+
+The simplest form of controlled experiment is often referred to as the A/B test. In A/B tests users are randomly exposed to one of two variants: control (A), or treatment (B). Based on data collected, an Overall Evaluation Criterion (OEC) is derived for each variant. Figure~\ref{fig:ab_flow} illustrates the A/B testing process.
+
+@TODO: Insert figure similar to the one in Kohavi2007 p.3.
+
+One word in the previous paragraph, ``randomly'', warrants some discussion. To be able to establish a causal relationship between the selected variant and the evaluation, the variant selection must indeed be completely random, and not based on what Kohavi et al. term ``any old which way''~\cite{Kohavi2007}.
+
+This point \emph{must} be kept in mind when designing adaptive systems based on controlled experiments, as in our case.
 
 \section{State of the art}
 \label{survey:sub:state_of_the_art}
 
 
-\section{Similar research} % (fold)
-\label{survey:sec:similar_applications}
 
-The approach taken to adaptive personalization is based heavily on the work by Vrieze in ``Fundaments of Adaptive Personalization''~\cite{Vrieze}.
-
-\subsection{Relevant literature} % (fold)
-\label{survey:sec:relevant_literature}
-
-Teltzrow and Kobsa's work on privacy-driven personalization systems provides insight into a lot of the issues surrounding the lack of demographic information in personalization~\cite{Teltzrow2004,Kobsa2007}. However, the main focus of their work seems to be that users are more willing to provide demographic information if that information is not backtracable to themselves, through pseudonymous personalization.
-This matches the application in question quite poorly, as the goal is not to obtain demographics -- rather to attempt to cope without it.
-
-\emph{@TODO} Explore and include literature on:
-
-\begin{itemize}
-  \item Clustering and segmenting users, choice of algorithms etc.
-  \item Visualizing and evaluating clusters.
-  \item A/B testing, multivariate testing, multi-arm bandits.
-  \item Motivations for adaptive personalization. Online business models?
-  \item Anonymity: do users experience personalization as an overstep?
-\end{itemize}
-
-% subsection relevant_literature (end)
-
-% section similar_applications (end)
+% \section{Similar research} % (fold)
+% \label{survey:sec:similar_applications}
+%
+% The approach taken to adaptive personalization is based heavily on the work by Vrieze in ``Fundaments of Adaptive Personalization''~\cite{Vrieze}.
+%
+% \subsection{Relevant literature} % (fold)
+% \label{survey:sec:relevant_literature}
+%
+% Teltzrow and Kobsa's work on privacy-driven personalization systems provides insight into a lot of the issues surrounding the lack of demographic information in personalization~\cite{Teltzrow2004,Kobsa2007}. However, the main focus of their work seems to be that users are more willing to provide demographic information if that information is not backtracable to themselves, through pseudonymous personalization.
+% This matches the application in question quite poorly, as the goal is not to obtain demographics -- rather to attempt to cope without it.
+%
+% \emph{@TODO} Explore and include literature on:
+%
+% \begin{itemize}
+%   \item Clustering and segmenting users, choice of algorithms etc.
+%   \item Visualizing and evaluating clusters.
+%   \item A/B testing, multivariate testing, multi-arm bandits.
+%   \item Motivations for adaptive personalization. Online business models?
+%   \item Anonymity: do users experience personalization as an overstep?
+% \end{itemize}

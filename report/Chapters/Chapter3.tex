@@ -7,13 +7,22 @@
 \section{System overview} % (fold)
 \label{approach:sec:system_overview}
 
-The proposed system is constructed around the data flowing through it.
+The proposed system is constructed around the data flowing through it. This chapter describes each part of the system outlined in figure~\ref{fig:system-architecture}.
 
-The system takes the data stepwise through an ingestion pipeline, importing, filtering and cleaning it, before churning it into user models. This particular part of the system is elaborated on further in section~\ref{approach:sec:data_ingestion_and_preprocessing}.
+\begin{figure}[h]
+  \centering
+    \includegraphics[width=0.75\textwidth]{Figures/system-architecture}
+    \caption{Overview of the system architecture.}
+    \label{fig:system-architecture}
+\end{figure}
+
+The system begins by taking the data stepwise through an ingestion pipeline, importing, filtering and cleaning it. The steps of the ingestion pipeline are discussed in section~\ref{approach:sec:data_ingestion_and_preprocessing}, before moving on to the user modeling component in section~\ref{approach:sec:user_modeling}.
 
 Once user models are in place, the system generates user segments. These are stored in a database for future use. There are several viable approaches to the segmentation task. These are discussed in more detail in section~\ref{approach:sec:clustering}.
 
-As it turns out, when designing completely autonomous adaptative systems, we need more data than user segments to effectively drive the adaptive component. When considering whether to enable a feature or an interface switch, we need to know whether doing so will be advantageous to the user segment in question. This is discussed in section~\ref{approach:sec:adaptation_component}.
+Apart from clusters, the adaptation component requires content experiment results to predict how users will respond to application variations. This is discussed in section~\ref{approach:sec:identifying_adaptability}.
+
+The components come together in the adaptation component, discussed in section~\ref{approach:sec:adaptation_component}, whose job it is to answer questions about users, effectively completing the feedback cycle back to the application.
 
 % section system_overview (end)
 
@@ -238,32 +247,4 @@ The perhaps most obvious example of this is the landing page, whose main objecti
 \subsection{Applying the personalized feature set} % (fold)
 \label{approach:sec:applying_the_personalized_feature_set}
 
-Description of the FlagService model.
-
-% section applying_the_personalized_feature_set (end)
-
-\subsection{Visualizing effects} % (fold)
-\label{approach:sec:visualizing_effects}
-
-% section visualizing_effects (end)
-
-% section adaptation_component (end)
-
-\subsection{Differentiating product features} % (fold)
-\label{approach:sec:differentiating_product_features}
-
-% section differentiating_product_features (end)
-
-\section{Evolving the user models} % (fold)
-\label{approach:sec:evolving_the_user_models}
-
-\subsection{Multi-arm bandits}
-
-\subsection{Tracking individual treatment}
-
-% section evolving_the_user_models (end)
-
-\section{Visualization requirements (?)} % (fold)
-\label{approach:sec:visualization_requirements}
-
-% section visualization_requirements (end)
+Description of the feature service.
