@@ -201,9 +201,6 @@ Recent research, however, usually does not make these kinds of assumptions about
 
 Thus, we will be using the terms ``user adaptation'' and ``personalization'' without relating it to the domain in which it is visible to the user, as this is quite irrelevant with a clear separation of the application and adaptational component. The evolution of this model through the 90s and into the modern internet era is elaborated on in the following sections.
 
-
-\subsection{Conceptual framework}
-
 \subsection{Implementation methodology}
 
 As mentioned, there are many approaches to the task of user adaptation. Due to the constraints outlined in the previous chapters, we will be honing in on the approach termed ``web usage mining'', or sometimes ``clickstream analysis''.
@@ -271,6 +268,30 @@ This makes it hard to know if these numbers are similar to those among the users
 There are many approaches to the task of clustering user models.
 
 @TODO: Some text on hierarchical, flat, density, probabilistic, k-median etc, before presenting k-means as our choice due to: good match with both input and desired output, scales well (parallel optimization), by far most popular in commercial applications~\cite{Berkhin2006}.
+
+\subsection{Clustering evaluation}
+\label{survey:sub:clustering_evaluation}
+
+In general, any clustering method should search for clusters whose members are close to each other and well separated. Berry and Linoff~\cite{Berry1996} formulate it in terms of ``compactness'' and ``separation''.
+
+\begin{description}
+  \item[Compactness] \hfill \\
+    The members of each cluster should be as close to each other as possible.
+  \item[Separation] \hfill \\
+    The clusters themselves should be widely spaced.
+\end{description}
+
+For an algorithm such as $k$-means, which takes the $k$ as an input, the central question when it comes to cluster validity is for which value of $k$ the cluster compactness and separation are optimal.
+
+The most efficient way of measuring cluster quality between several executions of a clustering method, where only its parameters -- like $k$ -- differ, is to utilize a so-called \emph{relative criteria}~\cite{Halkidi2001}.
+
+One of the most widely used measures of clusters' relative criteria is the Davies-Bouldin index, which is the one used to differentiate between clusters in this project. It is defined as:
+
+\begin{equation}
+  \text{DB}_k = \frac{1}{k} \sum_{i=1}^k \max_{i \neq j} \left( \frac{s_i + s_j}{d(c_i, c_j)} \right)
+\end{equation}
+
+where $k$ is the number of clusters, $c_x$ is the centroid of cluster $x$, $s_x$ is the average distance of all elements in cluster $x$ to centroid $c_x$, and $d(c_i,c_j)$ is the distance between centroids $c_i$ and $c_j$.
 
 \section{A/B testing}
 \label{survey:sec:ab_testing}

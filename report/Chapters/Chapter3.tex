@@ -20,7 +20,7 @@ The system begins by taking the data stepwise through an ingestion pipeline, imp
 
 Once user models are in place, the system generates user segments. These are stored in a database for future use. There are several viable approaches to the segmentation task. These are discussed in more detail in section~\ref{approach:sec:clustering}.
 
-Apart from clusters, the adaptation component requires content experiment results to predict how users will respond to application variations. This is discussed in section~\ref{approach:sec:identifying_adaptability}.
+Apart from clusters, the adaptation component requires content experiment results to predict how users will respond to application variations. This is discussed in section~\ref{approach:sec:feature_experiments}.
 
 The components come together in the adaptation component, discussed in section~\ref{approach:sec:adaptation_component}, whose job it is to answer questions about users, effectively completing the feedback cycle back to the application.
 
@@ -204,6 +204,8 @@ Figure~\ref{fig:k-means} shows a simple python-esque implementation of the algor
 \subsection{Evaluating cluster quality}
 \label{approach:sub:evaluating_clusters}
 
+\cite{Halkidi2001}
+
 @TODO: Davies-Bouldin index etc.
 
 \subsection{Normalizing axes}
@@ -212,10 +214,10 @@ Figure~\ref{fig:k-means} shows a simple python-esque implementation of the algor
 \subsection{Storing clustering results}
 \label{approach:sub:storing_results}
 
-\section{Identifying adaptable product features}
-\label{approach:sec:identifying_adaptability}
+\section{Feature experiments}
+\label{approach:sec:feature_experiments}
 
-Ideally at this point, we have identified several significant clusters of users. Now we want to adapt the product to better suit each user, based on the cluster he or she belongs to.
+Ideally at this point, we have identified several significant clusters of users. Now we want to find viable ways of adapting the product to better suit each user, based on the cluster he or she belongs to.
 
 Given a set of candidate product alterations $A$, we want to give each user the combination of these that maximizes some performance measure $P$. However, we arguably have no predictive bias to start us off on solving this.
 
