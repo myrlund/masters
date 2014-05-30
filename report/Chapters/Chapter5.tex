@@ -9,14 +9,37 @@
 \section{Summary} % (fold)
 \label{conclusion:sec:summary}
 
-% section results (end)
+As shown in the previous chapter, we find that there are indeed clear differences in feature adoption across the identified user segments.
+
+The domain constraints and the resulting scarcity and unreliability of user modeling data makes for clustering results that are at best hard to intuitively understand. This hinders us in reasoning about the various ways of applying the user adaptations, ie. the ways of distributing the feature variants among the identified user segments.
+
+% Often, this process is based on more diffuse concepts, like business intelligence or intuition about the users.
+
+The controlled experiments of section~\ref{approach:sec:feature_experiments} provide us with hard evidence of behavioral correlations in our user base -- or indeed, lack thereof. This disentangles us from the error-prone decision making otherwise involved in setting up group adaptations.
 
 \section{Generalizing the system} % (fold)
 \label{conclusion:sec:generalizing_the_system}
+
+Section~\ref{survey:sub:generality} analyzes the application case, and identifies the two main challenges of providing user adaptation:
+
+\begin{enumerate}
+  \item the absence of demographics
+  \item the unreliability of user identity
+\end{enumerate}
+
+Together, these two factors comprise an unusually harsh environment for an adaptative system to operate in. In ... we predicted that the clusters would be hard to intuitively understand, as they would effectively represent a noisy and incomplete version of the actual user base.
+
+As we saw in chapter~\ref{Chapter4}, these predictions did indeed match the results.
+
+Due to uncertainty caused by domain constraints, it is hard to tell to what extent the results generalize.
 
 % section generalizing_the_system (end)
 
 \section{Suggestions for further work} % (fold)
 \label{conclusion:sec:further_work}
 
-% section suggestions_for_further_work (end)
+The work presented can be improved in many ways.
+
+Within the domain of appear.in, and applications like it, the event data cleaning and user modeling processes have a lot to gain.
+
+Firstly, it would be interesting to see if similar results are achieved for other applications.
