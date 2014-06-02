@@ -29,9 +29,20 @@ An easy way of discovering whether this inductive bias is present in the user ba
     \label{fig:experimental-setup}
 \end{figure}
 
-The main experiment will determine whether an alteration of the service performs differently among ``different kinds of users''. A/B test results and user clusters will serve as input data to test the hypothesis.
+The main hypothesis is:
 
-@TODO: Formulate exact hypothesis.
+\begin{quote}
+  Different variations of a service may perform differently among ``different kinds of users''. These variations can be used as inductive bias on which general user adaptations can be based.
+\end{quote}
+
+\subsection{Experiment input}
+
+Two sources of input will serve as input data to test the hypothesis:
+
+\begin{enumerate}
+  \item A/B test results
+  \item User clusters
+\end{enumerate}
 
 The data from the A/B test results describe each person's designated variant, and the resulting performance. See table~\ref{tab:person_variants} for some example data.
 
@@ -69,22 +80,7 @@ The user cluster data contain the same persons as the test results in table~\ref
 
 These data sources are aggregated with regard to variant and cluster, and the relative success rates compared.
 
---
-
-\emph{Condensed version.}
-
-The main experiment determines whether an alteration of the service affects different kinds of users differently.
-More specifically, do users in clusters $C_1, \ldots, C_n$ employ function $f$ in significantly differing ways? We find out without touching a large percentage of the users, and can use the results to individually enable features for users that
-
-We break the process into three steps, each elaborated on in~\ref{approach:sec:feature_experiments}, \ref{approach:sec:clustering}, and \ref{approach:sec:adaptation_component}:
-
-\begin{enumerate}
-  \item A/B test feature $f$ on a percentage of all users.
-  \item Separate users into clusters $C_1, \ldots, C_n$.
-  \item Analyze results: did the test results vary significantly between clusters?
-\end{enumerate}
-
-If the final answer is ``yes'', we can store our results and use them as a basis for adaptating the interface for each user.
+The next sections walk through and evaluate the actual results in the context of the experiment described in this section.
 
 \section{A/B testing features} % (fold)
 \label{eval:sec:ab_testing_features}
@@ -245,7 +241,7 @@ The features used in this particular clustering run are (going clockwise around 
 
 Most of these features are quantified by counting the number of relevant events logged for each user.
 
-A ... \ref{eval:sec:clustering_results}.
+Although irrelevant to the experiment, a detailed analysis of the clusters depicted in figure~\ref{fig:radar-clusters-february} is available in~\ref{eval:sec:clustering_results}.
 
 \subsection{The applicability of manual cluster analysis}
 \label{eval:sub:cluster_analysis_applicability}
@@ -267,12 +263,14 @@ The task of adapting the application brings together previous A/B test results a
   \label{tab:results}
 \end{table}
 
+\clearpage
+
 \section{Identity persistence}
 \label{eval:sec:identity_persistence}
 
 As has been discussed extensively already, a major difficulty in adapting applications such as appear.in to its users is that there is no concrete notion of \emph{a user}. Users are anonymous, and the only way they are being tracked at all is through a random hash set in a tracking cookie (see section~\ref{survey:unreliable_identity} and~\ref{survey:sec:privacy_vs_personalization}).
 
-How, though, does this affect our adaptation efforts? One way of gauging this is to look at how many users return over time; that is, to what extent are unique cookie hashes seen over time?
+How, though, does this affect our adaptation efforts? One way of gauging this is to look at the number of users we see returning. More precisely: for how many months do we see each tracking cookie return before we never see it again?
 
 Table~\ref{tab:returning_users} shows the number of unique users that visited the site in January, February and March, along with the percentage of these users who were seen again during the next 1 thru 5 months.
 
@@ -284,7 +282,7 @@ Table~\ref{tab:returning_users} shows the number of unique users that visited th
     February   & 26,273  & 20.20\% & 3.80\%   & 2.10\%   & 1.10\%   & -        \\
     March      & 113,715 & 23.20\% & 5.40\%   & 2.90\%   & -        & -        \\ \hline
   \end{tabular}
-  \caption{Portions of identified users returning to the site over time.}
+  \caption{The degree to which a monthly unique set of users are seen again after $n$ months.}
   \label{tab:returning_users}
 \end{table}
 
@@ -292,7 +290,7 @@ Two plots of these numbers can be seen in figure~\ref{fig:perceived_user_persist
 
 As we see, just over 20\% are seen again the month after they first visit the site. Only about 20\% of these users again make it through to the subsequent month. After three months, less than 3\% remain in all three cases.
 
-There are three reasons for the perceived number of users to drop:
+The perceived rate of retention is subject to three different factors:
 
 \begin{enumerate}
   \item The user did not use the service again.
@@ -300,9 +298,9 @@ There are three reasons for the perceived number of users to drop:
   \item The user changed browser or computer.
 \end{enumerate}
 
-There is all reason to believe that we are looking at a combination between all three factors, yet hard to know how much each contributes to the trend.
+There is all reason to believe that we are looking at a combination between all three, yet hard to know how much each contributes to the trend. We naturally assume that most users perceived as not returning simply do not return.
 
-Based on the survey performed by Teltzrow and Kobsa~\cite{Teltzrow2004}, as discussed in section~\ref{survey:sec:privacy_vs_personalization}, we will assume that the last two factors contribute significantly to these numbers.
+However, the survey performed by Teltzrow and Kobsa~\cite{Teltzrow2004}, as discussed in section~\ref{survey:sec:privacy_vs_personalization}, states that more than half of all users clear their cookies periodically, and a significant amount of users reject cookies altogether. We will therefore assume that the last two factors also contribute in a significant degree to these numbers.
 
 \begin{figure}[t]
   \centering
