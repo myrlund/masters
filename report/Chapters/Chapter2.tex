@@ -123,9 +123,24 @@ However, as touched upon in section~\ref{intro:sec:appearin}, the main challenge
 
 \subsubsection{The absence of demographics}
 
-@TODO: refer to work involving demographics (surveys, webshops, marketing foobar etc.), work not requiring it (clickstream analysis, implicit user modeling etc), and work just talking about the issue.
+A key facet of all user adaptation and personalization is adapting to a user's interests, and so it is imperative to learn about the customer. Montgomery and Srinivasan introduce a distinction between active and passive learning to aid in categorizing approaches to the issue~\cite{Montgomery2002}. Whereas active learning results from direct questions to the user, passive learning is the opposite: learning about the user without asking.
 
-The absence of demographics leaves us with less information for us to found our predictions on.
+Active learning has several disadvantages in the general case:
+
+\begin{enumerate}
+  \item It requires too much effort on the customer's part.
+  \item The user may indeed not know the answer to the questions, either lacking the proper knowledge or experience to evaluate the alternatives.
+  \item The user may be unwilling to reveal correct answers.
+  \item It is inefficient since it ignores information consumers reveal about their preferences in their past interactions and purchases.
+\end{enumerate}
+
+The first point applies especially to the case of appear.in. An important part of the product is the simplicity of the application, ie. the small amount of friction. Thus, introducing questionnaires or similar approaches to collecting active feedback from users has not been viewed as a positive tradeoff up to this point.
+
+So, we will be limited to passive learning. What does this leave us with in practice?
+
+Montgomery identifies three major sources of information from which it is possible to passively learn: transaction data, clickstream data, and email.
+
+appear.in, being a so-called single-page web application, has no clickstream in the traditional sense -- the traditional sense being the series of pages navigated to. Transactional data is usually related to e-commerce, and to some sense of ``items bought'', and is similarly irrelevant in this sense. However, we can choose to view the series of interactions with the application as a clickstream of sorts -- an event stream, -- and use it as a data source in much the same way.
 
 \subsubsection{The unreliability of user identity}
 \label{survey:unreliable_identity}
@@ -181,7 +196,7 @@ One system, however, Doppelgänger~\cite{Orwant1995}, stands out in this regard,
 
 \subsubsection{Internet-time research}
 
-@TODO What are recent developments and key enablers?
+@TODO: What are recent developments and key enablers?
 
 \subsection{Personalization on the web}
 \label{survey:sub:web_personalization}
@@ -300,7 +315,7 @@ Controlled experiments embody the best scientific design for establishing a caus
 
 The simplest form of controlled experiment is often referred to as the A/B test. In A/B tests users are randomly exposed to one of two variants: control (A), or treatment (B). Based on data collected, an Overall Evaluation Criterion (OEC) is derived for each variant. Figure~\ref{fig:ab_flow} illustrates the A/B testing process.
 
-@TODO: Insert figure similar to the one in Kohavi2007 p.3.
+\emph{@TODO: Insert figure similar to the one in Kohavi2007 p.3.}
 
 One word in the previous paragraph, ``randomly'', warrants some discussion. To be able to establish a causal relationship between the selected variant and the evaluation, the variant selection must indeed be completely random, and not based on what Kohavi et al. term ``any old which way''~\cite{Kohavi2007}.
 
@@ -309,7 +324,7 @@ This point \emph{must} be kept in mind when designing adaptive systems based on 
 \section{State of the art}
 \label{survey:sub:state_of_the_art}
 
-
+\emph{@TODO: Compile a set from the above sections.}
 
 % \section{Similar research} % (fold)
 % \label{survey:sec:similar_applications}
