@@ -114,7 +114,7 @@ The experiment stood between the old landing page, the control treatment, and a 
 \section{A/B testing features}
 \label{eval:sec:ab_testing_features}
 
-After running for one week with an even randomized user split between the two variations, the results were in. In total, just over 20,000 people were included in the experiment and were served one of the two variations.
+After running through the test period with an even randomized user split between the two variations, the results were in. In total, just over 20,000 people were included in the experiment and were served one of the two variations.
 
 The two were compared head to head for two different performance metrics:
 
@@ -276,15 +276,16 @@ As has been discussed extensively already, a major difficulty in adapting applic
 
 How, though, does this affect our adaptation efforts? One way of gauging this is to look at the number of users we see returning. More precisely: for how many months do we see each tracking cookie return before we never see it again?
 
-Table~\ref{tab:returning_users} shows the number of unique users that visited the site in January, February and March, along with the percentage of these users who were seen again during the next 1 thru 5 months.
+Table~\ref{tab:returning_users} shows the decline over time of the number of returning users, as compared to the user base of January, February and March.
 
 \begin{table}[h]
-  \begin{tabular}{|l|r|rrrrr|}
+  \centering
+  \begin{tabular}{|l|rrrrr|}
     \hline
-    From month & Base    & 1 month & 2 months & 3 months & 4 months & 5 months \\ \hline
-    January    & 25,452  & 23.20\% & 5.10\%   & 2.90\%   & 1.90\%   & 0.90\%   \\
-    February   & 26,273  & 20.20\% & 3.80\%   & 2.10\%   & 1.10\%   & -        \\
-    March      & 113,715 & 23.20\% & 5.40\%   & 2.90\%   & -        & -        \\ \hline
+    Users from month & 1 month & 2 months & 3 months & 4 months & 5 months \\ \hline
+    January          & 23.20\% & 5.10\%   & 2.90\%   & 1.90\%   & 0.90\%   \\
+    February         & 20.20\% & 3.80\%   & 2.10\%   & 1.10\%   & -        \\
+    March            & 23.20\% & 5.40\%   & 2.90\%   & -        & -        \\ \hline
   \end{tabular}
   \caption{The degree to which a monthly unique set of users are seen again after $n$ months.}
   \label{tab:returning_users}
