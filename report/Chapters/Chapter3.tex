@@ -9,16 +9,16 @@
 
 The proposed system is constructed around the data flowing through it. This chapter describes each part of the system outlined in figure~\ref{fig:system-architecture}.
 
-\begin{figure}[h]
+\begin{figure}[b]
   \centering
-    \includegraphics[width=0.75\textwidth]{Figures/system-architecture}
+    \includegraphics[width=0.6\textwidth]{Figures/system-architecture}
     \caption{Overview of the system architecture.}
     \label{fig:system-architecture}
 \end{figure}
 
-The system begins by taking the data stepwise through an ingestion pipeline, importing, filtering and cleaning it. The steps of the ingestion pipeline are discussed in section~\ref{approach:sec:data_ingestion_and_preprocessing}, before moving on to the user modeling component in section~\ref{approach:sec:user_modeling}.
+The system begins by taking the data stepwise through an ingestion pipeline, importing, filtering, and cleaning it. The steps of the ingestion pipeline are discussed in section~\ref{approach:sec:data_ingestion_and_preprocessing}, before moving on to the user modeling component in section~\ref{approach:sec:user_modeling}.
 
-Once user models are in place, the system generates user segments. These are stored in a database for future use. There are several viable approaches to the segmentation task. These are discussed in more detail in section~\ref{approach:sec:clustering}.
+Once user models are in place, the system identifies user segments. These are stored in a database for future use. This process is discussed in more detail in section~\ref{approach:sec:clustering}.
 
 Apart from clusters, the adaptation component requires content experiment results to predict how users will respond to application variations. This is discussed in section~\ref{approach:sec:feature_experiments}.
 
@@ -43,20 +43,17 @@ The amount of data can be arbitrarily sizable, and will grow linearly with user 
 \subsection{Generating the raw data}
 \label{approach:sub:generating_data}
 
-The system input is a chronological series of raw events sent from the production system.
+The system input is a chronological series of raw events sent from the production system. The events are instrumented via an external analysis service called KISSmetrics\footnote{\url{https://www.kissmetrics.com/}} -- a user analysis system designed around tracking individual users' behavior.
 
-These are instrumented via an external analysis service called KISSmetrics\footnote{\url{https://www.kissmetrics.com/}}. It is a user analysis system designed around tracking individual users' behavior. It works by calling their REST API with the following data:
+The application logs an event by calling the KISSmetrics REST API. The following data is in each instrumentation call:
 
 \begin{enumerate}
   \item person identifier
   \item event name
-  \item user properties
+  \item user properties (optional)
 \end{enumerate}
 
 The consistency of the personal identifier has already been discussed extensively in the introductory chapters, especially section~\ref{intro:sub:anonymity_privacy}, but a short technical introduction to the actual production system is in order.
-
-\subsection{Event instrumentation in KISSmetrics}
-\label{approach:sec:event_instrumentation}
 
 To enable effective utilization of the KISSmetrics instrumentation functionality, they supply a client library for the purpose. This client library handles a few central things for us:
 
@@ -66,11 +63,9 @@ To enable effective utilization of the KISSmetrics instrumentation functionality
   \item Simple A/B testing facilities.
 \end{enumerate}
 
-When the KISSmetrics client library is loaded, the person identity is automatically either retrieved from the browser cookies, or generated.
+When the KISSmetrics client library is loaded, the person identity is automatically either retrieved from the browser cookies, or generated. The identity of a person is a unique randomly generated string, which serves no other purpose than to track the identity of the browser over time.
 
-The identity of a person is a unique randomly generated string, which serves no other purpose than to track the identity of the browser over time. No personal data is stored, nor is it available to us.
-
-Whenever something ``interesting'' happens, an event is sent to the KISSmetrics instrumentation service. An ``interesting'' event is anything that tells us about how the users use the service, both in terms of general activity and in terms of feature adoption. Every event is tagged with the person identity, as well as an event name and a timestamp.
+Whenever something ``interesting'' happens, an event is sent to the KISSmetrics instrumentation service. An ``interesting'' event is typically anything that tells us about how the users use the service, both in terms of general activity and in terms of feature adoption. Every event is tagged with the person identity, as well as an event name and a timestamp.
 
 The KISSmetrics service provides several analytical tools to dig into this data, thereamongst funnel reports and cohort reports -- as depicted in figure~\ref{fig:funnel-report} and figure~\ref{fig:cohort-report}.
 
@@ -93,16 +88,14 @@ The KISSmetrics service provides several analytical tools to dig into this data,
 
 KISSmetrics has the ability to export raw event data to data files. This can be used to power completely customized analyses, as will be needed for our particular task.
 
-After the raw data has been aquired, it will need to be cleaned. This is a simple process of churning through each line of each unprocessed data file, parsing and splitting its contents into appropriate data fields, and inserting it into a database.
-
-To facilitate the compilation of network-related user model features, conversation data was loaded into a graph database to enable querying of network structures. In the RDBMS handling the other data, this presented itself as a computationally unfeasable task.
+After the raw data has been aquired, it will need to be cleaned. This is a simple process of churning through each line of each unprocessed data file, parsing and splitting its contents into appropriate data fields, and inserting it into databases.\footnote{To facilitate the compilation of network-related user model features, conversation data was loaded into a graph database to enable querying of network structures.}
 
 % section data_ingestion_and_preprocessing (end)
 
 \section{User modeling} % (fold)
 \label{approach:sec:user_modeling}
 
-To find clusters of users, we first and foremost need to quantify them. More specifically, we want to represent each user as a feature vector in an $n$-dimensional space.
+To find clusters of users, we first and foremost need to quantify them. More specifically, we want to represent each user as a numerical feature vector.
 
 \subsection{Feature selection}
 \label{approach:sec:feature_selection}
@@ -121,16 +114,14 @@ Given the types of events being collected, we landed on compiling the following 
   \item Chat message sent
 \end{enumerate}
 
-To generate user models, the stream of event data needs to be mapped to its associated users for aggregation. This is a classic MapReduce task~\cite{Dean2008} easily solved using simple functional techniques, and did not present itself as a particularly interesting problem, albeit a computationally heavy one.
-
-To summarize, the transformation in this step started with data in the form of \eqref{pre_user_model}.
+To generate user models, the stream of event data were mapped to their associated users for aggregation. That is, the transformation in this step started with data in the form of \eqref{pre_user_model}.
 
 \begin{equation}
   \langle \text{event}, \text{timestamp}, \text{person}, \text{metadata} \rangle
   \label{pre_user_model}
 \end{equation}
 
-And ended with data in the form of~\eqref{post_user_model}.
+And ended with data in the form of~\eqref{post_user_model}, where \emph{value} contains the aggregated value.
 
 \begin{equation}
   \langle \text{person}, \text{feature}, \text{value} \rangle
@@ -158,79 +149,39 @@ Three algorithms were implemented and experimented with: DBSCAN, mean-shift, and
 \subsubsection{The k-means clustering algorithm}
 \label{subs:kmeans}
 
-The k-means clustering algorithm is arguably one of the most intuitive clustering algorithms.
+The k-means clustering algorithm takes as input a preset number of clusters, $k$, a similarity measure function, and a set of data vectors. Initially, it randomly chooses $k$ data vectors as centroids as a starting point for the process, before repeatedly performing a two-pass operation adjusting the centroids until convergence.
 
-It takes as input a preset number of clusters, $k$, a similarity measure function, and a set of data vectors. Initially, it randomly chooses $k$ data vectors as centroids as a starting point for the process, before repeatedly performing a two-pass operation adjusting the centroids until convergence.
+Section~\ref{code:kmeans} shows a simple python-esque implementation of the algorithm.
 
-Figure~\ref{fig:k-means} shows a simple python-esque implementation of the algorithm.
-
-\begin{figure}[h]
-  \begin{minted}[gobble=4]{python}
-    def kmeans(K, distance_fn, vectors):
-        N = len(vectors)
-        cluster_members = {}
-        memberships = {}
-
-        # Initially set centroids to random data vectors
-        centroids = [vectors[randint(N)] for _ in xrange(K)]
-
-        while True:
-
-            # Assign each data vector to the closest cluster centroid
-            for vector in vectors:
-                k = argmin(K, lambda k: distance_fn(centroid[k], vector))
-                if not memberships[vector] == k:
-                    cluster_members[memberships[vector]].remove(vector)
-                    cluster_members[k].append(vector)
-                    memberships[vector] = k
-
-            # Set each centroid to the mean of its members
-            previous_centroids = centroids
-            for k in xrange(K):
-                centroids[k] = mean_vector(cluster_members[k])
-
-            # Stop computing if we've achieved convergence
-            change = 0.0
-            for k in xrange(K):
-                change += distance_fn(previous_centroids[k], centroids[k])
-            if change < CONVERGENCE_THRESHOLD:
-                break
-  \end{minted}
-
-  \caption{The k-means algorithm}
-  \label{fig:k-means}
-\end{figure}
-
-\subsection{Evaluating cluster quality}
-\label{approach:sub:evaluating_clusters}
-
-\cite{Halkidi2001}
-
-@TODO: Davies-Bouldin index etc.
+% \subsection{Evaluating cluster quality}
+% \label{approach:sub:evaluating_clusters}
+%
+% We have talked about\cite{Halkidi2001}
+%
+% @TODO: Davies-Bouldin index etc.
 
 \subsection{Normalizing axes}
 \label{approach:sub:normalizing_axes}
 
-\subsection{Storing clustering results}
-\label{approach:sub:storing_results}
+@TODO
 
 \section{Feature experiments}
 \label{approach:sec:feature_experiments}
 
-Ideally at this point, we have identified several significant clusters of users. Now we want to find viable ways of adapting the product to better suit each user, based on the cluster he or she belongs to.
+Ideally at this point, we have identified several significant clusters of users. Next we want to find viable ways of adapting the product to better suit each user.
 
-Given a set of candidate product alterations $A$, we want to give each user the combination of these that maximizes some performance measure $P$. However, we arguably have no predictive bias to start us off on solving this.
+Given a set of candidate product alterations $A$, we want to give each user the combination of these that maximizes some performance measure $P$. However, we have no predictive bias to start us off on solving this.
 
-The approach taken in this implementation is a simple one, which relies on conducting a single A/B test up front for each candidate product alteration. The important part during this phase is to log each selected alteration variant along with the same person identifier used for other event instrumentation, as discussed in section~\ref{approach:sub:generating_data}.
+The approach taken in this implementation is a simple one, which relies on conducting a single A/B test up front for each proposed product alteration. An important part of this phase is to log each selected variant with the \emph{same person identifier} as is used for other event instrumentation, as discussed in section~\ref{approach:sub:generating_data}.
 
-This approach enables us to see up-front whether there are any significant variances in feature adoption between the clusters. If there are, we can adapt the service by selecting the more successful variation of the feature for all users in the relevant clusters. If not, we have a feature that affects all users equally -- at least with regard to cluster granularity.
+% This approach enables us to see up-front whether there are any significant variances in feature adoption between the clusters. If there are, we can adapt the service by selecting the more successful variation of the feature for all users in the relevant clusters. If not, we have a feature that affects all users equally -- at least with regard to cluster granularity.
 
 \subsection{Evaluation metrics} % (fold)
 \label{approach:sec:evaluation_metrics}
 
 When considering which variation of a product feature to prefer, we need to be able to measure their relative success rates.
 
-As for any user-facing product, the main objective is achieving user happiness. However, user happiness is hard to objectively define. For a service like appear.in, though, activity level should serve as a pretty clear indicator of user happiness -- unhappy users have more than enough alternative applications that cater to their needs.
+As for any user-facing product, the main objective is achieving user happiness. However, user happiness is hard to objectively define. For a service like appear.in, though, activity level serves as an adequate indicator of user happiness, as unhappy users have more than enough alternative applications that could cater to their needs.
 
 Simply put, we basically assume that the following hypothesis holds:
 
@@ -245,7 +196,7 @@ The perhaps most obvious example of this is the landing page, whose main objecti
 \section{Adaptation component} % (fold)
 \label{approach:sec:adaptation_component}
 
-
+@TODO
 
 \subsection{Applying the personalized feature set} % (fold)
 \label{approach:sec:applying_the_personalized_feature_set}

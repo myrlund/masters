@@ -1,6 +1,40 @@
-\chapter{Design Documents}
+\chapter{Source Code}
 
 \label{AppendixB}
 
-\lhead{Appendix B. \emph{Design Documents}}
+\lhead{Appendix B. \emph{Source Code}}
 
+\section{The k-means clustering algorithm}
+\label{code:kmeans}
+
+\begin{minted}[gobble=2]{python}
+  def kmeans(K, distance_fn, vectors):
+      N = len(vectors)
+      cluster_members = {}
+      memberships = {}
+
+      # Initially set centroids to random data vectors
+      centroids = [vectors[randint(N)] for _ in xrange(K)]
+
+      while True:
+
+          # Assign each data vector to the closest cluster centroid
+          for vector in vectors:
+              k = argmin(K, lambda k: distance_fn(centroid[k], vector))
+              if not memberships[vector] == k:
+                  cluster_members[memberships[vector]].remove(vector)
+                  cluster_members[k].append(vector)
+                  memberships[vector] = k
+
+          # Set each centroid to the mean of its members
+          previous_centroids = centroids
+          for k in xrange(K):
+              centroids[k] = mean_vector(cluster_members[k])
+
+          # Stop computing if we've achieved convergence
+          change = 0.0
+          for k in xrange(K):
+              change += distance_fn(previous_centroids[k], centroids[k])
+          if change < CONVERGENCE_THRESHOLD:
+              break
+\end{minted}

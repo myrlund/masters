@@ -84,13 +84,13 @@ Jonas Myrlund, February 2014
 
 \abstract{\addtocontents{toc}{\vspace{1em}} % Add a gap in the Contents, for aesthetics
 
-The goal of the project in this thesis is to explore the viability of a new approach to user adaptation, where the requirements of the application are significantly more constraining than in most cases seen in previous academic work.
+The goal of the project in this thesis is to explore the viability of an approach to user adaptation where the application context is significantly more constraining than in most cases seen in previous academic work.
 
-In this project we will describe a system for rolling out product features incrementally in an optimal way, based on feature adoption statistics within user segments. In other words, the described system allows for simple personalization of the product while experimenting with different feature variations.
+In this project I describe a system for rolling out product features incrementally in an optimal way, based on feature adoption statistics within user segments. In other words, the described system allows for simple personalization of the product while experimenting with different feature variations.
 
-Identifying the different ways in which users use a product can be useful on several levels, and it is often the case that some are more desirable than others. This can be due to its associated users generating more revenue, using the product more, inviting their friends, or similar. This project describes a system capable of not only identifying user classes based on user behavior, but more importantly: a framework for identifying the most effective ways of adapting the product to these user class segments, in effect driving users in a desirable direction.
+Identifying how different classes of users use an application differently can be useful on several levels, and it is often the case that some are more desirable than others. This can be due to its associated users generating more revenue, using the product more, inviting their friends, or similar. This project describes a system capable of not only identifying user classes based on user behavior, but more importantly: a framework for identifying the most effective ways of adapting the product to these user class segments, in effect driving users in a desirable direction.
 
-More specifically, given a set of identified user classes and a set of predefined treatments, we want to find out how each treatment affects each user class. Although the project implementation will specifically target the video conferencing service appear.in, a major research question will be to what extent the results generalize.
+% More specifically, given a set of identified user classes and a set of predefined treatments, we want to find out how each treatment affects each user class. Although the project implementation will specifically target the video conferencing service appear.in, a major research question will be to what extent the results generalize.
 
 We find that there are indeed clear differences in feature adoption across the identified user segments. However, due to uncertainty caused by domain constraints, it is uncertain to what extent the results generalize.
 
@@ -106,11 +106,11 @@ We find that there are indeed clear differences in feature adoption across the i
 
 \acknowledgements{\addtocontents{toc}{\vspace{1em}} % Add a gap in the Contents, for aesthetics
 
-I would like to thank my supervisors, Heri Ramampiaro and Helge Langseth, for lots of good advice, while at the same time allowing me a great extent of freedom in planning and executing this project.
+First and foremost, I would like to thank my supervisors, Heri Ramampiaro and Helge Langseth. While providing me with heaps of space to do things my own way, they have been an immense help in finding the academic angle for the project, and in continuously steering me back on course every time I've lost track of the goal.
 
-My supervisor at Telenor Digital AS -- Svein Yngvar Willassen.
+Telenor Digital AS have allowed me to write this thesis with them, and for this I am very grateful. Especially big thanks to Svein Yngvar Willassen, my supervisor at Telenor Digital, who both talked me into doing a master's project with appear.in, and assisted me greatly along the way.
 
-% Rolv Seehuus. Leon du Toit. <- ?
+Obviously, a big thanks to the entire appear.in team. It is extremely inspiring to do research when you thoroughly believe in the application you are working to improve. Ahead of me throughout the entire project period, they have improved the application immensely and attracted huge amounts of users who generated lots of data -- without which this thesis would have been impossible to write!
 
 }
 \clearpage % Start a new page
@@ -130,19 +130,19 @@ My supervisor at Telenor Digital AS -- Svein Yngvar Willassen.
 \lhead{\emph{List of Tables}} % Set the left side page header to "List of Tables"
 \listoftables % Write out the List of Tables
 
-%----------------------------------------------------------------------------------------
-%	ABBREVIATIONS
-%----------------------------------------------------------------------------------------
-
-\clearpage % Start a new page
-
-\setstretch{1.5} % Set the line spacing to 1.5, this makes the following tables easier to read
-
-\lhead{\emph{Abbreviations}} % Set the left side page header to "Abbreviations"
-\listofsymbols{ll} % Include a list of Abbreviations (a table of two columns)
-{
-% \textbf{API} & \textbf{A}pplication \textbf{P}rogramming \textbf{I}nterface \\
-}
+% %----------------------------------------------------------------------------------------
+% %	ABBREVIATIONS
+% %----------------------------------------------------------------------------------------
+%
+% \clearpage % Start a new page
+%
+% \setstretch{1.5} % Set the line spacing to 1.5, this makes the following tables easier to read
+%
+% \lhead{\emph{Abbreviations}} % Set the left side page header to "Abbreviations"
+% \listofsymbols{ll} % Include a list of Abbreviations (a table of two columns)
+% {
+% % \textbf{API} & \textbf{A}pplication \textbf{P}rogramming \textbf{I}nterface \\
+% }
 
 
 % %----------------------------------------------------------------------------------------
@@ -207,7 +207,7 @@ My supervisor at Telenor Digital AS -- Svein Yngvar Willassen.
 % Uncomment the lines as you write the Appendices
 
 \input{Appendices/AppendixA}
-% \input{Appendices/AppendixB}
+\input{Appendices/AppendixB}
 % \input{Appendices/AppendixC}
 
 \addtocontents{toc}{\vspace{2em}} % Add a gap in the Contents, for aesthetics

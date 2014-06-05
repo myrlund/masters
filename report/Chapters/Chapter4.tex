@@ -4,23 +4,25 @@
 
 \lhead{Chapter 4. \emph{Evaluation}}
 
-This chapter will evaluate the approach presented in chapter~\ref{Chapter3}, by implementing a prototype of the described system.
+This chapter will evaluate a prototype implementation of the approach presented in chapter~\ref{Chapter3}.
 
 The chapter starts with introducing the main goal and the experimental setup in sections~\ref{eval:sec:prerequisites} and~\ref{eval:sec:experimental_setup},
 before evaluating the actual results in sections~\ref{eval:sec:ab_testing_features},~\ref{eval:sec:clustering}, and~\ref{eval:sec:adapting_the_application}.
-We round up the section with a summary and discussion, in sections~\ref{eval:sec:summary} and~\ref{eval:sec:discussion}.
+We round up this evaluation chapter with a summary and discussion, in sections~\ref{eval:sec:summary} and~\ref{eval:sec:discussion}.
 
 \section{Prerequisites} % (fold)
 \label{eval:sec:prerequisites}
 
-For any of this user adaptation to have any actual use, we will need to find out whether there is actually significant variation in feature adoption between clusters; it matters little whether users exhibit differing behavior with regard to existing functionality, if this behavior yields no basis for predicting feature adoption in the future. We need an inductive bias.
+For any of this user adaptation to have any actual use, we will need to find out whether there actually exists significant variation in feature adoption between clusters; it matters little whether users exhibit differing behavior with regard to existing functionality, if this behavior yields no basis for predicting feature adoption in the future. We need an inductive bias.
 
-An easy way of discovering whether this inductive bias is present in the user base is to simply log whether there is significant variance across the user groups in their users' adoption of new features. Thus, this question of whether the predictive bias actually exists will be included as a central part of the actual experiment itself, and be thoroughly discussed through the next sections.
+As described in chapter~\ref{Chapter3}, a way of discovering whether this inductive bias is present in the user base is to investigate whether there is significant variance across the user groups in their users' adoption of new features. Thus, this question of whether the predictive bias exists will be included as a central part of the actual experiment itself, and be thoroughly discussed through the next sections.
 
 % section prerequisites (end)
 
 \section{Experimental setup} % (fold)
 \label{eval:sec:experimental_setup}
+
+@TODO: Describe figure~\ref{fig:experimental-setup} before jumping to hypothesis.
 
 \begin{figure}[h]
   \centering
@@ -35,8 +37,6 @@ The main hypothesis is:
   Different variations of a service may perform differently among ``different kinds of users''. These variations can be used as inductive bias on which general user adaptations can be based.
 \end{quote}
 
-\subsection{Experiment input}
-
 Two sources of input will serve as input data to test the hypothesis:
 
 \begin{enumerate}
@@ -48,7 +48,7 @@ The data from the A/B test results describe each person's designated variant, an
 
 \begin{table}[h]
   \centering
-  \begin{tabular}{|llll|}
+  \begin{tabular}{|l|l|ll|}
     \hline
     Person & Variant & Entered room & Entered conversation \\ \hline
     p1     & A       & no           & no  \\
@@ -65,7 +65,7 @@ The user cluster data contain the same persons as the test results in table~\ref
 
 \begin{table}[h]
   \centering
-  \begin{tabular}{|ll|}
+  \begin{tabular}{|l|l|}
     \hline
     Person & Cluster \\ \hline
     p1     & 1 \\
@@ -82,15 +82,8 @@ These data sources are aggregated with regard to variant and cluster, and the re
 
 The next sections walk through and evaluate the actual results in the context of the experiment described in this section.
 
-\section{A/B testing features} % (fold)
-\label{eval:sec:ab_testing_features}
-
-Due to various reasons, there was only time to perform one controlled content experiment. However, it will illustrate the approach adequately.
-
-\subsection{New appear.in landing page}
+\subsection{Evaluation case: New appear.in landing page}
 \label{eval:sub:new_landing_page}
-
-The experiment stood between the old landing page, the control treatment, and a new design. We shall from here on refer to them as variation $A$ and $B$, respectively. The two competing variations are depicted in figure~\ref{fig:variations}.
 
 \begin{figure}[h]
   \centering
@@ -114,6 +107,13 @@ The experiment stood between the old landing page, the control treatment, and a 
   \label{fig:variations}
 \end{figure}
 
+To test the hypothesis, we performed a controlled experiment on the user base of appear.in as we rolled out a new landing page.
+
+The experiment stood between the old landing page, the control treatment, and a new design. We shall from here on refer to them as variation $A$ and $B$, respectively. The two competing variations are depicted in figure~\ref{fig:variations}.
+
+\section{A/B testing features}
+\label{eval:sec:ab_testing_features}
+
 After running for one week with an even randomized user split between the two variations, the results were in. In total, just over 20,000 people were included in the experiment and were served one of the two variations.
 
 The two were compared head to head for two different performance metrics:
@@ -125,7 +125,6 @@ The two were compared head to head for two different performance metrics:
     The number of users going from the landing page and into a conversation. This entails that the person in question has understood the concept of how one establishes a conversation, which can be seen as the next step of user activation after entering a room.
 \end{description}
 
-Figures~\ref{fig:performance_room} and~\ref{fig:performance_conversation} show how the variations performed with respect to the two metrics, both with variation $B$ plotted relative to variation $A$ as the baseline.
 The aggregate numbers are shown in tables~\ref{tab:performance_room} and~\ref{tab:performance_conversation}.
 
 \begin{table}[h]
@@ -150,6 +149,8 @@ The aggregate numbers are shown in tables~\ref{tab:performance_room} and~\ref{ta
   \label{tab:performance_conversation}
 \end{table}
 
+Figures~\ref{fig:performance_room} and~\ref{fig:performance_conversation} show how the variations performed with respect to the two metrics, both with variation $B$ plotted relative to variation $A$ as the baseline.
+
 \begin{figure}[h]
   \centering
   \begin{subfigure}[t]{0.8\textwidth}
@@ -172,7 +173,9 @@ The aggregate numbers are shown in tables~\ref{tab:performance_room} and~\ref{ta
 
 As we can plainly see, variation $B$ performs slightly better at moving people into rooms, but evidently fails to communicate the conversation concept, leading to a relative decrease in actual subsequent conversations.
 
-While these numbers and plots set the scene, they are not very interesting from our adaptation perspective. We are first and foremost interested in seeing whether these numbers vary significantly between segments of the user base, providing us with a predictive bias from which we can extrapolate our user adaptations. Section~\ref{eval:sec:adapting_the_application} breaks the numbers down cluster by cluster, and investigates to what degree this information can be used to adapt the interface.
+While these numbers and plots set the scene, they are not very interesting from our adaptation perspective. We are first and foremost interested in seeing whether these numbers vary significantly between segments of the user base, thus providing us with a predictive bias from which we can extrapolate our user adaptations.
+
+Section~\ref{eval:sec:adapting_the_application} breaks the numbers down cluster by cluster, and investigates to what degree this information can be used to adapt the interface.
 
 \section{User clustering} % (fold)
 \label{eval:sec:clustering}
@@ -188,25 +191,16 @@ While these numbers and plots set the scene, they are not very interesting from 
 
 The clustering approach was iteratively improved on over several months. Large amounts of new data was gathered through the developments process, and with it the parameters were tuned and adapted.
 
-The tool wrapping the k-means clustering algorithm ended up supporting the set of runtime options shown in table~\ref{tab:clustering_runtime_options}.
-
-\begin{table}[h]
-  \begin{tabular}{ll}
-    \texttt{--timespan}          & Includes data only within the supplied timespan. \\
-    \texttt{-k}                 & Number of clusters. \\
-    \texttt{--normalize}         & Normalize axes before clustering. \\
-    \texttt{--drop-zero-vectors} & Don't include user model vectors of length zero in clustering. \\
-  \end{tabular}
-  \caption{Runtime options for clustering algorithm.}
-  \label{tab:clustering_runtime_options}
-\end{table}
-
-As different time periods saw user influx from a large variety of demographic origins (discussed in~\ref{eval:sub:varying_demographics}), the \emph{timespan} parameter was used extensively to compare these to aid in avoiding local maxima.
+Figure~\ref{fig:k_vs_db} shows a set of clustering runs. Data was timeboxed per month, from January thru May, and k-means was run for a range of $k$ from 3 up to 10. The other parameters used, as well as the particular resulting cluster set from February, are discussed in further detail in section~\ref{eval:sec:clustering_results}.
 
 \subsection{Varying demographics}
 \label{eval:sub:varying_demographics}
 
-Through the spring of 2014, appear.in received quite a bit of media attention. The coverage varied from technical showcases and industry newsletters to the service being featured in Hungarian newspapers and on BBC World News.
+Through the spring of 2014, appear.in received quite a bit of media attention, and different times saw user influx from a large variety of demographic origins.
+
+The coverage varied from technical showcases and industry newsletters to the service being featured in Hungarian newspapers and on BBC World News. Moreover, these spurs of media attention seems to mostly have been independently initiated, and as a result we saw large peaks of visitors from quite specific locations at different times. Overall, though, the traffic was distributed quite evenly over a large number of geographical areas.
+
+The \emph{timespan} parameter was used extensively to compare these, and aided in avoiding becoming subject to these various demographical biases.
 
 \subsection{Initial clustering results}
 \label{eval:sec:clustering_results}
@@ -214,6 +208,8 @@ Through the spring of 2014, appear.in received quite a bit of media attention. T
 The data used in this analysis stems from February 2014.
 
 The following clustering results were found by choosing the best of 5 k-means runs, ``best'' being defined by their Davies-Bouldin indices (see section~\ref{survey:sub:clustering_evaluation} for a brief description of this evaluation metric). This process was performed for $k$ parameter values from 3 to 10, where $k = 8$ yielded the best result. The 2 smallest resulting clusters were omitted in the analysis due to their relatively insignificant sizes.
+
+Although irrelevant to the experiment, a detailed analysis of the clusters depicted in figure~\ref{fig:radar-clusters-february} is available in~\ref{eval:sec:clustering_results}.
 
 Data from January and March yield more or less the same results, although they are a bit less clear. This could be due to media events and holidays generating more skewed data than usual.
 
@@ -228,7 +224,7 @@ The radar chart in figure~\ref{fig:radar-clusters-february} shows the centroids 
 
 Each dimension's centroid values $\mu_i \in \mu$ have been scaled by a factor of $\frac{10}{\max_{c \in C}{c_i}}$, to fit nicely inside the chart.
 
-The features used in this particular clustering run are (going clockwise around the chart):
+The features used in this particular clustering run are (clockwise around the chart):
 
 \begin{enumerate}
   \item chat messages sent
@@ -240,8 +236,6 @@ The features used in this particular clustering run are (going clockwise around 
 \end{enumerate}
 
 Most of these features are quantified by counting the number of relevant events logged for each user.
-
-Although irrelevant to the experiment, a detailed analysis of the clusters depicted in figure~\ref{fig:radar-clusters-february} is available in~\ref{eval:sec:clustering_results}.
 
 \subsection{The applicability of manual cluster analysis}
 \label{eval:sub:cluster_analysis_applicability}
@@ -257,16 +251,26 @@ We will return to this issue in chapter~\ref{Chapter5}.
 
 The task of adapting the application brings together previous A/B test results and the clusters discovered, as described in sections~\ref{eval:sec:ab_testing_features} and~\ref{eval:sec:clustering}.
 
-\begin{table}
+\begin{table}[h]
   \input{Figures/tables/fp-conv-may}
-  \caption{A result.}
-  \label{tab:results}
+  \caption{Success of the different variations for each cluster $C$.}
+  \label{tab:variation_cluster_correlations}
 \end{table}
 
-\clearpage
+Table~\ref{tab:variation_cluster_correlations} shows the success of the different variations for each cluster. We see that there are indeed clear differences between them, and can therefore reasonably state that there exists an inductive bias on which predictions about future behavior can be based.
+
+However, before jumping to conclusions, let us take a look at the number of people included in the experiment and the number of people identified as in the given clusters.
+
+To illustrate the point of the next section, the clusters in table~\ref{tab:variation_cluster_correlations} were identified based on data from just \emph{before} the A/B experiment was run. Cluster 1, in the first row, contains the same types of users as the ones described in~\ref{cluster:front_page_hits}, namely users only hitting the front page.
+
+% To be included in the content experiment data, the users need to fire the event used to measure.
+As we plainly see in the column with the total number of participants, the vast majority of these users did not return to the service within the experiment time period, resulting in an extremely low relative participation rate.
+The other clusters however, comprised of more active users, see a much higher participation rate.
 
 \section{Identity persistence}
 \label{eval:sec:identity_persistence}
+
+It may not be enough to be able to predict what the current user base wants. What we \emph{really} want is to use this information to improve the service for returning users. However, it is not enough to have predictive bias if we're unable to recognize our returning users. This section analyzes the impact of cookie impermanence.
 
 As has been discussed extensively already, a major difficulty in adapting applications such as appear.in to its users is that there is no concrete notion of \emph{a user}. Users are anonymous, and the only way they are being tracked at all is through a random hash set in a tracking cookie (see section~\ref{survey:unreliable_identity} and~\ref{survey:sec:privacy_vs_personalization}).
 
@@ -323,6 +327,7 @@ However, the survey performed by Teltzrow and Kobsa~\cite{Teltzrow2004}, as disc
 \section{Summary} % (fold)
 \label{eval:sec:summary}
 
+\vspace{10cm}
 
 % section results (end)
 

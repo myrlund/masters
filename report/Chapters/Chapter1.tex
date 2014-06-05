@@ -4,27 +4,31 @@
 
 \lhead{Chapter 1. \emph{Introduction}}
 
-% \emph{Context; motivation for the project; problem statement; outline of dissertation.}
+The goal of the project in this thesis is to explore the viability of user adaptation in applications significantly more constraining than in most cases seen in previous academic work.
 
-The goal of the project in this thesis is to explore the viability of a new approach to user adaptation, where the requirements of the application are significantly more constraining than in most cases seen in previous academic work.
+The application case is an anonymous, web-based video conferencing service called \url{appear.in}. The most important part of that description is the term ``anonymous'', as we not only need to deal with a complete lack of demographic information about the users -- we do not even have the ability to consistently identify them.
 
-The application case is an anonymous, web-based video conferencing service called \url{appear.in}. The most important part of that description is the term ``anonymous'', as we not only need to deal with a complete lack of demographic information about the users -- we do not even have the ability to consistently identify them. Luckily, there are a few workarounds to the issue of identification that make the problem at least partly tractable.
+Previous work in the area of user adaptation has often adhered to the concept of improving the recommending of some kind of resource -- often being reducible to the task of finding relevant items to sell to a given user. The goal of this project, however, is not to \emph{find good things}, it is to \emph{optimize the user experience of an application}. More specifically, the goal is to be able to predict which version of the application will lead to better performance for each user, down to individual feature level.
 
-Previous work in the area of user adaptation has often adhered to the concept of recommending some kind of resource -- often being reducible to the task of finding relevant items to sell, or interesting pages in a website hierarchy. The goal of this project, however, is not to \emph{find good things}, it is to \emph{optimize the user experience of an application}. More specifically, the goal is to be able to predict which version of the application will lead to better performance for each user, down to the individual feature level.
-
-Let us start off with some background on why I believe this is an especially exciting time for user adaptation on the web, before section~\ref{intro:sec:appearin} introduces the specific application case of appear.in. Finally, section~\ref{intro:sec:adaptation} will provide an introduction to the realm of user adaptation.
+Let us start off with some background on why I believe this is an especially exciting time for user adaptation in the context of ``simple'' web applications, before section~\ref{intro:sec:appearin} introduces the specific application case of appear.in. Finally, section~\ref{intro:sec:adaptation} will provide an introduction to the realm of user adaptation.
 
 \section{Background and motivation}
 \label{intro:sec:motivation}
 
 The web is an interesting venue in which to explore new ways of user adaptation and personalization. Even today, when we are able to build almost every kind of application right in the web browser, a fundamental concept remains: there is still a server serving the application code every single time a user opens the site\footnote{Caching aside, of course.}.
 
+This is the modern web: a place where applications are nearing the power of traditional desktop applications, but with the potential of being continuously tailored to suit each user individually.
+
+Moreover, as there is no installation step -- no technologically required ``setup'' -- many simple web applications take this further by not requiring any kind of identification, removing the unnecessary friction it would otherwise entail. As the web moves more and more in the direction of sophisticated web applications, more and more applications of this sort pop up.
+
+I believe this new breed of web applications has come to stay, and want to investigate to what extent we can apply user adaptation techniques to further enhance them. Can we do any interesting user adaptations without actual users and without consistent identity? And if so, what can we hope to achieve?
+
 \subsection{The modern web}
 \label{intro:sub:the_modern_web}
 
-This is the modern web: a place where applications are nearing the power of traditional desktop applications, but with the potential of being continuously tailored to suit each user individually.
+When we say that web applications are nearing the power of traditional desktop applications, we are of course talking about the introduction of HTML5.
 
-When we say that web applications are nearing the power of traditional desktop applications, we are of course talking about the introduction of HTML5. HTML was primarily designed as a language for semantically describing documents, and little more. The last decade, however, the concept of web applications has thoroughly established itself, while lacking clear standardization efforts from the W3C. The HTML5 specification is an attempt to remedy this~\cite{W3CHTML5_intro}, by providing standards and guidelines for the browser vendors on how to implement a wide range of common APIs.
+HTML was primarily designed as a language for describing scientific documents, and little more. The last decade, however, the concept of web applications has thoroughly established itself, while lacking clear standardization efforts from the W3C. The HTML5 specification is an attempt to remedy this~\cite{W3CHTML5_intro}, by providing standards and guidelines for the browser vendors on how to implement a wide range of common APIs.
 
 In practice, these APIs lets websites do things like:
 
@@ -49,7 +53,7 @@ For a long time, developing video conferencing services was an extremely challen
 
 \subsection{The enabling piece of technology: WebRTC}
 
-As the name implies, WebRTC handles real-time communication, but for our case, the important aspect of the technology is that it is able to do so peer-to-peer. Although it per design is a protocol for exchanging arbitrary data between peers, it is particularly geared toward multimedia streams. For instance, the traditionally cumbersome task of setting up a two-way audiovisual connection is now a matter of dropping around 40 lines of boilerplate Javascript into a web page\footnote{For an excellent introduction, see: \url{http://www.html5rocks.com/en/tutorials/webrtc/basics/}.}.
+As the name implies, WebRTC handles real-time communication, but for our case, the important aspect of the technology is that it is able to do so peer-to-peer. Although it is designed to be a protocol for exchanging arbitrary data between peers, it is particularly geared toward multimedia. For instance, the traditionally cumbersome task of setting up a two-way audiovisual connection is now a matter of dropping around 40 lines of boilerplate Javascript into a web page\footnote{For an excellent introduction, see: \url{http://www.html5rocks.com/en/tutorials/webrtc/basics/}.}.
 
 Although the WebRTC specification at the time of writing still officially is a \emph{working draft} in the W3C\footnote{The latest specification can be found here: \url{http://dev.w3.org/2011/webrtc/editor/webrtc.html}.}, most of the large browser vendors have already implemented it. Consequentially, a plethora of applications leveraging this technology are already available, with ever more being launched every month.
 
@@ -57,15 +61,17 @@ Although the WebRTC specification at the time of writing still officially is a \
 
 One of these applications is called appear.in, and it will serve as the main use case in this thesis. Like many other WebRTC applications, appear.in concerns itself with video conferencing.
 
-The idea is simple enough: a conversation happens between users who are in the same room at the same time. The central idea, though, is that the \emph{conversation} is identified solely by the URL in use, and not in any way by the peers connecting. As an example, if any two people are visiting \url{https://appear.in/ntnu} at the same time, they will see and hear each other and can start chatting away without any further call setup or configuration.
+The idea is simple enough: a conversation happens between users who are in the same room at the same time. The central idea, though, is that the \emph{conversation} is identified solely by the URL in use, and not in any way by the peers connecting. There is no notion of \emph{calling} someone -- you simply meet up in a room and talk. As an example, if any two people are visiting \url{https://appear.in/ntnu} at the same time, they will see and hear each other and can start chatting away.
 
-For both screenshots, as well as a thorough breakdown of the application, please see section~\ref{survey:sub:appearin}.
+For a showcase and a thorough breakdown of the application, please see section~\ref{survey:sub:appearin}.
 
-This view of a conversation as not really being an enitity in its own right, but rather an \emph{effect} of people being in the same room at the same time, breaks with the traditional model of audiovisual communication. Traditionally, talking to someone not present has been a process of one person \emph{calling} the other one, with group conversations usually being nothing more than an extension of this concept. appear.in doesn't concern itself with distinguishing between callers and callees, has no simple concept of a ``conversation'', and generally does not enforce any particular way of using the service -- apart from requiring the conversation venue to be identifiable by a string of characters.
+This view of a conversation as not really being an enitity in its own right, but rather an \emph{effect} of people being in the same room at the same time, breaks with the traditional model of audiovisual communication. Traditionally, talking to someone not present has been a process of one person \emph{calling} the other one, with group conversations usually being nothing more than an extension of this concept. appear.in doesn't concern itself with distinguishing between callers and callees, has no simple concept of a ``conversation'', and generally does not enforce any particular way of using the service -- apart from requiring the conversation venue, the ``room'', to be identifiable by a string of characters.
 
 \subsection{Usage patterns}
 
-Until the arrival of WebRTC, this particular way of thinking about conversations for anything but textual conversations hasn't been a big thing. However, the simplicity of the room concept opens the service up for a wide variety of uses\footnote{In addition to traditional video calls, we've already seen it used for everything from virtual offices and team meeting rooms to baby monitoring and remote tutoring, just to name a few.}. These wildly varied use cases are where the motivation for this project stems from:
+Until appear.in, this particular way of thinking about audiovisual conversations hasn't been a commonly seen pattern. However, the simplicity of the room concept opens the service up for a wide variety of uses: in addition to traditional video calls, we've already seen it used for everything from virtual offices and team meeting rooms to baby monitoring and remote tutoring, just to name a few.
+
+These wildly varied use cases are where the motivation for this research project stems from:
 
 \begin{enumerate}
   \item If the users' behaviors are quantified, will any clear and distinct usage patterns emerge?
@@ -75,6 +81,28 @@ Until the arrival of WebRTC, this particular way of thinking about conversations
 \subsection{Anonymity and privacy}
 \label{intro:sub:anonymity_privacy}
 
+Before moving on, let's define some words and concepts that will be central to this section, and to the rest of the thesis. The following definitions have been taken from the Merriam-Webster online dictionary\footnote{\url{http://www.merriam-webster.com/dictionary/}}.
+
+\begin{description}
+  \item[Anonymous] \hfill \\
+    Lacking individuality, distinction, or recognizability.
+  \item[Identity] \hfill \\
+    The distinguishing character or personality of an individual.
+  \item[Pseudonymous] \hfill \\
+    Using a pseudonym: a name that someone uses instead of his or her real name.
+\end{description}
+
+More plainly, this thesis will use these words in the following ways to describe the user base.
+
+\begin{description}
+  \item[Anonymous] \hfill \\
+    Not being recognizable as a person from the collected user data.
+  \item[Identity] \hfill \\
+    The ability to be distinguished from other users over time.
+  \item[Pseudonymity] \hfill \\
+    Being able to identify users without actual personal information.
+\end{description}
+
 appear.in is an anonymous communication service. No personal information is ever collected about the users, and not even IP-addresses or geolocational data is logged on an individual level. By tracking individual \emph{browsers} using cookies, however, we can track users -- or more precisely, browsers -- over time.
 
 By logging various events that we deem interesting along with a cookie value identifying the browser, we can reconstruct user sessions, and connect them to the application users pseudonomously. By ``pseudonomously'' it is meant that we identify the users solely by a random string set in their browser.
@@ -82,17 +110,12 @@ By logging various events that we deem interesting along with a cookie value ide
 This all opens a wide series of questions bordering to sociological aspects of web usage:
 
 \begin{enumerate}
-  \item
-    To what extent can an anonymous web service be adapted?
-  \item
-    Is user behavior enough to provide a satisfactory personalized user experience?
-  % \item
-  %   Will a personalized user experience go against the users' expectations of appear.in as an anonymous web service?
-  % \item
-  %   How can we measure any of this?
+  \item To what extent can an anonymous web service be adapted?
+  \item Is user behavior enough to provide a satisfactory personalized user experience?
+  \item Will the identifying cookies live long enough to enable a worthwhile adaptation effort?
 \end{enumerate}
 
-These are issues which will be revisited throughout the thesis.
+These issues will be revisited throughout the thesis.
 
 \subsubsection{Absence of identity} % (fold)
 
@@ -101,7 +124,7 @@ Several others have written about how privacy constraints impact personalized sy
 There are ways of coping with the absence of user identification. Kobsa, for instance, describes an approach that makes heavy use of pseudonyms designed around this problem~\cite{Kobsa2003}.
 However, appear.in is not only a pseudonymous service -- it is a fully anonymous service; there are no user accounts, and there is no login.
 
-Tracking users, then, is obviously a bit of a struggle.
+This all makes tracking users very problematic.
 
 \subsubsection{Tracking users}
 \label{intro:sub:tracking_users}
@@ -112,12 +135,14 @@ Unfortunately, using only cookies for identification has its clear downsides. Sh
 
 Without tracking more user information -- IPs and locations, for instance -- there is no easy way of tying these user ids together\footnote{Some suggestions on how to solve this is found in the suggestions for further work, in section~\ref{conclusion:sec:further_work}.}, and to reason about them as a single user. However, collecting this information about users goes against appear.in's privacy policy, and it has been deemed more interesting to see what can be done without crossing this line.
 
+The impact of tracking users based solely on cookies is discussed further in section~\ref{survey:unreliable_identity}.
+
 \section{User adaptation}
 \label{intro:sec:adaptation}
 
 Before answering the question of \emph{how} to do user adaptation, let's look into the more fundamental issue of \emph{why}. Why would we want to adapt a product to its users?
 
-There can be several reasons. Dijkstra once described a way in which humans and computers differ with a short anecdote involving piano playing and his mother~\cite{Dijkstra1982}:
+Dijkstra once described a fundamental way in which humans and computers differ with a short anecdote involving piano playing and his mother~\cite{Dijkstra1982}:
 
 \begin{quote}
     To end up my talk I would like to tell you a small story, that taught me the absolute mystery of human communication. I once went to the piano with the intention to play a Mozart sonata, but at the keyboard I suddenly changed my mind and started playing Schubert instead. After the first few bars my surprised mother interrupted me with ``I thought you were going to play Mozart!''. She was reading and had only seen me going to the piano through the corner of her eye. It then transpired that, whenever I went to the piano, she always knew what I was going to play! How? Well, she knew me for seventeen years, that is the only explanation you are going to get.
@@ -125,7 +150,7 @@ There can be several reasons. Dijkstra once described a way in which humans and 
 
 Humans constantly monitor the world around them, and model the objects and people in it. The kind of implicit modeling and predictive behavior is something computers generally have a hard time dealing with.
 
-In addition to this, the digital world around us is becoming more and more complex. This complexity will at some point overwhelm users. Adapting to the user's expectations may help in this~\cite{Vrieze}.
+However, the digital world around us is becoming more and more complex, and this complexity will at some point overwhelm users. Adapting to the user's expectations may help in minimizing friction and confusion as users meet this increase in complexity~\cite{Vrieze}.
 
 For a survey of the field of user adaptation, see section~\ref{survey:sec:user_adaptation}.
 
@@ -134,9 +159,7 @@ For a survey of the field of user adaptation, see section~\ref{survey:sec:user_a
 
 The application case of appear.in presents a few novel qualities for an adaptive system to deal with. Firstly, we want to do feature-level user adaptation of a web application, and secondly, we want to do so with extremely challenging privacy constraints.
 
-The first point, what being an \emph{application} running on the web entails for the relevance of previous research, is discussed in depth in section~\ref{survey:sub:web_personalization}.
-
-The second point, the impact of tight privacy constraints, requires some discussion before we take on the concrete problem specification of this thesis.
+What being an \emph{application} running on the web entails for the relevance of previous research, is deferred to section~\ref{survey:sub:web_personalization}. The impact of tight privacy constraints, on the other hand, requires some discussion before we take on the concrete problem specification of this thesis.
 
 As we shall see throughout chapter~\ref{Chapter2}, most of the surveyed adaptation systems have a notion of \emph{users}, who can be tracked over time. Furthermore, most traditional user modeling systems even assume either the availability of demographic information or some notion of \emph{consumption of resources}, which in turn both can aid in constructing user models.
 
@@ -161,23 +184,24 @@ To find out, we perform the following steps:
 
 If significant variation exists for a feature's variations, we can consistently select the highest-scoring feature variation for the members of the various user classes. The reasoning behind this leap can be found in section~\ref{approach:sec:clustering}.
 
-The A/B testing regime proposed in this work has the advantage of not requiring any sort of reasoning about the actual users in each clusters. By all means, this may well be interesting from a business intelligence perspective, but it will not be necessary to effectively roll out an optimized feature set for each user class.
+The A/B testing regime proposed in this work has the advantage of not requiring any sort of reasoning about the actual users in each clusters. By all means, this may well be interesting from a business intelligence perspective, but will not be necessary to be able to effectively roll out an optimized feature set for each user class.
 
-This project describes a system capable of not only identifying user classes based on user behavior, but more importantly: a framework for identifying the most effective ways of adapting the product to these user classes, in effect driving users in a desirable direction.
+This project describes a system capable of not only identifying user classes based on user behavior, but more importantly: it describes a framework for identifying the most effective ways of adapting the product to these user classes, in effect driving users in a desirable direction.
 
 Although the project implementation will specifically target the video conferencing service appear.in, a major research question will be to what extent the results generalize.
 
 \subsection{Research questions}
 \label{sub:research_questions}
 
-With the context outlined above, we formulate the following two main research questions:
+With the context outlined above, we formulate the following three research questions:
 
 \begin{enumerate}
   \item Is it possible to clearly divide users of simple, anonymous web applications into user classes based solely on their behavior?
   \item To what extent can such an application be adapted to better suit their way of using it?
+  \item When identity is unreliable, is the effort worth it?
 \end{enumerate}
 
-It is clear that the second research question strongly depends on the first one, and consequently the thesis is organized in a similarly stepwise manner.
+It is clear that our ability to answer each subsequent research question depends on the answer to the one before it. Consequently, the thesis is organized in a similarly stepwise manner.
 
 \section{Organization of the thesis}
 \label{sec:thesis_organization}
