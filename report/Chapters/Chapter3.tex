@@ -151,14 +151,9 @@ Three algorithms were implemented and experimented with: DBSCAN, mean-shift, and
 
 The k-means clustering algorithm takes as input a preset number of clusters, $k$, a similarity measure function, and a set of data vectors. Initially, it randomly chooses $k$ data vectors as centroids as a starting point for the process, before repeatedly performing a two-pass operation adjusting the centroids until convergence.
 
-Section~\ref{code:kmeans} shows a simple python-esque implementation of the algorithm.
+Section~\ref{code:kmeans} shows a simple python-esque implementation of the k-means algorithm.
 
-% \subsection{Evaluating cluster quality}
-% \label{approach:sub:evaluating_clusters}
-%
-% We have talked about\cite{Halkidi2001}
-%
-% @TODO: Davies-Bouldin index etc.
+To select good parameters -- the optimal value for $k$, given the input vectors -- we will use a relative cluster validation index, like the Davies-Bouldin index discussed in section~\ref{survey:sub:clustering_evaluation}.
 
 \section{Feature experiments}
 \label{approach:sec:feature_experiments}
