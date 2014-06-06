@@ -186,9 +186,53 @@ The perhaps most obvious example of this is the landing page, whose main objecti
 \section{Adaptation component} % (fold)
 \label{approach:sec:adaptation_component}
 
-@TODO
+In the adaptation component, we want to select the variation which is most likely to provide the best experience for the user.
+
+In other words, given a user $u$ in cluster $c$ and a set of variations $V$, we choose the variation that is more likely to maximize our selected objective function. That is,
+
+\begin{equation}
+  \text{preferred}(c, V) = \argmax_{v \in V} \text{score}(c, v)
+\end{equation}
+
+The scoring function will in our case simply be the ratio of cluster $c$ members who were ``converted'' during the experiment, ie. who achieved the designated goal, after having been presented with variation $v$.
+
+\begin{equation}
+  \text{score}_{c,v} = \frac{\text{converted}_{c,v}}{\text{participants}_{c,v}}
+\end{equation}
+
+Given a recent set of clusters and experiment results for the users within them, the adaptation component has what it needs to select a preferred variation based on this heuristic.
 
 \subsection{Applying the personalized feature set} % (fold)
 \label{approach:sec:applying_the_personalized_feature_set}
 
-Description of the feature service.
+Since well before this project, appear.in had a way of toggling features based on external criteria. The existing model allowed for overriding various settings, as well as pre-releasing features internally, using URL parameters.
+
+We call this scheme ``URL-based feature switching''. Some examples are listed in table~\ref{tab:feature_switches}.
+
+\begin{table}[h]
+  \centering
+    \begin{tabular}{|l|l|}
+      \hline
+      Parameter setting    & Effect \\ \hline
+      \texttt{?video=off}  & Turn off video by default. \\
+      \texttt{?audio=off}  & Mute microphone by default. \\
+      \texttt{?followRoom} & Turn on experimental ``follow room'' functionality. \\
+      \hline
+    \end{tabular}
+  \caption{By appending feature switches to the room URL, various effects can be achieved.}
+  \label{tab:feature_switches}
+\end{table}
+
+Enabling user adaptation thus became a simple matter of extending this model by allowing for feature values to be dictated by our adaptation component.
+
+In the current codebase, the setting of each feature value happens like so:
+
+\begin{minted}[gobble=2]{javascript}
+  var features = {
+      // ...
+      isVideoDisabledByDefault: $routeParams.video === "off",
+      isAudioDisabledByDefault: $routeParams.audio === "off"
+  };
+\end{minted}
+
+Here, \verb|$routeParams| contains the parameters set in the URL, as described above. In the same way, we can perform an external call with the current user id to the adaptation component described above, and apply the desired feature set in a similar way.
