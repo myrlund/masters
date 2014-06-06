@@ -255,6 +255,7 @@ We will return to this issue in chapter~\ref{Chapter5}.
 The task of adapting the application brings together previous A/B test results and the clusters discovered, as described in sections~\ref{eval:sec:ab_testing_features} and~\ref{eval:sec:clustering}.
 
 \begin{table}[h]
+  \centering
   \input{Figures/tables/fp-conv-may}
   \caption{Success of the different variations for each cluster $C$.}
   \label{tab:variation_cluster_correlations}
@@ -267,7 +268,7 @@ However, before jumping to conclusions, let us take a look at the number of peop
 To illustrate the point of the next section, the clusters in table~\ref{tab:variation_cluster_correlations} were identified based on data from just \emph{before} the A/B experiment was run. Cluster 1, in the first row, contains the same types of users as the ones described in~\ref{cluster:front_page_hits}, namely users only hitting the front page.
 
 % To be included in the content experiment data, the users need to fire the event used to measure.
-As we plainly see in the column with the total number of participants, the vast majority of these users did not return to the service within the experiment time period, resulting in an extremely low relative participation rate.
+As we can plainly see, the majority of the clustered users did not return to the service within the experiment time period, resulting in an extremely low relative participation rate.
 The other clusters however, comprised of more active users, see a much higher participation rate.
 
 \section{Identity persistence}
