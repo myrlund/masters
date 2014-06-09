@@ -18,7 +18,7 @@ The proposed system is constructed around the data flowing through it. This chap
 
 The system begins by taking the data stepwise through an ingestion pipeline, importing, filtering, and cleaning it. The steps of the ingestion pipeline are discussed in section~\ref{approach:sec:data_ingestion_and_preprocessing}, before moving on to the user modeling component in section~\ref{approach:sec:user_modeling}.
 
-Once user models are in place, the system identifies user segments. These are stored in a database for future use. This process is discussed in more detail in section~\ref{approach:sec:clustering}.
+Once user models are in place, the system identifies user segments. These are stored in a database for future use. This process is discussed in more detail in section~\ref{approach:clustering}.
 
 Apart from clusters, the adaptation component requires content experiment results to predict how users will respond to application variations. This is discussed in section~\ref{approach:sec:feature_experiments}.
 
@@ -129,7 +129,7 @@ And ended with data in the form of~\eqref{post_user_model}, where \emph{value} c
 \end{equation}
 
 \section{Clustering the users}
-\label{approach:sec:clustering}
+\label{approach:clustering}
 
 We assume the following hypothesis holds, as a basis for the clustering approach to the user adaptation problem:
 
@@ -158,6 +158,24 @@ To select good parameters -- the optimal value for $k$, given the input vectors 
 \section{Feature experiments}
 \label{approach:sec:feature_experiments}
 
+Controlled experiments embody the best scientific design for establishing a causal relationship between changes and their influence on user-observable behavior~\cite{Kohavi2007,Kohavi2008}.
+
+The simplest form of controlled experiment is often referred to as the A/B test. In A/B tests users are randomly exposed to one of two variants: control (A), or treatment (B). Based on data collected, an Overall Evaluation Criterion (OEC) is derived for each variant. Figure~\ref{fig:ab_flow} illustrates the A/B testing process.
+
+\begin{figure}[h]
+  \centering
+    \includegraphics[width=0.7\textwidth]{Figures/ab-test-flow}
+    \caption{The flow of an A/B test.}
+    \label{fig:ab_flow}
+\end{figure}
+
+One word in the previous paragraph, ``randomly'', warrants some discussion. To be able to establish a causal relationship between the selected variant and the evaluation, the variant selection must indeed be completely random, and not based on what Kohavi et al. term ``any old which way''~\cite{Kohavi2007}.
+
+This point \emph{must} be kept in mind when designing adaptive systems based on controlled experiments, as in our case.
+
+\subsection{Running a feature experiment}
+\label{approach:running_feature_experiment}
+
 Ideally at this point, we have identified several significant clusters of users. Next we want to find viable ways of adapting the product to better suit each user.
 
 Given a set of candidate product alterations $A$, we want to give each user the combination of these that maximizes some performance measure $P$. However, we have no predictive bias to start us off on solving this.
@@ -169,7 +187,7 @@ The approach taken in this implementation is a simple one, which relies on condu
 \subsection{Evaluation metrics} % (fold)
 \label{approach:sec:evaluation_metrics}
 
-When considering which variation of a product feature to prefer, we need to be able to measure their relative success rates.
+When considering which variation of a product feature to prefer, we need to be able to measure their relative success rates. As introduced above, this involves determining an overall evaluation criterion -- an OEC.
 
 As for any user-facing product, the main objective is achieving user happiness. However, user happiness is hard to objectively define. For a service like appear.in, though, activity level serves as an adequate indicator of user happiness, as unhappy users have more than enough alternative applications that could cater to their needs.
 
