@@ -8,7 +8,7 @@ This chapter will evaluate a prototype implementation of the approach presented 
 
 The chapter starts with introducing the main goal and the experimental setup in sections~\ref{eval:sec:prerequisites} and~\ref{eval:sec:experimental_setup},
 before evaluating the actual results in sections~\ref{eval:sec:ab_testing_features},~\ref{eval:sec:clustering}, and~\ref{eval:sec:adapting_the_application}.
-We round up this evaluation chapter with a summary and discussion, in sections~\ref{eval:sec:summary} and~\ref{eval:sec:discussion}.
+% We round up this evaluation chapter with a summary and discussion, in sections~\ref{eval:sec:summary} and~\ref{eval:sec:discussion}.
 
 \section{Prerequisites} % (fold)
 \label{eval:sec:prerequisites}
@@ -263,22 +263,22 @@ The task of adapting the application brings together previous A/B test results a
 
 Table~\ref{tab:variation_cluster_correlations} shows the success of the different variations for each cluster. We see that there are indeed clear differences between them, and can therefore reasonably state that there exists an inductive bias on which predictions about future behavior can be based.
 
-However, before jumping to conclusions, let us take a look at the number of people included in the experiment and the number of people identified as in the given clusters.
+However, let us not jump to conclusions. In~\ref{eval:sec:ab_testing_features} we ran a controlled experiment with just over 20,000 people, and here we are seeing numbers totaling at just over 1300.
 
 To illustrate the point of the next section, the clusters in table~\ref{tab:variation_cluster_correlations} were identified based on data from just \emph{before} the A/B experiment was run. Cluster 1, in the first row, contains the same types of users as the ones described in~\ref{cluster:front_page_hits}, namely users only hitting the front page.
 
-% To be included in the content experiment data, the users need to fire the event used to measure.
-As we can plainly see, the majority of the clustered users did not return to the service within the experiment time period, resulting in an extremely low relative participation rate.
-The other clusters however, comprised of more active users, see a much higher participation rate.
+As we can plainly see, the majority of the clustered users did not return to the service within the experiment time period, resulting in an extremely low relative participation rate. The other clusters however, comprised of more active users, see a much higher participation rate.
 
 \section{Identity persistence}
 \label{eval:sec:identity_persistence}
 
-It may not be enough to be able to predict what the current user base wants. What we \emph{really} want is to use this information to improve the service for returning users. However, it is not enough to have predictive bias if we're unable to recognize our returning users. This section analyzes the impact of cookie impermanence.
+The numbers in~\ref{eval:sec:adapting_the_application} tells us that it may not be enough to be able to predict what the current user base wants. What we \emph{really} want is to use this information to improve the service for returning users. However, it is not enough to have predictive bias if we're unable to \emph{recognize} our returning users. This section analyzes the impact of cookie impermanence.
 
-As has been discussed extensively already, a major difficulty in adapting applications such as appear.in to its users is that there is no concrete notion of \emph{a user}. Users are anonymous, and the only way they are being tracked at all is through a random hash set in a tracking cookie (see section~\ref{survey:unreliable_identity} and~\ref{survey:sec:privacy_vs_personalization}).
+As has been discussed extensively already, a major difficulty in adapting applications such as appear.in to its users is that there is no concrete notion of a user. Users are anonymous, and the only way they are being tracked at all is through a random hash set in a tracking cookie (see section~\ref{survey:client_side_identity}).
 
-How, though, does this affect our adaptation efforts? One way of gauging this is to look at the number of users we see returning. More precisely: for how many months do we see each tracking cookie return before we never see it again?
+How, though, does this affect our adaptation efforts?
+
+One way of gauging this is to look at the number of users we see returning. As an extreme, consider a user who does not keep cookies across sessions. Every time this user returns to the site, he will be treated as a new, previously unseen user. By extension, for how long do we see each tracking cookie return before we never see it again?
 
 Table~\ref{tab:returning_users} shows the decline over time of the number of returning users, as compared to the user base of January, February and March.
 
@@ -298,6 +298,24 @@ Table~\ref{tab:returning_users} shows the decline over time of the number of ret
 Two plots of these numbers can be seen in figure~\ref{fig:perceived_user_persistence}, with normal scale and logarithmic scale.
 
 As we see, just over 20\% are seen again the month after they first visit the site. Only about 20\% of these users again make it through to the subsequent month. After three months, less than 3\% remain in all three cases.
+
+As a more general measure of this, take figure~\ref{fig:user_timediffs}. The histogram shows the number of persons having visited the site at least twice, against the number of days separating their first and last recorded visit. As we see, it takes less than a month before the number of users has fallen an entire order of magnitude.
+
+\begin{figure}[t]
+  \centering
+  \begin{subfigure}[t]{0.9\textwidth}
+    \includegraphics[width=\textwidth]{Figures/plots/timediffs/timediffs}
+    \caption{Linear scale.}
+  \end{subfigure}
+
+  \begin{subfigure}[t]{0.9\textwidth}
+    \includegraphics[width=\textwidth]{Figures/plots/timediffs/timediffs-log}
+    \caption{Logarithmic scale.}
+  \end{subfigure}
+
+  \caption{Returning users' site usage time spans.}
+  \label{fig:user_timediffs}
+\end{figure}
 
 The perceived rate of retention is subject to three different factors:
 
@@ -328,15 +346,3 @@ However, the survey performed by Teltzrow and Kobsa~\cite{Teltzrow2004}, as disc
   \caption{Perceived user persistence, illustrating the identified user dropoff rate.}
   \label{fig:perceived_user_persistence}
 \end{figure}
-
-\section{Summary} % (fold)
-\label{eval:sec:summary}
-
-\vspace{10cm}
-
-% section results (end)
-
-\section{Discussion} % (fold)
-\label{eval:sec:discussion}
-
-% section discussion (end)

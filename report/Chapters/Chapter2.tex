@@ -181,6 +181,35 @@ This chapter will present the application case and the available data, discusse 
 
     appear.in, being a so-called single-page web application (SPA), has no clickstream in the traditional sense, a traditional clickstream being the series of pages navigated to. Transactional data, on the other hand, is usually related to e-commerce, and to some sense of ``items bought''. This is similarly irrelevant in this particular interpretation. However, we \emph{can} choose to view the series of interactions with the application as a clickstream of sorts -- an event stream -- and use it as a data source in much the same way.
 
+  \subsection{What is a user identity?}
+  \label{survey:identity}
+
+    Before moving on, let's define some words and concepts that will be central to this section, and to the rest of the thesis. The following definitions have been taken from the Merriam-Webster online dictionary\footnote{\url{http://www.merriam-webster.com/dictionary/}}.
+
+    \begin{description}
+      \item[Anonymous] \hfill \\
+        Lacking individuality, distinction, or recognizability.
+      \item[Identity] \hfill \\
+        The distinguishing character or personality of an individual.
+      \item[Pseudonymous] \hfill \\
+        Using a pseudonym: a name that someone uses instead of his or her real name.
+    \end{description}
+
+    Adapted to our realm, this thesis will use these words in the following ways.
+
+    \begin{description}
+      \item[Anonymous] \hfill \\
+        Not being recognizable as a person from the collected user data.
+      \item[Identity] \hfill \\
+        The ability to be distinguished from other users over time.
+      \item[Pseudonymity] \hfill \\
+        Being able to identify users without actual personal information.
+    \end{description}
+
+    In these word senses, appear.in is an anonymous communication service: no personal information is ever collected about the users, and not even IP-addresses or geolocational data is logged on an individual level. By tracking individual \emph{browsers} using cookies, however, we can track users -- or more precisely, browsers -- over time.
+
+    By logging various events that we deem interesting along with a cookie value identifying the browser, we can reconstruct user sessions, and connect them to the application users pseudonomously. By ``pseudonomously'' it is meant that we identify the users solely by a random string set in their browser.
+
   \subsection{Client-side identity}
   \label{survey:client_side_identity}
 
