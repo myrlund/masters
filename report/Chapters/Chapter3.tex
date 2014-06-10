@@ -138,7 +138,7 @@ Thus, we want to segment the users in the following way: users in each segment s
 \subsection{Choice of clustering algorithm}
 \label{approach:clustering_algorithm}
 
-Three algorithms were implemented and experimented with: DBSCAN, mean-shift, and k-means. Of these, the k-means clearly proved itself as the most effective one, and as it also managed to produce adequate and meaningful results, it was chosen as the principal algorithm. Further motivation for this choice is discussed in~\ref{survey:clustering_intro}.
+Three algorithms were implemented and experimented with: DBSCAN, mean-shift, and k-means. Of these, the k-means clearly proved itself as the most effective one, and as it also managed to produce adequate and meaningful results (see~\ref{appendix:clustering_results}), it was chosen as the principal algorithm. Further motivation for this choice is discussed in~\ref{survey:clustering_intro}.
 
 The k-means clustering algorithm takes as input a preset number of clusters, $k$, a similarity measure function, and a set of data vectors. Initially, it randomly chooses $k$ data vectors as centroids as a starting point for the process, before repeatedly performing a two-pass operation adjusting the centroids until convergence.
 
