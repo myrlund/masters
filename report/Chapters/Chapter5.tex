@@ -6,42 +6,31 @@
 
 % \emph{I konklusjonen din, beskriv status for ditt arbeid. Oppsummer hva du har oppnådd, sammenlignet med hva du opprinnelig ønsket å oppnå. Relater arbeidet til tidligere relevant arbeid. Foreslår videre arbeid som du tror vil være verdt.}
 
-\section{Summary} % (fold)
-\label{conclusion:sec:summary}
+\section{Summary and discussion} % (fold)
+\label{conclusion:summary_and_discussion}
 
-As shown in the previous chapter, we find that there are indeed clear differences in feature adoption across the identified user segments.
+  This thesis has presented a system capable of identifying user clusters, and the ways in which these differ from each other in their interactions with the application. The clustering results are clear and consistent over several months of largely varying user base demographics.
 
-The domain constraints and the resulting scarcity and unreliability of user modeling data makes for clustering results that are at best hard to intuitively understand. This hinders us in reasoning about the various ways of applying the user adaptations, ie. the ways of distributing the feature variants among the identified user segments.
+  There is also evidence of clear differences in feature adoption across the identified clusters, presenting an inductive bias on which user adaptations can theoretically be based.
 
-% Often, this process is based on more diffuse concepts, like business intelligence or intuition about the users.
+  However, some issues presented themselves, particularly pertaining to the short life span of tracking cookies. As touched upon many times throughout the thesis, appear.in does not have any user identification mechanisms apart from that of identifiers stored in client-side cookies. As most users seem to clear their browser cookies regularly, we are only able to apply the adaptations to a small percentage of the users, as most users are perceived to disappear after a few weeks of activity.
 
-The controlled experiments of section~\ref{approach:feature_experiments} provide us with hard evidence of behavioral correlations in our user base -- or indeed, lack thereof. This disentangles us from the error-prone decision making otherwise involved in setting up group adaptations.
+  This makes the scheme proposed in this project unfeasible in a production setting. The computing and data requirements arguably far outweigh the potential benefits, especially due to the relatively miniscule reach of the tentative user adaptations.
 
-\section{Generalizing the system} % (fold)
-\label{conclusion:sec:generalizing_the_system}
+  \subsection{Generality of the results}
+  \label{conclusion:result_generality}
 
-Section~\ref{survey:data_quality} analyzes the available data, and identifies the two main challenges of providing user adaptation:
+    The poor performance of the proposed system is mostly due the issue of unstable identity and cookie impermanence. In this regard, the results should generalize to any system whose user identification scheme relies solely upon browser cookies.
 
-\begin{enumerate}
-  \item the absence of demographics
-  \item the unreliability of user identity
-\end{enumerate}
-
-Together, these two factors comprise an unusually harsh environment for an adaptative system to operate in. In ... we predicted that the clusters would be hard to intuitively understand, as they would effectively represent a noisy and incomplete version of the actual user base.
-
-As we saw in chapter~\ref{Chapter4}, these predictions did indeed match the results.
-
-Due to uncertainty caused by domain constraints, it is hard to tell to what extent the results generalize.
-
-% section generalizing_the_system (end)
+    Indeed, the results herein confirm the position of the literature in that stable user identity is a necessary prerequisite for personalization.
 
 \section{Suggestions for further work} % (fold)
 \label{conclusion:sec:further_work}
 
-The work presented can be improved in many ways.
+  It would be interesting to determine the distribution of the user retention factors introduced in~\ref{eval:retention_factors}. Theoretically, albeit unlikely, the user dropoff perceived could simply all be due to users not returning to the site, their cookie clearing behavior not being a significant factor. To support the conclusions above, surveying users on this subject would be helpful.
 
-Within the domain of appear.in, and applications like it, the event data cleaning and user modeling processes have a lot to gain.
+  On a related note, it would be interesting to see an up-to-date survey on users' attitudes towards first-party tracking cookies and online privacy, to see if they match the ones outlined in~\ref{survey:privacy_vs_personalization}.
 
-Firstly, it would be interesting to see if similar results are achieved for other applications.
+  There are also several ways the approach taken in this project could be improved. The time window for determining adaptations turning out to be the biggest challenge of the suggested approach, it would be interesting to see the performance of an online scheme in comparison. Not requiring behavioral data to pass through the entire offline feedback loop in order to be taken into consideration, should remedy at least some of the worst symptoms of cookie impermanence. Moreover, as touched upon in~\ref{survey:identifying_sterotypes}, a collaborative filtering might be able to serve the purpose. It is, however, doubtful whether any online approach would alleviate the identity situation enough to be useful.
 
-Keep cluster centroids to enable ``classification'' of new users into groups whose behavior is already known.
+  Another question of interest is: what kind of additional metadata would be needed to remove us from the problem of cookie impermanence? If provided with IP-addresses and the room names in use, for instance, would that be enough to enable consolidating user event streams -- even across browsers and computers?
