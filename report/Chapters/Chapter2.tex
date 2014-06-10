@@ -4,7 +4,7 @@
 
 \lhead{Chapter 2. \emph{Survey}}
 
-This chapter will present the application case and the available data, discusse some important identification issues, and survey relevant research within the areas to be touched upon in the approach taken to answer the research questions.
+This chapter will present the application case and the available data, discuss some important identity issues, and survey relevant research within the areas relevant to answering the research questions.
 
 \section{The application case}
 \label{survey:application_case}
@@ -46,7 +46,7 @@ This chapter will present the application case and the available data, discusse 
 
     This view of a conversation as not really being an enitity in its own right, but rather an \emph{effect} of people being in the same room at the same time, breaks with the traditional model of audiovisual communication. Traditionally, talking to someone not present has been a process of one person \emph{calling} the other one, with group conversations usually being nothing more than an extension of this concept. appear.in doesn't concern itself with distinguishing between callers and callees, has no simple concept of a ``conversation'', and generally does not enforce any particular way of using the service -- apart from requiring the conversation venue, the ``room'', to be identifiable by a string of characters.
 
-    Until appear.in, this particular way of thinking about audiovisual conversations hasn't been a commonly seen pattern. However, the simplicity of the room concept opens the service up for a wide variety of uses: in addition to traditional video calls, we've already seen it used for everything from virtual offices and team meeting rooms to baby monitoring and remote tutoring, just to name a few.
+    Until the arrival of appear.in, this particular way of thinking about audiovisual conversations hadn't been a commonly seen pattern. However, the simplicity of the room concept opens the service up for a wide variety of uses: in addition to traditional video calls, we've already seen it used for everything from virtual offices and team meeting rooms to baby monitoring and remote tutoring, just to name a few.
 
   \subsection{The inner workings of appear.in}
   \label{survey:appearin_details}
@@ -106,8 +106,6 @@ This chapter will present the application case and the available data, discusse 
 
     As the quality of the video conferencing part of the application is largely governed by the browser and other low-level technicalities, we will mostly focus our efforts on the functionality augmenting the content: effectively, the rest of the UI.
 
-    \emph{Please note that all features discussed in this section are continuously subject to heavy revision, and should not in any way be viewed as a permanent or final set of features.}
-
     The leftmost part of the top bar consists of a URL copying control, as shown in figure~\ref{fig:ui:copy_control}. Many users utilize this area when copying the page URL to invite their peers to the room. However, seeing as the same effect is easily achieved by copying the address field of the browser -- which we cannot track -- use of this control does not give a complete picture of users' sharing behavior.
 
     To the top right is a row of buttons, as shown in figure~\ref{fig:ui:top_buttons}. Respectively, they allow the user to ``lock'', ``follow'', ``claim'', and leave the room. Of these, only the first three are of particular interest, as the ``leave room'' button essentially does nothing but close the window, severing the connection.
@@ -157,7 +155,7 @@ This chapter will present the application case and the available data, discusse 
 \section{The quality of the data}
 \label{survey:data_quality}
 
-  @TODO
+  As shown in figure~\ref{fig:appearin_arch}, the clients send various data to an external instrumentation service. While the details of the instrumented data are discussed in section~\ref{approach:sub:generating_data}, this section will deal with the general quality of the clients as a data source.
 
   \subsection{Lack of demographics}
   \label{survey:lack_of_demographics}
@@ -189,10 +187,10 @@ This chapter will present the application case and the available data, discusse 
     \begin{description}
       \item[Anonymous] \hfill \\
         Lacking individuality, distinction, or recognizability.
-      \item[Identity] \hfill \\
-        The distinguishing character or personality of an individual.
       \item[Pseudonymous] \hfill \\
         Using a pseudonym: a name that someone uses instead of his or her real name.
+      \item[Identity] \hfill \\
+        The distinguishing character or personality of an individual.
     \end{description}
 
     Adapted to our realm, this thesis will use these words in the following ways.
@@ -200,35 +198,36 @@ This chapter will present the application case and the available data, discusse 
     \begin{description}
       \item[Anonymous] \hfill \\
         Not being recognizable as a person from the collected user data.
-      \item[Identity] \hfill \\
-        The ability to be distinguished from other users over time.
       \item[Pseudonymity] \hfill \\
         Being able to identify users without actual personal information.
+      \item[Identity] \hfill \\
+        The qualities that allow us to distinguish users from each other.
     \end{description}
 
     In these word senses, appear.in is an anonymous communication service: no personal information is ever collected about the users, and not even IP-addresses or geolocational data is logged on an individual level. By tracking individual \emph{browsers} using cookies, however, we can track users -- or more precisely, browsers -- over time.
 
-    By logging various events that we deem interesting along with a cookie value identifying the browser, we can reconstruct user sessions, and connect them to the application users pseudonomously. By ``pseudonomously'' it is meant that we identify the users solely by a random string set in their browser.
+    By logging various events that we deem interesting along with a cookie value identifying the browser, we can reconstruct user sessions, and connect them to the application users pseudonomously.
+    % By ``pseudonomously'' it is meant that we identify the users solely by a random string set in their browser.
 
   \subsection{Client-side identity}
   \label{survey:client_side_identity}
 
-    Several others have written about how privacy constraints impact personalized systems~\cite{Teltzrow2004,Kobsa2007}. Indeed, the very nature of anonymity is an extension of privacy. However, the absence of \emph{identity} presents an entirely different challenge.
+    Several others have written about how privacy constraints impact personalized systems~\cite{Teltzrow2004,Kobsa2007}. Indeed, the very nature of anonymity is an extension of privacy. However, the absence of \emph{identity} presents an entirely different challenge when designing personalization systems.
 
-    There are ways of coping with the absence of user identification. Kobsa, for instance, describes an approach that makes heavy use of pseudonyms designed around this problem~\cite{Kobsa2003}. However, appear.in is not only a pseudonymous service -- it is a fully anonymous service; there are no user accounts, and there is no login.
+    There are ways of coping with the absence of user identification. Kobsa, for instance, describes an approach that makes heavy use of pseudonyms designed around this problem~\cite{Kobsa2003}. However, user pseudonyms in appear.in -- the tracking cookies -- reside only in the user's browser, and may be lost at any time.
 
     This all makes tracking users very problematic. However, we can somewhat circumvent the problem using web cookies, albeit with a very time-limited effect.
 
-    \subsubsection{Preserving state with cookies}
+    \subsubsection{Unstable user state with cookies}
     \label{survey:state_with_cookies}
 
       The first time a user visits appear.in, a cookie is set with a \emph{random value} uniquely identifying the \emph{browser}. It is this value which is sent with every event to the instrumentation service, as described in figure~\ref{fig:appearin_arch}.
 
-      Unfortunately, using only cookies for identification has its clear downsides. Should the user clear the browser cache, switch browsers, use the browser ``incognito''\footnote{Google lingo for private browsing, where previously set cookies are not available (among other things).}, or simply use multiple machines, then different user ids will be generated for each case.
+      Unfortunately, using only cookies for identification has its clear downsides. Should the user clear the browser cache, switch browsers, use the browser ``incognito''\footnote{Google lingo for private browsing, where previously set cookies are not available (among other things).}, or simply use multiple machines, then different user ids will be generated and used in each case.
+
+      As we shall see, most users periodically clear their browser cookies (see~\ref{survey:privacy_vs_personalization} for numbers), which causes an abrupt end of the perceived event stream from the browser user, never to be reassumed. The effect is illustrated in figure~\ref{fig:clear_cookie_impact} for a hypothetical case, in which user $A$ clears the browser cache twice, effectively cutting off the event stream each time. There is no obvious way to consolidate the three event streams of the three perceived users $A$, $B$, and $C$.
 
       Without tracking more user information -- IPs and locations, for instance -- there is no easy way of tying these user ids together, to reason about them as a single user. However, collecting this information about users goes against appear.in's privacy policy, and it has been deemed more interesting to see what can be done without crossing this line.
-
-      As we shall see, most users periodically clear their browser cookies (see~\ref{survey:privacy_vs_personalization} for numbers), which causes an abrupt end of the perceived event stream from the browser user, never to be reassumed. The effect is illustrated in figure~\ref{fig:clear_cookie_impact} for a hypothetical case, in which user $A$ clears the browser cache twice, effectively cutting off the event stream each time. There is no obvious way in which to consolidate the three event streams of the three perceived users $A$, $B$, and $C$.
 
       \begin{figure}[h]
         \centering
@@ -247,16 +246,17 @@ This chapter will present the application case and the available data, discusse 
           \label{fig:clear_cookie_impact}
       \end{figure}
 
-      In practice, this leads to sparse usage data and quite a bit of noise in the event stream used as the basis for the user model generation. Furthermore, the shortening of event streams also introduces a bias to the clustering algorithms, as the user model vectors will be shorter than is actually the case.
+      In practice, this leads to sparse usage data and quite a bit of noise in the event stream used as the basis for the user model generation.
+      % Furthermore, the shortening of event streams also introduces a bias to the clustering algorithms, as the user model vectors will be shorter than is actually the case.
 
   \subsection{Privacy versus personalization}
   \label{survey:privacy_vs_personalization}
 
-    There are not only the technical sides of user tracking to deal with. Due to various non-technical reasons, there exists at the time of writing a great deal of controversy surrounding the issue of online privacy.
+    There are not only the technical sides of user tracking to deal with. Due to a wide range of non-technical reasons, there exists at the time of writing a great deal of controversy surrounding online privacy.
 
-    This section discusses how this affects our current ability to perform effective user adaptations, and some prospects for the future.
+    This section discusses how this affects our current ability to perform effective user adaptations, and includes some prospects for the future.
 
-    Teltzrow and Kobsa~\cite{Teltzrow2004} state the issue plainly: ``Personalization systems need to acquire a certain amount of data about users' interests, behavior, demographics and actions before they can start adapting to them.'' As we shall see, many Internet users are highly sceptical of providing personal information to web sites, and a majority are concerned about web sites tracking their movements and behavior online. This doesn't fit adaptive systems' demand for data collection.
+    Teltzrow and Kobsa~\cite{Teltzrow2004} state our predicament plainly: ``Personalization systems need to acquire a certain amount of data about users' interests, behavior, demographics and actions before they can start adapting to them.'' As we shall see, many Internet users are highly sceptical of providing personal information to web sites, and a majority are concerned about web sites tracking their movements and behavior online. This doesn't fit adaptive systems' demand for data collection.
 
     \subsubsection{Personal information}
 
@@ -275,7 +275,7 @@ This chapter will present the application case and the available data, discusse 
 
     \subsubsection{Tracking}
 
-      While there is no theoretical upper bound to the lifetime of a tracking cookie, surveys of Internet users, as well as our own analyses, see that they usually do not persist for very long~\cite{Teltzrow2004}.
+      While there is no theoretical upper bound to the lifetime of a tracking cookie, surveys of Internet users, as well as our own analyses, see that they usually do not persist for very long~\cite{Teltzrow2004}:
 
       \begin{enumerate}
         \item People who are concerned about being tracked on the Internet: 60\%~\cite{CyberDialogue2001}, 54\%~\cite{Fox2000}, 63\%~\cite{Harris2000}
@@ -290,7 +290,7 @@ This chapter will present the application case and the available data, discusse 
 
       Although these numbers are a bit dated, there is little reason to believe that the tracking situation is going to get any easier in the years to come~\cite{RuizMartinez2012,Nikiforakis2013,Sorensen2013,Eijk2011}.
 
-      As we have seen, there already exists broad scepticism towards the use of cookies to track users, even on first-party sites. Much of the problem seems to stem from sites allowing third-party cookies, to better serve advertisements to its users -- who most often are oblivious to the tracking taking place at all.
+      As we have seen, there already exists broad scepticism towards the use of cookies to track users, even on first-party sites. Much of the problem seems to stem from sites allowing third-party cookies, to better serve advertisements to its users -- who often are oblivious to the tracking taking place at all.
 
       These third-party cookies, however, allow these third-parties to track users' activity and behavior across multiple sites, often without their explicit consent. This has recently been deemed as bordering to surveillance, and in recent years extensive legislative restrictions have been introduced to decrease the prevalence of particularly third-party cookies.
 
@@ -299,23 +299,23 @@ This chapter will present the application case and the available data, discusse 
 \section{Identifying stereotypes}
 \label{survey:identifying_sterotypes}
 
-  There are many approaches to the task of sterotyping users. In this project we will approach the task using standard clustering techniques.
+  There are many approaches to the task of sterotyping users. In this project we will approach the task using clustering techniques.
 
-  In the broad sense of the problem at hand -- adapting the application -- there are, of course, alternatives to the clustering approach taken. Two of them are \emph{classification} and \emph{collaborative filtering}:
+  In the broad sense of the problem at hand -- adapting the application -- there are, of course, alternatives to the clustering approach. Two of them are \emph{classification} and \emph{collaborative filtering}:
 
   \begin{description}
     \item[Collaborative filtering] \hfill \\
       Let us briefly reiterate on the first main research question: is it possible to consistently stereotype the users? While collaborative filtering may be a good approach to the user adaptation problem isolated, it will not be able to aid us in identifying stereotypes.
     \item[Classification] \hfill \\
-      Classification problems require training sets with predefined stereotypes. As there is no preexisting set of stereotypes, and no known patterns within the data, a classification approach is unfeasible.
+      Classification problems require training sets with predefined classes. As there is no preexisting set of stereotypes, and no \emph{known} patterns within the data, a classification approach is unfeasible.
   \end{description}
 
-  Due to these constraints, the clustering approach is chosen. The following sections take a closer look at how we can use clustering techniques to identify and evaluate the quality of user stereotypes.
+  Due to these constraints, the clustering approach is chosen. The following sections take a closer look at how we can use clustering techniques to identify and evaluate the quality of user clusters.
 
   \subsection{Stereotyping with clustering techniques}
   \label{survey:clustering_intro}
 
-    There are many distinctions that can be made between the various clustering models. The following list contains a brief introduction of some of the commonly used models.
+    There are many different clustering models, and many distinctions that can be made between them. The following list contains a brief introduction of some of those most commonly used.
 
     \begin{description}
       \item[Centroid models] \hfill \\
@@ -326,7 +326,7 @@ This chapter will present the application case and the available data, discusse 
         Defines clusters as dense areas in the data space.
     \end{description}
 
-    The most common model, by far, is the centroid model. This is the clustering scheme to be used in the approach described in chapter~\ref{Chapter3}.
+    The most common model by far is the centroid model, more specifically the k-means approach~\cite{Berkhin2006}. This is the clustering scheme to be used in the approach described in chapter~\ref{Chapter3}.
 
     The k-means algorithm has several strong suites with regard to our application~\cite{Berkhin2006}:
 
@@ -357,7 +357,7 @@ This chapter will present the application case and the available data, discusse 
     One of the most widely used measures of clusters' relative criteria is the Davies-Bouldin index, which is the one used to differentiate between clusters in this project. It is defined as:
 
     \begin{equation}
-      \text{DB}_k = \frac{1}{k} \sum_{i=1}^k \max_{i \neq j} \left( \frac{s_i + s_j}{d(c_i, c_j)} \right)
+      \text{DB}_k = \frac{1}{k} \sum_{i=1}^k \max_{j,\,i \neq j} \left( \frac{s_i + s_j}{d(c_i, c_j)} \right)
     \end{equation}
 
     where $k$ is the number of clusters, $c_x$ is the centroid of cluster $x$, $s_x$ is the average distance of all elements in cluster $x$ to centroid $c_x$, and $d(c_i,c_j)$ is the distance between centroids $c_i$ and $c_j$.
@@ -367,7 +367,7 @@ This chapter will present the application case and the available data, discusse 
 \section{Adaptive systems}
 \label{survey:adaptive_systems}
 
-  Adaptive systems have been around for quite some time, and they exist in many forms. Here, this section will focus mainly on the subject of user modeling and adaptive graphical user interfaces.
+  Adaptive systems have been around for quite some time, and they exist in many forms. This section will focus mainly on the subject of user modeling and adaptive graphical user interfaces.
 
   \subsection{History of user modeling}
 
@@ -402,8 +402,10 @@ This chapter will present the application case and the available data, discusse 
 
   \subsection{State of the art}
 
-    \emph{@TODO: Extend and refine.}
+    Adaptive user interfaces have not been commercially available for very long, at least not in the commercial application sphere. It is not many years since adaptive \emph{menus} first hit the mainstream, with Microsoft's Smart Menus\texttrademark\ and the various start menus that have been launched since Windows XP~\cite{Gajos2006}.
 
-    It is not many years since adaptive \emph{menus} entered mainstream commercial, with Microsoft's Smart Menus\texttrademark\ and the various start menus that have been launched since Windows XP~\cite{Gajos2006}. When it comes to adaptive hypermedia, the main focus of research seems to be on eLearning~\cite{Vrieze}, and on adapting to different screen sizes and mobile devices~\cite{Findlater2008}.
+    On the other hand, when it comes to adaptive hypermedia, the main focus of research seems to be on eLearning~\cite{Vrieze}, and on adapting to different screen sizes and mobile devices~\cite{Findlater2008}.
 
-    Although there has indeed been extensive research into consolidating privacy concerns and personalization~\cite{Kobsa2007,Wang2012,Knijnenburg2013}, no significant research seems to have targeted the realm of personalizing strongly privacy-constrained web applications.
+    All these approaches, however, operate under non-restraining conditions.
+
+    There has indeed been extensive research into consolidating privacy concerns and personalization~\cite{Kobsa2007,Wang2012,Knijnenburg2013}, but no significant research seems to have targeted the realm of personalizing strongly privacy-constrained web applications.

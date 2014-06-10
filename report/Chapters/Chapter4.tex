@@ -13,16 +13,16 @@ before evaluating the actual results in sections~\ref{eval:sec:ab_testing_featur
 \section{Prerequisites} % (fold)
 \label{eval:sec:prerequisites}
 
-For any of this user adaptation to have any actual use, we will need to find out whether there actually exists significant variation in feature adoption between clusters; it matters little whether users exhibit differing behavior with regard to existing functionality, if this behavior yields no basis for predicting feature adoption in the future. We need an inductive bias.
+For any of this user adaptation to have any actual use, we will need to find out whether there actually exists significant variation in feature adoption between clusters; it matters little whether users exhibit differing behavior with regard to existing functionality, unless this behavior yields a basis for predicting future behavior. We need an inductive bias.
 
-As described in chapter~\ref{Chapter3}, a way of discovering whether this inductive bias is present in the user base is to investigate whether there is significant variance across the user groups in their users' adoption of new features. Thus, this question of whether the predictive bias exists will be included as a central part of the actual experiment itself, and be thoroughly discussed through the next sections.
+As described in chapter~\ref{Chapter3}, a way of discovering whether this inductive bias is present in the user base is to investigate whether there is significant variance across the clusters in their members' adoption of new features. Thus, this question of whether the predictive bias exists will be included as a central part of the actual experiment itself, and be thoroughly discussed through the next sections.
 
-% section prerequisites (end)
+Moreover, an arguably obvious, but imperative aspect of the proposed approach is that the users for whom adaptations are predicted must be identifiable over an extended amount of time. They must be present with the same cookie identifier both prior to clustering and after applying the adaptations.
 
 \section{Experimental setup} % (fold)
 \label{eval:sec:experimental_setup}
 
-@TODO: Describe figure~\ref{fig:experimental-setup} before jumping to hypothesis.
+In the main experiment, we want to correlate the A/B test results with the user clusters, and see if variations are present. This rather simple scheme is illustrated in figure~\ref{fig:experimental-setup}.
 
 \begin{figure}[h]
   \centering
@@ -111,7 +111,7 @@ To test the hypothesis, we performed a controlled experiment on the user base of
 
 The experiment stood between the old landing page, the control treatment, and a new design. We shall from here on refer to them as variation $A$ and $B$, respectively. The two competing variations are depicted in figure~\ref{fig:variations}.
 
-\section{A/B testing features}
+\section{A/B testing feature variations}
 \label{eval:sec:ab_testing_features}
 
 After running through the test period with an even randomized user split between the two variations, the results were in. In total, just over 20,000 people were included in the experiment and were served one of the two variations.
@@ -175,7 +175,7 @@ As we can plainly see, variation $B$ performs slightly better at moving people i
 
 While these numbers and plots set the scene, they are not very interesting from our adaptation perspective. We are first and foremost interested in seeing whether these numbers vary significantly between segments of the user base, thus providing us with a predictive bias from which we can extrapolate our user adaptations.
 
-Section~\ref{eval:sec:adapting_the_application} breaks the numbers down cluster by cluster, and investigates to what degree this information can be used to adapt the interface.
+Section~\ref{eval:sec:adapting_the_application} breaks the numbers down cluster by cluster, and investigates to what degree this information can be used to power user adaptations.
 
 \section{User clustering} % (fold)
 \label{eval:sec:clustering}
@@ -186,8 +186,6 @@ Section~\ref{eval:sec:adapting_the_application} breaks the numbers down cluster 
     \caption{$k$ vs. Davies-Bouldin index, for clusters with data for January to May.}
     \label{fig:k_vs_db}
 \end{figure}
-
-The clustering approach was iteratively improved on over several months. Large amounts of new data was gathered through the developments process, and with it the parameters were tuned and adapted.
 
 Figure~\ref{fig:k_vs_db} shows a set of clustering runs. Data was timeboxed per month, from January thru May, and k-means was run for a range of $k$ from 3 up to 10. The other parameters used, as well as the particular resulting cluster set from February, are discussed in further detail in section~\ref{eval:sec:clustering_results}.
 
@@ -200,19 +198,14 @@ The coverage varied from technical showcases and industry newsletters to the ser
 
 The \emph{timespan} parameter was used extensively to compare these, and aided in avoiding becoming subject to these various demographical biases.
 
-\subsection{Axis normalization}
-\label{eval:sub:axis_normalization}
-
-@TODO
-
 \subsection{Initial clustering results}
 \label{eval:sec:clustering_results}
 
 The data used in this analysis stems from February 2014.
 
-The following clustering results were found by choosing the best of 5 k-means runs, ``best'' being defined by their Davies-Bouldin indices (see section~\ref{survey:evaluating_clusters} for a brief description of this evaluation metric). This process was performed for $k$ parameter values from 3 to 10, where $k = 8$ yielded the best result. The 2 smallest resulting clusters were omitted in the analysis due to their relatively insignificant sizes.
+The clustering results shown in this section were produced by choosing the best of 5 k-means runs, ``best'' being defined by their Davies-Bouldin indices (see section~\ref{survey:evaluating_clusters} for a brief description of this evaluation metric). This process was performed for $k$ parameter values from 3 to 10, where $k = 8$ yielded the best result.
 
-Although irrelevant to the experiment, a detailed analysis of the clusters depicted in figure~\ref{fig:radar-clusters-february} is available in~\ref{appendix:clustering_results}.
+Although mostly irrelevant to the experiment, a detailed analysis of the clusters depicted in figure~\ref{fig:radar-clusters-february} is available in~\ref{appendix:clustering_results}.
 
 Data from January and March yield more or less the same results, although they are a bit less clear. This could be due to media events and holidays generating more skewed data than usual.
 
@@ -240,14 +233,14 @@ The features used in this particular clustering run are (clockwise around the ch
 
 Most of these features are quantified by counting the number of relevant events logged for each user.
 
-\subsection{The applicability of manual cluster analysis}
-\label{eval:sub:cluster_analysis_applicability}
-
-When analyzing a set of clusters, it is tempting to focus on the extremes -- the easily stereotyped user profiles -- as we have done above. However, we see that a vast majority of users are indeed too close to the origo to be confidently labelled as some kind of stereotype.
-
-Thus, although tempting from a business intelligence type of perspective, manual cluster stereotyping becomes a highly speculative exercise whose conclusions are extremely hard to confirm without demographic data readily available.
-
-We will return to this issue in chapter~\ref{Chapter5}.
+% \subsection{The applicability of manual cluster analysis}
+% \label{eval:sub:cluster_analysis_applicability}
+%
+% When analyzing a set of clusters, it is tempting to focus on the extremes -- the easily stereotyped user profiles -- as we have done above. However, we see that a vast majority of users are indeed too close to the origo to be confidently labelled as some kind of stereotype.
+%
+% Thus, although tempting from a business intelligence type of perspective, manual cluster stereotyping becomes a highly speculative exercise whose conclusions are extremely hard to confirm without demographic data readily available.
+%
+% We will return to this issue in chapter~\ref{Chapter5}.
 
 \section{Adapting the application} % (fold)
 \label{eval:sec:adapting_the_application}
@@ -265,18 +258,14 @@ Table~\ref{tab:variation_cluster_correlations} shows the success of the differen
 
 However, let us not jump to conclusions. In~\ref{eval:sec:ab_testing_features} we ran a controlled experiment with just over 20,000 people, and here we are seeing numbers totaling at just over 1300.
 
-To illustrate the point of the next section, the clusters in table~\ref{tab:variation_cluster_correlations} were identified based on data from just \emph{before} the A/B experiment was run. Cluster 1, in the first row, contains the same types of users as the ones described in~\ref{cluster:front_page_hits}, namely users only hitting the front page.
-
-As we can plainly see, the majority of the clustered users did not return to the service within the experiment time period, resulting in an extremely low relative participation rate. The other clusters however, comprised of more active users, see a much higher participation rate.
+To illustrate the point of the next section, the clusters in table~\ref{tab:variation_cluster_correlations} were identified based on data from just \emph{before} the A/B experiment was run. As we can plainly see, the majority of the clustered users did not return to the service within the experiment time period, resulting in an extremely low participation rate.
 
 \section{Identity persistence}
 \label{eval:sec:identity_persistence}
 
-The numbers in~\ref{eval:sec:adapting_the_application} tells us that it may not be enough to be able to predict what the current user base wants. What we \emph{really} want is to use this information to improve the service for returning users. However, it is not enough to have predictive bias if we're unable to \emph{recognize} our returning users. This section analyzes the impact of cookie impermanence.
+The numbers in~\ref{eval:sec:adapting_the_application} tells us that it may not be enough to be able to predict what the current user base wants. What we \emph{really} want is to use this information to improve the service for returning users. However, it is not enough to have predictive bias if we're unable to recognize our returning users. This section analyzes the impact of cookie impermanence.
 
-As has been discussed extensively already, a major difficulty in adapting applications such as appear.in to its users is that there is no concrete notion of a user. Users are anonymous, and the only way they are being tracked at all is through a random hash set in a tracking cookie (see section~\ref{survey:client_side_identity}).
-
-How, though, does this affect our adaptation efforts?
+As has been discussed extensively already, a major difficulty in adapting applications such as appear.in to its users is that there is no concrete notion of a user. Users are anonymous, and the only way they are being tracked at all is through a random hash set in a tracking cookie (see section~\ref{survey:client_side_identity}). How exactly, though, does this affect our adaptation efforts?
 
 One way of gauging this is to look at the number of users we see returning. As an extreme, consider a user who does not keep cookies across sessions. Every time this user returns to the site, he will be treated as a new, previously unseen user. By extension, for how long do we see each tracking cookie return before we never see it again?
 
@@ -299,7 +288,7 @@ Two plots of these numbers can be seen in figure~\ref{fig:perceived_user_persist
 
 As we see, just over 20\% are seen again the month after they first visit the site. Only about 20\% of these users again make it through to the subsequent month. After three months, less than 3\% remain in all three cases.
 
-As a more general measure of this, take figure~\ref{fig:user_timediffs}. The histogram shows the number of persons having visited the site at least twice, against the number of days separating their first and last recorded visit. As we see, it takes less than a month before the number of users has fallen an entire order of magnitude.
+As a more general measure of this, take figure~\ref{fig:user_timediffs}. The histogram shows the number of persons having visited the site at least twice, placed in bins reflecting the number of days separating their first and last recorded visit. As we see, on average it takes less than a month before the number of users has fallen an entire order of magnitude.
 
 \begin{figure}[t]
   \centering

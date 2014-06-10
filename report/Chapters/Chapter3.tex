@@ -18,7 +18,7 @@ The proposed system is constructed around the data flowing through it. This chap
 
 The system begins by taking the data stepwise through an ingestion pipeline, importing, filtering, and cleaning it. The steps of the ingestion pipeline are discussed in section~\ref{approach:sec:data_ingestion_and_preprocessing}, before moving on to the user modeling component in section~\ref{approach:sec:user_modeling}.
 
-Once user models are in place, the system identifies user segments. These are stored in a database for future use. This process is discussed in more detail in section~\ref{approach:clustering}.
+Once user models are in place, the system identifies user clusters. These are stored in a database for future use. This process is discussed in more detail in section~\ref{approach:clustering}.
 
 Apart from clusters, the adaptation component requires content experiment results to predict how users will respond to application variations. This is discussed in section~\ref{approach:feature_experiments}.
 
@@ -30,8 +30,6 @@ The components come together in the adaptation component, discussed in section~\
 \label{approach:sec:data_ingestion_and_preprocessing}
 
 Before the interesting parts of the system can start doing their work, the data needs to be transformed from \emph{a series of chronological raw events} to \emph{a set of user models}.
-
-The amount of data can be arbitrarily sizable, and will grow linearly with user activity. The system architecture has been designed to be able to cope with this; its functional and data-driven nature should be easily adaptable to hugely scalable programming paradigms like MapReduce.
 
 \begin{figure}[h]
   \centering
@@ -53,17 +51,15 @@ The application logs an event by calling the KISSmetrics REST API. The following
   \item user properties (optional)
 \end{enumerate}
 
-The consistency of the personal identifier has already been discussed extensively in the introductory chapters, especially section~\ref{survey:client_side_identity}, but a short technical introduction to the actual production system is in order.
-
 To enable effective utilization of the KISSmetrics instrumentation functionality, they supply a client library for the purpose. This client library handles a few central things for us:
 
 \begin{enumerate}
-  \item Person identity storage and loading over subsequent page loads.
+  \item Person identity management over subsequent page loads.
   \item The low-level instrumentation of events.
   \item Simple A/B testing facilities.
 \end{enumerate}
 
-When the KISSmetrics client library is loaded, the person identity is automatically either retrieved from the browser cookies, or generated. The identity of a person is a unique randomly generated string, which serves no other purpose than to track the identity of the browser over time.
+When the KISSmetrics client library is loaded, the person identity is automatically retrieved from the browser cookies, or, if missing, generated. The identity of a person is a unique randomly generated string, which serves no other purpose than to track the identity of the browser over time.
 
 Whenever something ``interesting'' happens, an event is sent to the KISSmetrics instrumentation service. An ``interesting'' event is typically anything that tells us about how the users use the service, both in terms of general activity and in terms of feature adoption. Every event is tagged with the person identity, as well as an event name and a timestamp.
 
@@ -88,7 +84,7 @@ The KISSmetrics service provides several analytical tools to dig into this data,
 
 KISSmetrics has the ability to export raw event data to data files. This can be used to power completely customized analyses, as will be needed for our particular task.
 
-After the raw data has been aquired, it will need to be cleaned. This is a simple process of churning through each line of each unprocessed data file, parsing and splitting its contents into appropriate data fields, and inserting it into databases.\footnote{To facilitate the compilation of network-related user model features, conversation data was loaded into a graph database to enable querying of network structures.}
+After the raw data has been acquired, it will need to be cleaned. This is a simple process of churning through each line of each unprocessed data file, parsing and splitting its contents into appropriate data fields, and inserting it into databases.\footnote{To facilitate the compilation of network-related user model features, conversation data was loaded into a graph database to enable querying of network structures.}
 
 % section data_ingestion_and_preprocessing (end)
 
@@ -100,7 +96,7 @@ To find clusters of users, we first and foremost need to quantify them. More spe
 \subsection{Feature selection}
 \label{approach:sec:feature_selection}
 
-Given the types of events being collected, we landed on compiling the following features:
+Given the types of events being collected, the following features were compiled:
 
 \begin{enumerate}
   \item First degree conversation partners
@@ -139,13 +135,10 @@ The more similarly two people use a service, the more likely they are to respond
 
 Thus, we want to segment the users in the following way: users in each segment should be as similar as possible, and as dissimilar those in other segments as possible. This scheme fits well with the two criterias for selecting an optimal clustering scheme, as described by Berry and Linoff~\cite{Berry1997}.
 
-\subsection{Choice of algorithms}
-\label{approach:sec:clustering_algorithms}
+\subsection{Choice of clustering algorithm}
+\label{approach:clustering_algorithm}
 
-Three algorithms were implemented and experimented with: DBSCAN, mean-shift, and k-means. Of these, the k-means clearly proved itself as the most effective one, and as it also managed to produce adequate and meaningful results, it was chosen as the principal algorithm.
-
-\subsubsection{The k-means clustering algorithm}
-\label{subs:kmeans}
+Three algorithms were implemented and experimented with: DBSCAN, mean-shift, and k-means. Of these, the k-means clearly proved itself as the most effective one, and as it also managed to produce adequate and meaningful results, it was chosen as the principal algorithm. Further motivation for this choice is discussed in~\ref{survey:clustering_intro}.
 
 The k-means clustering algorithm takes as input a preset number of clusters, $k$, a similarity measure function, and a set of data vectors. Initially, it randomly chooses $k$ data vectors as centroids as a starting point for the process, before repeatedly performing a two-pass operation adjusting the centroids until convergence.
 
@@ -169,7 +162,7 @@ The simplest form of controlled experiment is often referred to as the A/B test.
 
 One word in the previous paragraph, ``randomly'', warrants some discussion. To be able to establish a causal relationship between the selected variant and the evaluation, the variant selection must indeed be completely random, and not based on what Kohavi et al. term ``any old which way''~\cite{Kohavi2007}.
 
-This point \emph{must} be kept in mind when designing adaptive systems based on controlled experiments, as in our case.
+This point is important to keep in mind when designing adaptive systems based on controlled experiments, as in our case.
 
 \subsection{Running a feature experiment}
 \label{approach:running_feature_experiment}
@@ -189,7 +182,7 @@ When considering which variation of a product feature to prefer, we need to be a
 
 As for any user-facing product, the main objective is achieving user happiness. However, user happiness is hard to objectively define. For a service like appear.in, though, activity level serves as an adequate indicator of user happiness, as unhappy users have more than enough alternative applications that could cater to their needs.
 
-Simply put, we basically assume that the following hypothesis holds:
+Simply put, we assume that the following hypothesis holds:
 
 \begin{hypothesis}
   Happy users use the service more than unhappy users.
@@ -197,7 +190,7 @@ Simply put, we basically assume that the following hypothesis holds:
 
 Furthermore, we seldom need a measure of \emph{user happiness} to determine the relative success of variations of a product feature. Some parts of the product have clearly defined goals themselves.
 
-The perhaps most obvious example of this is the landing page, whose main objective is to get people to try out the product. We can define the performance of the landing page in terms of the percentage of users that continue on to try out the product.
+The perhaps most obvious example of this is the landing page, whose main objective is to get people to try the product. Thus, we can define the performance of the landing page in terms of the percentage of users that continue on to try out the product.
 
 \section{Adaptation component} % (fold)
 \label{approach:sec:adaptation_component}

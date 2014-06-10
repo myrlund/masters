@@ -7,15 +7,15 @@
 \section{Background and motivation}
 \label{intro:background_and_motivation}
 
-  The advent of HTML5 enables us to build increasingly sophisticated applications that run right in the web browser on demand.
+  The advent of HTML5 enables us to build increasingly sophisticated applications that run right in the web browser.
 
-  Apart from the tendency to move ever closer to feature parity with native applications, most web applications share a common trait seldom seen elsewhere: they are available instantly and on-demand. Although some applications require the user to sign up or in other ways get past a paywall, the notion of a web application as being available \emph{without installation} remains. This is discussed further in~\ref{survey:the_modern_web}.
+  Apart from the tendency to move ever closer to feature parity with native applications, most web applications share a common trait seldom seen elsewhere: they are available instantly on demand. Although some applications require the user to sign up or pay their way over a paywall, the notion of a web application as being available \emph{without installation} remains. This is discussed further in~\ref{survey:the_modern_web}.
 
   This lack of friction is something many web applications leverage. Indeed, the main competition among applications is often a matter of minimizing friction: a push towards simplicity and ease-of-use. This often involves the absence of authentication. As the users and the legislative forces governing the Internet are becoming more and more privacy-aware, there is little reason to believe this application niche is going away in the near future (see~\ref{survey:privacy_vs_personalization} for discussion).
 
-  A real-world application adhering to the concept of minimizing friction is the application case for this project; appear.in\footnote{Available at \url{https://appear.in}.} is an attempt at providing a full-fledged video conferencing service with as little friction as possible. Among other things, this entails the application having no particular notion of users, and with that a highly unstable notion of \emph{identity}.
+  A real-world application adhering to these principles is the application case for this project; appear.in\footnote{Available at \url{https://appear.in}.} is a stab at providing a full-fledged video conferencing service with as little friction as possible. Among other things, this entails the application having no particular notion of users, and with that, a highly unstable notion of \emph{identity}.
 
-  An interesting question is, then, what can we do with the unstable data situation at hand? Is the behavioral data we have available enough to be able to do any significant user adaptations, for instance? In very broad terms, this is what this project sets out to answer.
+  An interesting question then arises: what can we get out of the unstable data we have at hand? Is the behavioral data we have available enough to be able to do any significant user adaptations, for instance? In very broad terms, this is what this project sets out to answer.
 
   % Before moving to the concrete research questions, let us have a look at some privacy issues surrounding the handling of identity in user adaptation settings.
   %
@@ -26,7 +26,7 @@
 
   This project will investigate whether users of a simple service, like the appplication case, fall into clear sterotypical patterns. Further, it will attempt to measure to what extent these user stereotypes can be used as a basis for user adaptations.
 
-  Since these problems in many ways build on each other, they will have to be answered in sequence. More specifically, I will attempt to answer the following questions:
+  Since these problems build on each other, they will have to be answered in sequence. More specifically, I will attempt to answer the following questions:
 
   \begin{enumerate}
     \item Is it possible to consistently stereotype the users of simple web applications without requiring explicit authentication?
@@ -42,4 +42,4 @@
 
   Chapter~\ref{Chapter2} surveys the application case and the available data, discusses some important identification issues, and surveys relevant research.
   Chapter~\ref{Chapter3} describes the approach taken to answer the research questions.
-  In chapter~\ref{Chapter4} an implementation of the approach described in chapter~\ref{Chapter3} is evaluated, before chapter~\ref{Chapter5} discusses some important takeaways, and suggests further work.
+  In chapter~\ref{Chapter4} an implementation of the approach described in chapter~\ref{Chapter3} is evaluated, before chapter~\ref{Chapter5} concludes with a discussion on the most important takeaways and suggestions for further work.
