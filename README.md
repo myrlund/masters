@@ -5,7 +5,7 @@ Master's project
 
 > The following is a draft of what will be the final project description. It is not necessarily up to date.
 
-User adaptation in an anonymous application setting
+User adaptation in anonymous web applications
 -----------------------------
 
 The goal of the project in this thesis is to explore the viability of an approach to user adaptation where the application context is significantly more constraining than in most cases seen in previous academic work.
