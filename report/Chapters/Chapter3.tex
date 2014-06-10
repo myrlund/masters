@@ -20,7 +20,7 @@ The system begins by taking the data stepwise through an ingestion pipeline, imp
 
 Once user models are in place, the system identifies user segments. These are stored in a database for future use. This process is discussed in more detail in section~\ref{approach:clustering}.
 
-Apart from clusters, the adaptation component requires content experiment results to predict how users will respond to application variations. This is discussed in section~\ref{approach:sec:feature_experiments}.
+Apart from clusters, the adaptation component requires content experiment results to predict how users will respond to application variations. This is discussed in section~\ref{approach:feature_experiments}.
 
 The components come together in the adaptation component, discussed in section~\ref{approach:sec:adaptation_component}, whose job it is to answer questions about users, effectively completing the feedback cycle back to the application.
 
@@ -53,7 +53,7 @@ The application logs an event by calling the KISSmetrics REST API. The following
   \item user properties (optional)
 \end{enumerate}
 
-The consistency of the personal identifier has already been discussed extensively in the introductory chapters, especially section~\ref{intro:sub:anonymity_privacy}, but a short technical introduction to the actual production system is in order.
+The consistency of the personal identifier has already been discussed extensively in the introductory chapters, especially section~\ref{survey:client_side_identity}, but a short technical introduction to the actual production system is in order.
 
 To enable effective utilization of the KISSmetrics instrumentation functionality, they supply a client library for the purpose. This client library handles a few central things for us:
 
@@ -139,8 +139,6 @@ The more similarly two people use a service, the more likely they are to respond
 
 Thus, we want to segment the users in the following way: users in each segment should be as similar as possible, and as dissimilar those in other segments as possible. This scheme fits well with the two criterias for selecting an optimal clustering scheme, as described by Berry and Linoff~\cite{Berry1997}.
 
-@TODO: Remember the bias introduced in section~\ref{survey:sub:generality}.
-
 \subsection{Choice of algorithms}
 \label{approach:sec:clustering_algorithms}
 
@@ -153,7 +151,7 @@ The k-means clustering algorithm takes as input a preset number of clusters, $k$
 
 Section~\ref{code:kmeans} shows a simple python-esque implementation of the k-means algorithm.
 
-To select good parameters -- the optimal value for $k$, given the input vectors -- we will use a relative cluster validation index, like the Davies-Bouldin index discussed in section~\ref{survey:sub:clustering_evaluation}.
+To select good parameters -- the optimal value for $k$, given the input vectors -- we will use a relative cluster validation index, like the Davies-Bouldin index discussed in section~\ref{survey:evaluating_clusters}.
 
 \section{Feature experiments}
 \label{approach:feature_experiments}
